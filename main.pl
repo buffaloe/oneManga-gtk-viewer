@@ -2,6 +2,10 @@
 use strict;
 use warnings;
 
+use Gtk2 '-init';
+
+use Gtk::List;
+
 ###############################################################################
 # Global SIG Die function to print/trace out the exception, otherwise create
 # an exception and die
@@ -22,7 +26,11 @@ $SIG{__DIE__} = sub {
 # Main execution
 ###############################################################################
 if (($#ARGV + 1) == 0) {
+    
+    my $gui = Gtk::List->new(600, 800);
+    $gui->display_window();
 
+    Gtk2->main;
 
 } elsif ((($#ARGV + 1) != 1) or ((($#ARGV + 1) == 1) and not ($ARGV[0] eq "test"))) {
     die "Invaild args!\n";
