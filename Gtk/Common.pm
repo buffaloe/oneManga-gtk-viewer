@@ -4,22 +4,24 @@ use strict;
 
 use Gtk2 '-init';
 
-our $VERSION = '0.01';
+our $VERSION = '0.03';
+
+use constant TRUE   => 1;
+use constant FALSE  => 0;
 
 ###############################################################################
 # Static Final Global Vars
 ###############################################################################
-my $TRUE = 1;
-my $FALSE = 0;
-
 my @MENU_ITEM = (
  #  name,	stock id,   label
  [  "FileMenu",	undef,	    "_File" ],
+ [  "EditMenu",	undef,	    "_Edit" ],
  [  "HelpMenu",	undef,	    "_Help" ],
  #  name,	stock id,	label,	    accelerator,    tooltip,	func 
- [  "Close",	'gtk-close',	"_Quit",    "<control>C",   "Close",	undef ],
+ [  "Close",	'gtk-close',	"_Close",   "<control>C",   "Close",	undef ],
  [  "Quit",	'gtk-quit',	"_Quit",    "<control>Q",   "Quit",	undef ],
  [  "About",	'gtk-about',	"_About",   "<control>A",   "About",	\&about_cb ],
+ [  "Preferences",  'gtk-preferences',	"_Preferences",	undef,   "Preferences",	\&preferences_cb ],
 );
 
 my $MENU_INFO = "
@@ -29,6 +31,10 @@ my $MENU_INFO = "
 	    <separator/>
 	    <menuitem action='Close'/>
 	    <menuitem action='Quit'/>
+	</menu>
+	
+	<menu action='EditMenu'>
+	    <menuitem action='Preferences'/>
 	</menu>
 	
 	<menu action='HelpMenu'>
@@ -68,11 +74,11 @@ sub about_cb {
     $dialog->set_copyright('Copyright (c) Paul Berens');
 
     $dialog->set_license('This program is free software; you can redistribute it and blah blah - Update this');
-    $dialog->set_wrap_license($TRUE);
+    $dialog->set_wrap_license(TRUE);
 
     # Dispose of it when the user closes it
     $dialog->signal_connect (response => 
-	    sub { $dialog->destroy(); $TRUE});
+	    sub { $dialog->destroy(); TRUE});
 
     $dialog->show();
 }
@@ -81,9 +87,60 @@ sub about_cb {
 ###############################################################################
 # Initalizes the preferences Dialog
 ###############################################################################
-sub init_preferences {
-    my ($self) = @_;
+sub preferences_cb {
+    my ($callback_data, $callback_action, $widget) = @_;
+    
+    my $dialog = Gtk2::Dialog->new('oneManga Viewer Preferences',
+	    undef,
+	    'destroy-with-parent',
+	    'gtk-cancel'    =>	'cancel',
+	    'gtk-ok'	    =>	'ok');
 
+    $dialog->set_default_response('ok');
+
+    # Tabbed notebook for all of the preferences categories
+    my $notebook = Gtk2::Notebook->new();
+    $notebook->set_show_tabs(TRUE);
+    $dialog->vbox()->pack_start($notebook, TRUE, TRUE, 0);
+
+    
+    # Notebook page for General Settings
+    my $general = Gtk2::VBox->new();
+    $notebook->append_page($general, 'General');
+
+
+
+
+    # Notebook page for Manga List
+    my $list = Gtk2::VBox->new();
+    $notebook->append_page($list, 'Manga List');
+    
+    $list->add(Gtk2::Label->new('da'));
+
+
+
+    # Notebook page for Manga Viewer
+    my $viewer = Gtk2::VBox->new();
+    $notebook->append_page($viewer, 'Viewer');
+
+    $viewer->add(Gtk2::Label->new('da'));
+
+
+
+
+
+
+
+    # show and interact modally -- blocks until the user
+    # activates a response.
+    $dialog->show_all();
+    my $response = $dialog->run();
+    if ($response eq 'ok') {
+    }
+
+    # activating a response does not destroy the window,
+    # that's up to you.
+    $dialog->destroy();
 }
 
 

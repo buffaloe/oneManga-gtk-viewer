@@ -6,7 +6,10 @@ use Gtk2 '-init';
 
 use Gtk::Common;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
+
+use constant TRUE   => 1;
+use constant FALSE  => 0;
 
 ###############################################################################
 # Static Final Global Vars
@@ -18,8 +21,6 @@ my @TEXT_BOX_LIST = ('_gtk_title', '_gtk_ranking', '_gtk_aka',
 my @TEXT_BOX_LABEL = ('Title:', 'Ranking:', 'AKA:', 'Status:',
 	'Max Chapters:', 'Last Updated:', 'Categories', 'Author:', 'Artist:',
 	'Summary:');
-my $TRUE = 1;
-my $FALSE = 0;
 my $COVER_IMAGE_WIDTH = 200;
 my $COVER_IMAGE_HEIGHT = 340;
 
@@ -68,24 +69,24 @@ sub _initalize {
     # TODO: May want to refactor this out and define the interface in the
     # initalizer
     $self->{_gtk_window}->signal_connect(delete_event => sub {
-	    Gtk2->main_quit; $TRUE});
+	    Gtk2->main_quit; TRUE});
 
     # Create the VBox that will hold the menu bar and the VPaned for 
     # the table/manga info
     my $root_vbox = Gtk2::VBox->new();
     $self->{_gtk_window}->add($root_vbox);
-    $root_vbox->pack_start($self->init_menu_bar(), $FALSE, $FALSE, 0);
+    $root_vbox->pack_start($self->init_menu_bar(), FALSE, FALSE, 0);
     
     # Create the VPaned that will hold the table/manga info
     my $root_vpaned = Gtk2::VPaned->new(); 
-    $root_vbox->pack_start($root_vpaned, $TRUE, $TRUE, 0);
+    $root_vbox->pack_start($root_vpaned, TRUE, TRUE, 0);
  
     # Create the Frame with indented shadow type to make the grab-bar appear
     # popped out for the VPaned
     my $table_frame = Gtk2::Frame->new();
     $table_frame->set_shadow_type('in');
     $table_frame->add($self->init_table());
-    $root_vpaned->pack1($table_frame, $TRUE, $TRUE);
+    $root_vpaned->pack1($table_frame, TRUE, TRUE);
    
     # Create the HBox that will hold the manga cover-image and the manga
     # information block
@@ -96,11 +97,11 @@ sub _initalize {
     my $info_frame = Gtk2::Frame->new();
     $info_frame->set_shadow_type('in');
     $info_frame->add($info_hbox);
-    $root_vpaned->pack2($info_frame, $FALSE, $TRUE);
+    $root_vpaned->pack2($info_frame, FALSE, TRUE);
 
     # Pack in the cover image and detailed information widgets
-    $info_hbox->pack_start($self->init_cover_image(), $FALSE, $FALSE, 0);
-    $info_hbox->pack_start($self->init_detailed_info(), $TRUE, $TRUE, 0);
+    $info_hbox->pack_start($self->init_cover_image(), FALSE, FALSE, 0);
+    $info_hbox->pack_start($self->init_detailed_info(), TRUE, TRUE, 0);
 }
 
 
@@ -180,8 +181,8 @@ sub init_table {
 	    $func, 9);
 
 
-    $tree_view->set_rules_hint($TRUE);
-    map { $_->set_resizable($TRUE)} $tree_view->get_columns();
+    $tree_view->set_rules_hint(TRUE);
+    map { $_->set_resizable(TRUE)} $tree_view->get_columns();
 
     my $tree_selection = $tree_view->get_selection();
     $tree_selection->set_mode('browse');
@@ -242,7 +243,7 @@ sub init_cover_image {
 sub init_detailed_info {
     my ($self) = @_;
 
-    my $info_table = Gtk2::Table->new($#TEXT_BOX_LIST, 2, $FALSE);
+    my $info_table = Gtk2::Table->new($#TEXT_BOX_LIST, 2, FALSE);
 
     # Create all of the Gtk2::Entry and Gtk2::TextBuffer that will 
     # display the manga's information
@@ -261,7 +262,7 @@ sub init_detailed_info {
 	# available space as needed
 	if ($i < $#TEXT_BOX_LIST) {
 	    my $tmp_box = Gtk2::Entry->new();
-	    $tmp_box->set_editable($FALSE);
+	    $tmp_box->set_editable(FALSE);
 
 	    $self->{$TEXT_BOX_LIST[$i]} = $tmp_box; 
 	    
@@ -270,7 +271,7 @@ sub init_detailed_info {
 
 	} else {
 	    my $tmp_box = Gtk2::TextView->new();
-	    $tmp_box->set_editable($FALSE);
+	    $tmp_box->set_editable(FALSE);
 	    $tmp_box->set_wrap_mode('word-char');
 
 	    $self->{$TEXT_BOX_LIST[$i]} = Gtk2::TextBuffer->new(); 
