@@ -28,7 +28,7 @@ my @MENU_ITEM = (
  [  "Close",	'gtk-close',	"_Close",   "<control>C",   "Close",	undef ],
  [  "Quit",	'gtk-quit',	"_Quit",    "<control>Q",   "Quit",	undef ],
  [  "About",	'gtk-about',	"_About",   "<control>A",   "About",	\&about_cb ],
- [  "Preferences",  'gtk-preferences',	"_Preferences",	undef,   "Preferences",	\&preferences_cb ],
+ [  "Preferences",  'gtk-preferences',	"Pr_eferences",	undef,   "Preferences",	\&preferences_cb ],
 );
 
 my $MENU_INFO = "
@@ -41,9 +41,12 @@ my $MENU_INFO = "
 	</menu>
 	
 	<menu action='EditMenu'>
+	    <separator/>
 	    <menuitem action='Preferences'/>
 	</menu>
-	
+
+##INSERT-HERE##
+
 	<menu action='HelpMenu'>
 	    <menuitem action='About'/>
 	</menu>
@@ -185,18 +188,31 @@ sub preferences_cb {
 # Initalizes the Menu Bar, 
 ###############################################################################
 sub init_menu_bar {
-    my $self = shift;
+    my ($self, $item, $info) = @_;
+
+    my (@new_item, $new_info);
+    if (defined $item and defined $info) {
+	@new_item = @MENU_ITEM;
+	push(@new_item, @{$item});
+
+	$new_info = $MENU_INFO;
+	$new_info =~ s/##INSERT-HERE##/$info/;
+    } else {
+	@new_item = @MENU_ITEM;
+	$new_info = $MENU_INFO;
+	$new_info =~ s/##INSERT-HERE##//;
+    }
 
     # Create an Action Group
     my $actions = Gtk2::ActionGroup->new("Actions");
-    $actions->add_actions(\@MENU_ITEM, undef);
+    $actions->add_actions(\@new_item, undef);
 
     # Create the UIManager
     my $ui = Gtk2::UIManager->new();
     $ui->insert_action_group($actions, 0);
 
     eval {
-	$ui->add_ui_from_string($MENU_INFO);
+	$ui->add_ui_from_string($new_info);
     };
    
     # Maybe useful to return an accel group to the window so it can set it

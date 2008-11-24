@@ -12,13 +12,40 @@ our $VERSION = '0.03';
 use constant TRUE   => 1;
 use constant FALSE  => 0;
 
+use constant IMAGE_WIDTH    => 200;
+use constant IMAGE_HEIGHT   => 340;
+
 ###############################################################################
 # Static Final Global Vars
 ###############################################################################
 my $WINDOW_TITLE = 'Viewer';
-my $PAGE_IMAGE_WIDTH = 200;
-my $PAGE_IMAGE_HEIGHT = 340;
 
+my @MENU_ITEM = (
+ #  name,		stock id,   label
+ [  "ViewMenu",		undef,      "_View" ],
+ [  "BookmarksMenu",	undef,      "_Bookmarks" ],
+ #  name,       stock id,       label,		accelerator,    tooltip,	func 
+ [  "ZoomIn",	'gtk-zoom-in',	"_Zoom In",	"<control>plus",   "Zoom In",	undef ],
+ [  "ZoomOut",	'gtk-zoom-out',	"Zoom _Out",	"<control>minus",   "Zoom Out",	undef ],
+ [  "Normal",	'gtk-zoom-100',	"_Normal Size",	"<control>0",   "Normal Size",	undef ],
+ [  "BestFit",	'gtk-zoom-fit',	"_Best Fit",	undef,		"Best Fit",	undef ],
+
+ [  "BookmarkManga",	undef,	"Bookmark This Manga",	"<control>D",   "Bookmark This Manga",    undef ],
+);
+
+my $MENU_INFO = "
+<menu action='ViewMenu'>
+    <separator/>
+    <menuitem action='ZoomIn'/>
+    <menuitem action='ZoomOut'/>
+    <menuitem action='Normal'/>
+    <menuitem action='BestFit'/>
+</menu>
+
+<menu action='BookmarksMenu'>
+    <menuitem action='BookmarkManga'/>
+    <separator/>
+</menu>";
 
 ###############################################################################
 # Constructor
@@ -61,7 +88,8 @@ sub _initalize {
     # Along with chapter/page info
     my $root_vbox = Gtk2::VBox->new();
     $self->{_gtk_window}->add($root_vbox);
-    $root_vbox->pack_start(Gtk::Common->new()->init_menu_bar(), FALSE, FALSE, 0);
+    $root_vbox->pack_start(Gtk::Common->new()->init_menu_bar(
+		\@MENU_ITEM, $MENU_INFO), FALSE, FALSE, 0);
 
     
     # Hbox to hold the dropdown
