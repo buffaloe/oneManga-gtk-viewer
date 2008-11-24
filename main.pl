@@ -5,6 +5,7 @@ use warnings;
 use Gtk2 '-init';
 
 use Gtk::List;
+use Exception;
 
 ###############################################################################
 # Global SIG Die function to print/trace out the exception, otherwise create

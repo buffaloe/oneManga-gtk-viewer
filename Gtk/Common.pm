@@ -9,10 +9,33 @@ our $VERSION = '0.01';
 ###############################################################################
 # Static Final Global Vars
 ###############################################################################
-my $WINDOW_TITLE = 'oneManga List';
 my $TRUE = 1;
 my $FALSE = 0;
 
+my @MENU_ITEM = (
+ #  name,	stock id,   label
+ [  "FileMenu",	undef,	    "_File" ],
+ [  "HelpMenu",	undef,	    "_Help" ],
+ #  name,	stock id,	label,	    accelerator,    tooltip,	func 
+ [  "Close",	'gtk-close',	"_Quit",    "<control>C",   "Close",	undef ],
+ [  "Quit",	'gtk-quit',	"_Quit",    "<control>Q",   "Quit",	undef ],
+ [  "About",	'gtk-about',	"_About",   "<control>A",   "About",	\&about_cb ],
+);
+
+my $MENU_INFO = "
+<ui>
+    <menubar name='MenuBar'>
+	<menu action='FileMenu'>
+	    <separator/>
+	    <menuitem action='Close'/>
+	    <menuitem action='Quit'/>
+	</menu>
+	
+	<menu action='HelpMenu'>
+	    <menuitem action='About'/>
+	</menu>
+    </menubar>
+</ui>";
 
 ###############################################################################
 # Constructor
@@ -21,7 +44,7 @@ sub new {
     my ($class) = @_;
 
     my $self = {
-	_model			=> undef
+	_accel	=> undef
     };
     bless $self, $class;
     return $self;
@@ -29,25 +52,34 @@ sub new {
 
 
 ###############################################################################
-# Initalizes the about Dialog
+# Displays the about dialog
 ###############################################################################
-sub init_about {
-    my ($self) = @_;
-
+sub about_cb {
+    my ($callback_data, $callback_action, $widget) = @_;
+    
     my $dialog = Gtk2::AboutDialog->new();
 
-    $dialog->set_program_name('oneManga Viewer');
     $dialog->set_title('About oneManga Viewer');
-    $dialog->set_authors('Paul Berens');
-    $dialog->set_copyright('(c) Paul Berens');
-    $dialog->set_version('0.1');
+    $dialog->set_program_name('oneManga Viewer');
+    $dialog->set_version('0.1 - Alpha');
+    $dialog->set_comments('A oneManga.com On/Offline Viewer');
+    
+    $dialog->set_authors('Paul Berens <antimatter.junk@gmail.com>');
+    $dialog->set_copyright('Copyright (c) Paul Berens');
 
-    return $dialog;
+    $dialog->set_license('This program is free software; you can redistribute it and blah blah - Update this');
+    $dialog->set_wrap_license($TRUE);
+
+    # Dispose of it when the user closes it
+    $dialog->signal_connect (response => 
+	    sub { $dialog->destroy(); $TRUE});
+
+    $dialog->show();
 }
 
 
 ###############################################################################
-# Initalizes the about Dialog
+# Initalizes the preferences Dialog
 ###############################################################################
 sub init_preferences {
     my ($self) = @_;
@@ -56,68 +88,28 @@ sub init_preferences {
 
 
 ###############################################################################
-# Initalizes the menu Bar
+# Initalizes the Menu Bar, 
 ###############################################################################
 sub init_menu_bar {
     my $self = shift;
-    my @additional = @_;
 
-    # Create the Menu Bar which contains all of the Menu Items such as
-    # File menu, Help menu, etc..
-    my $menu_bar = Gtk2::MenuBar->new();
+    # Create an Action Group
+    my $actions = Gtk2::ActionGroup->new("Actions");
+    $actions->add_actions(\@MENU_ITEM, undef);
 
-    # Create the File Menu
-    my $file_menu = Gtk2::MenuItem->new('_File');
-    my $file_submenu = Gtk2::Menu->new();
-    $file_menu->set_submenu($file_submenu); 
+    # Create the UIManager
+    my $ui = Gtk2::UIManager->new();
+    $ui->insert_action_group($actions, 0);
 
-    # Create the prefernce option
-    my $preference = Gtk2::ImageMenuItem->new_from_stock('gtk-preferences',
-	    undef);
-    $file_submenu->append($preference);
-
-    # Seperator
-    $file_submenu->append(Gtk2::SeparatorMenuItem->new());
-
-    # Create the Quit option on the File Menu
-    my $quit = Gtk2::ImageMenuItem->new_from_stock('gtk-quit', undef);
-    $file_submenu->append($quit);
-
-    # TODO: May want to refactor this along with the destroy signal
-    $quit->signal_connect(activate => sub {
-	    Gtk2->main_quit; $TRUE});
-
+    eval {
+	$ui->add_ui_from_string($MENU_INFO);
+    };
    
-    # Create the Help Menu
-    my $help_menu = Gtk2::MenuItem->new('_Help');
-    my $help_submenu = Gtk2::Menu->new();
-    $help_menu->set_submenu($help_submenu);
+    # Maybe useful to return an accel group to the window so it can set it
+    #$window->add_accel_group ($ui->get_accel_group);
 
-    # Create the About option on the Help Menu
-    my $about = Gtk2::ImageMenuItem->new_from_stock('gtk-about', undef);
-    $help_submenu->append($about);
-
-    # TODO: May want to refactor this
-    $about->signal_connect(activate => sub {
-	    my $about_dialog = $self->init_about();
-	    $about_dialog->run();
-	    $about_dialog->destroy();
-	    $TRUE;
-	    });
-
-
-    # Add all of the generated Menu's to the Menu Bar
-    $menu_bar->append($file_menu);
-    foreach (@additional) {
-	$menu_bar->append($_);
-    }
-    $menu_bar->append($help_menu);
-
-    return $menu_bar;
+    return $ui->get_widget("/MenuBar");
 }
-
-
-
 
 1;
 __END__
