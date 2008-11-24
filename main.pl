@@ -5,6 +5,7 @@ use warnings;
 use Gtk2 '-init';
 
 use Gtk::List;
+use Gtk::Viewer;
 use Exception;
 
 ###############################################################################
@@ -30,6 +31,9 @@ if (($#ARGV + 1) == 0) {
     
     my $gui = Gtk::List->new(600, 800);
     $gui->display_window();
+    
+    my $gui2 = Gtk::Viewer->new(600, 800);
+    $gui2->display_window();
 
     Gtk2->main;
 
