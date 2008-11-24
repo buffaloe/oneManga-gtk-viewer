@@ -2,12 +2,18 @@ package Gtk::Common;
 use warnings;
 use strict;
 
+use Gtk2::Pango;
 use Gtk2 '-init';
 
 our $VERSION = '0.03';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;
+
+use constant HPADDING => 12;
+use constant HPADDING_INDENT => 24;
+
+use constant VPADDING => 6;
 
 ###############################################################################
 # Static Final Global Vars
@@ -97,17 +103,42 @@ sub preferences_cb {
 	    'gtk-ok'	    =>	'ok');
 
     $dialog->set_default_response('ok');
+    $dialog->set_has_separator(FALSE);
 
     # Tabbed notebook for all of the preferences categories
     my $notebook = Gtk2::Notebook->new();
     $notebook->set_show_tabs(TRUE);
-    $dialog->vbox()->pack_start($notebook, TRUE, TRUE, 0);
+    my $notebook_align = Gtk2::Alignment->new(0, 0.5, 0, 0);
+    $notebook_align->set_padding(VPADDING, VPADDING, HPADDING, HPADDING);
+    $notebook_align->add($notebook);
+    $dialog->vbox()->pack_start($notebook_align, TRUE, TRUE, 0);
 
     
     # Notebook page for General Settings
-    my $general = Gtk2::VBox->new();
+    my $general = Gtk2::Table->new(3, 3, FALSE);
     $notebook->append_page($general, 'General');
 
+    # Cache Label
+    my $cache_label = Gtk2::Label->new();
+    $cache_label->set_markup('<b>Cache</b>');
+    my $cache_label_align = Gtk2::Alignment->new(0, 0.5, 0, 0);
+    $cache_label_align->set_padding(0, 0, HPADDING, 0);
+    $cache_label_align->add($cache_label);
+    $general->attach($cache_label_align, 1, 4, 1, 2, 'fill', 'fill', 2, 2);
+
+    # Cache Dir
+    my $cache_dir_label = Gtk2::Alignment->new(0, 0.5, 0, 0);
+    $cache_dir_label->set_padding(0, 0, HPADDING_INDENT, 0);
+    $cache_dir_label->add(Gtk2::Label->new('Cache Dir:'));
+    my $cache_dir_entry = Gtk2::Entry->new();
+    my $cache_dir_button = Gtk2::Alignment->new(0, 0.5, 0, 0);
+    $cache_dir_button->set_padding(0, 0, 0, HPADDING_INDENT);
+    $cache_dir_button->add(Gtk2::Button->new('_Browse...'));
+
+    $general->attach($cache_dir_label, 1, 2, 2, 3, 'fill', 'fill', 2, 2);
+    $general->attach($cache_dir_entry, 2, 3, 2, 3, ['fill', 'expand'], 
+	    'fill', 2, 2);
+    $general->attach($cache_dir_button, 3, 4, 2, 3, 'fill', 'fill', 2, 2);
 
 
 
