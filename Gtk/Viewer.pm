@@ -32,7 +32,8 @@ my @MENU_ITEM = (
  [  "Normal",	'gtk-zoom-100',	"_Normal Size",	"<control>0",   "Normal Size",	undef ],
  [  "BestFit",	'gtk-zoom-fit',	"_Best Fit",	undef,		"Best Fit",	undef ],
 
- [  "BookmarkManga",	undef,	"Bookmark This Manga",	"<control>D",   "Bookmark This Manga",    undef ],
+ [  "AddBookmark",	undef,	"_Add Bookmark",	"<control>D",   "Bookmark this Manga",	undef ],
+ [  "EditBookmarks",	undef,	"_Edit Bookmarks",	"<control>B",   "Edit the Bookmarks",	undef ],
 );
 
 my $MENU_INFO = "
@@ -47,7 +48,8 @@ my $MENU_INFO = "
 	</menu>
 
 	<menu action='BookmarksMenu'>
-	    <menuitem action='BookmarkManga'/>
+	    <menuitem action='AddBookmark'/>
+	    <menuitem action='EditBookmarks'/>
 	    <separator/>
 	</menu>
     </menubar>
