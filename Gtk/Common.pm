@@ -2,10 +2,9 @@ package Gtk::Common;
 use warnings;
 use strict;
 
-use Gtk2::Pango;
 use Gtk2 '-init';
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;
@@ -31,7 +30,7 @@ my @MENU_ITEM = (
  [  "Preferences",  'gtk-preferences',	"Pr_eferences",	undef,   "Preferences",	\&preferences_cb ],
 );
 
-my $MENU_INFO = "
+my $MENU_INFO1 = "
 <ui>
     <menubar name='MenuBar'>
 	<menu action='FileMenu'>
@@ -44,9 +43,12 @@ my $MENU_INFO = "
 	    <separator/>
 	    <menuitem action='Preferences'/>
 	</menu>
-
-##INSERT-HERE##
-
+    </menubar>
+</ui>";
+	
+my $MENU_INFO2 = "
+<ui>
+    <menubar name='MenuBar'>
 	<menu action='HelpMenu'>
 	    <menuitem action='About'/>
 	</menu>
@@ -189,30 +191,21 @@ sub preferences_cb {
 ###############################################################################
 sub init_menu_bar {
     my ($self, $item, $info) = @_;
-
-    my (@new_item, $new_info);
-    if (defined $item and defined $info) {
-	@new_item = @MENU_ITEM;
-	push(@new_item, @{$item});
-
-	$new_info = $MENU_INFO;
-	$new_info =~ s/##INSERT-HERE##/$info/;
-    } else {
-	@new_item = @MENU_ITEM;
-	$new_info = $MENU_INFO;
-	$new_info =~ s/##INSERT-HERE##//;
-    }
+    my @item = @{$item} if _is_array($item);
 
     # Create an Action Group
     my $actions = Gtk2::ActionGroup->new("Actions");
-    $actions->add_actions(\@new_item, undef);
+    $actions->add_actions(\@MENU_ITEM, undef);
+    $actions->add_actions(\@item, undef) if _is_array($item);
 
     # Create the UIManager
     my $ui = Gtk2::UIManager->new();
     $ui->insert_action_group($actions, 0);
 
     eval {
-	$ui->add_ui_from_string($new_info);
+	$ui->add_ui_from_string($MENU_INFO1);
+	$ui->add_ui_from_string($info) unless not defined $info;
+	$ui->add_ui_from_string($MENU_INFO2);
     };
    
     # Maybe useful to return an accel group to the window so it can set it
@@ -268,6 +261,33 @@ sub _preference_indent {
 
     return $align;
 }
+
+
+###############################################################################
+# Check if a reference passed to it is indeed an array reference
+###############################################################################
+sub _is_array {
+    my ($ref) = @_;
+    # Firstly arrays need to be references, throw
+    #  out non-references early.
+    return FALSE unless ref $ref;
+
+    # Now try and eval a bit of code to treat the
+    #  reference as an array.  If it complains
+    #  in the 'Not an ARRAY reference' then we're
+    #  sure it's not an array, otherwise it was.
+    eval {
+	my $a = @$ref;
+    };
+    if ($@=~/^Not an ARRAY reference/) {
+	return FALSE;
+    } elsif ($@) {
+	die "Unexpected error in eval: $@\n";
+    } else {
+	return TRUE;
+    }
+}
+
 
 1;
 __END__

@@ -34,18 +34,22 @@ my @MENU_ITEM = (
 );
 
 my $MENU_INFO = "
-<menu action='ViewMenu'>
-    <separator/>
-    <menuitem action='ZoomIn'/>
-    <menuitem action='ZoomOut'/>
-    <menuitem action='Normal'/>
-    <menuitem action='BestFit'/>
-</menu>
+<ui>
+    <menubar name='MenuBar'>
+	<menu action='ViewMenu'>
+	    <separator/>
+	    <menuitem action='ZoomIn'/>
+	    <menuitem action='ZoomOut'/>
+	    <menuitem action='Normal'/>
+	    <menuitem action='BestFit'/>
+	</menu>
 
-<menu action='BookmarksMenu'>
-    <menuitem action='BookmarkManga'/>
-    <separator/>
-</menu>";
+	<menu action='BookmarksMenu'>
+	    <menuitem action='BookmarkManga'/>
+	    <separator/>
+	</menu>
+    </menubar>
+</ui>";
 
 ###############################################################################
 # Constructor
