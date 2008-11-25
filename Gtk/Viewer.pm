@@ -4,7 +4,7 @@ use strict;
 
 use Gtk2 '-init';
 
-use Gtk::Common;
+use Gtk::Common qw(:padding);
 use Exception;
 
 our $VERSION = '0.03';
@@ -12,8 +12,10 @@ our $VERSION = '0.03';
 use constant TRUE   => 1;
 use constant FALSE  => 0;
 
-use constant IMAGE_WIDTH    => 200;
-use constant IMAGE_HEIGHT   => 340;
+use constant IMAGE_WIDTH    => 702;
+use constant IMAGE_HEIGHT   => 1200;
+
+use constant PAGE_COMBOBOX_WIDTH => 187;
 
 ###############################################################################
 # Static Final Global Vars
@@ -56,14 +58,12 @@ my $MENU_INFO = "
 ###############################################################################
 sub new {
     my ($class, $width, $height) = @_;
+    throw MyException::Gtk_Viewer(
+	    error => 'Width or Height of the window is undefined!')
+	unless (defined $width and defined $height);
 
     my $self = {
-	_gtk_window		=> undef,
-	_gtk_chapter		=> undef,
-	_gtk_page		=> undef,
-	_gtk_image		=> undef,
-	_gtk_back		=> undef,
-	_gtk_forward		=> undef
+	_gtk_window	=> undef
     };
     bless $self, $class;
 
@@ -80,55 +80,72 @@ sub _initalize {
 
     # Create and setup the root window
     $self->{_gtk_window} = Gtk2::Window->new();
+    # TODO: Setup so that its "Manga Name - Window Title"
     $self->{_gtk_window}->set_title($WINDOW_TITLE);
     $self->{_gtk_window}->set_default_size($width, $height);
 
-    # TODO: May want to refactor this out and define the interface in the
-    # initalizer
+    # TODO: Provide a hook for the model/controller/etc to be notifyed
+    # when this window is closed/destroyed so that they can perform cleanup
     $self->{_gtk_window}->signal_connect(delete_event => sub {
 	    $self->{_gtk_window}->destroy(); TRUE});
 
-    # Create the VBox that will hold the MenuBar and the page display, 
-    # Along with chapter/page info
+
+    # Create the VBox that holds the MenuBar, Chapter/Page widgets and
+    # Pagation widgets along with the actual manga display
     my $root_vbox = Gtk2::VBox->new();
     $self->{_gtk_window}->add($root_vbox);
     $root_vbox->pack_start(Gtk::Common->new()->init_menu_bar(
 		\@MENU_ITEM, $MENU_INFO), FALSE, FALSE, 0);
 
-    
-    # Hbox to hold the dropdown
+
+    # Combo Box HBox
     my $combo_hbox = Gtk2::HBox->new();
     $root_vbox->pack_start($combo_hbox, FALSE, FALSE, 0);
 
-    # Combo-box
-    $self->{_gtk_chapter} = Gtk2::Combo->new(); 
-    $self->{_gtk_page} = Gtk2::Combo->new(); 
+    # Chapters
+    my $chapter_label = left_indent(Gtk2::Label->new('Chapters:'));
+    my $chapter_combo = Gtk2::ComboBox->new();
     
-    $combo_hbox->pack_start(Gtk2::Label->new('Chapters:'), FALSE, FALSE, 0);
-    $combo_hbox->pack_start($self->{_gtk_chapter}, FALSE, FALSE, 0);
-    
-    $combo_hbox->pack_start(Gtk2::Label->new('Pages:'), FALSE, FALSE, 0);
-    $combo_hbox->pack_start($self->{_gtk_page}, FALSE, FALSE, 0);
+    $combo_hbox->pack_start($chapter_label, FALSE, FALSE, 0);
+    $combo_hbox->pack_start($chapter_combo, TRUE, TRUE, 0);
+   
+    # Pages
+    my $page_label = Gtk2::Label->new('Pages:');
+    my $page_combo = Gtk2::ComboBox->new();
+    # TODO: Need to find a better way of forcing the width of the page combo
+    # box so that its not ate up by the chapters combo box
+    $page_combo->set_size_request(PAGE_COMBOBOX_WIDTH, -1);
+
+    $combo_hbox->pack_start($page_label, FALSE, FALSE, 0);
+    $combo_hbox->pack_start(right_indent($page_combo), FALSE, FALSE, 0);
 
 
-    # Image
-    $self->{_gtk_image} = Gtk2::Image->new();
+    # The Manga page Image
+    my $image = Gtk2::Image->new();
+    # TODO: Look into maybe replacing this with a per page basis
+    $image->set_size_request(IMAGE_WIDTH, IMAGE_HEIGHT);
+
     my $scroll_image = Gtk2::ScrolledWindow->new();
     $scroll_image->set_policy('automatic', 'automatic');
-    $scroll_image->add_with_viewport($self->{_gtk_image});
+    $scroll_image->add_with_viewport($image);
     
     $root_vbox->pack_start($scroll_image, TRUE, TRUE, 0);
 
-    
-    # Hbox to hold the buttons
+
+    # Button HBox for the back/forward buttons
     my $button_hbox = Gtk2::HBox->new();
-    $root_vbox->pack_start($button_hbox, FALSE, FALSE, 0);
 
-    $self->{_gtk_back} = Gtk2::Button->new_from_stock('gtk-go-back');
-    $self->{_gtk_forward} = Gtk2::Button->new_from_stock('gtk-go-forward');
+    # TODO: Remove the hardcoded padding values here
+    my $button_hbox_align = Gtk2::Alignment->new(0, 0, 1, 1);
+    $button_hbox_align->set_padding(0, 4, 6, 6);
+    $button_hbox_align->add($button_hbox);
+    $root_vbox->pack_start($button_hbox_align, FALSE, FALSE, 0);
 
-    $button_hbox->pack_start($self->{_gtk_back}, FALSE, TRUE, 0);
-    $button_hbox->pack_end($self->{_gtk_forward}, FALSE, TRUE, 0);
+    my $back = Gtk2::Button->new_from_stock('gtk-go-back');
+    my $forward = Gtk2::Button->new_from_stock('gtk-go-forward');
+
+    $button_hbox->pack_start($back, FALSE, TRUE, 0);
+    $button_hbox->pack_end($forward, FALSE, TRUE, 0);
 
 }
 

@@ -4,6 +4,18 @@ use strict;
 
 use Gtk2 '-init';
 
+# Export a few common function into any packets that uses this
+require Exporter;
+our @ISA = qw(Exporter);
+our %EXPORT_TAGS = ( 'padding' => [ qw(
+right_indent
+left_indent
+border_padding
+)]);
+our @EXPORT_OK = ( @{ $EXPORT_TAGS{'padding'} } );
+our @EXPORT = qw();
+
+
 our $VERSION = '0.04';
 
 use constant TRUE   => 1;
@@ -24,10 +36,10 @@ my @MENU_ITEM = (
  [  "EditMenu",	undef,	    "_Edit" ],
  [  "HelpMenu",	undef,	    "_Help" ],
  #  name,	stock id,	label,	    accelerator,    tooltip,	func 
- [  "Close",	'gtk-close',	"_Close",   "<control>C",   "Close",	undef ],
- [  "Quit",	'gtk-quit',	"_Quit",    "<control>Q",   "Quit",	undef ],
- [  "About",	'gtk-about',	"_About",   "<control>A",   "About",	\&about_cb ],
- [  "Preferences",  'gtk-preferences',	"Pr_eferences",	undef,   "Preferences",	\&preferences_cb ],
+ [  "Close",	'gtk-close',	"_Close",   "<control>C",   "Close",	\&_close_cb ],
+ [  "Quit",	'gtk-quit',	"_Quit",    "<control>Q",   "Quit",	\&_quit_cb ],
+ [  "About",	'gtk-about',	"_About",   "<control>A",   "About",	\&_about_cb ],
+ [  "Preferences",  'gtk-preferences',	"Pr_eferences",	undef,   "Preferences",	\&_preferences_cb ],
 );
 
 my $MENU_INFO1 = "
@@ -70,9 +82,30 @@ sub new {
 
 
 ###############################################################################
+# The Close Callback
+###############################################################################
+sub _close_cb {
+    my ($callback_data, $callback_action, $widget) = @_;
+
+    print "Close callback invoked\n";
+}
+
+
+###############################################################################
+# The Quit Callback
+###############################################################################
+sub _quit_cb {
+    my ($callback_data, $callback_action, $widget) = @_;
+    
+    # TODO: Quick and dirty
+    Gtk2->main_quit();
+}
+
+
+###############################################################################
 # Displays the about dialog
 ###############################################################################
-sub about_cb {
+sub _about_cb {
     my ($callback_data, $callback_action, $widget) = @_;
     
     my $dialog = Gtk2::AboutDialog->new();
@@ -99,7 +132,7 @@ sub about_cb {
 ###############################################################################
 # Initalizes the preferences Dialog
 ###############################################################################
-sub preferences_cb {
+sub _preferences_cb {
     my ($callback_data, $callback_action, $widget) = @_;
     
     my $dialog = Gtk2::Dialog->new('oneManga Viewer Preferences',
@@ -114,13 +147,13 @@ sub preferences_cb {
     # Tabbed notebook for all of the preferences categories
     my $notebook = Gtk2::Notebook->new();
     $notebook->set_show_tabs(TRUE);
-    $dialog->vbox()->pack_start(_preference_border_padding($notebook), 
+    $dialog->vbox()->pack_start(border_padding($notebook), 
 	    TRUE, TRUE, 0);
 
     
     # Notebook page for General Settings
     my $general = Gtk2::Table->new(4, 3, FALSE);
-    $notebook->append_page(_preference_border_padding($general), 
+    $notebook->append_page(border_padding($general), 
 	    'General');
 
     # Cache Label
@@ -128,7 +161,7 @@ sub preferences_cb {
 	    1, 4, 1, 2, 'fill', 'fill', 2, 2);
 
     # Cache Dir
-    my $cache_dir_label = _preference_indent(Gtk2::Label->new('Cache Dir:'));
+    my $cache_dir_label = left_indent(Gtk2::Label->new('Cache Dir:'));
     my $cache_dir_entry = Gtk2::Entry->new();
     my $cache_dir_button = Gtk2::Button->new('_Browse...');
 
@@ -143,7 +176,7 @@ sub preferences_cb {
 	    1, 4, 3, 4, 'fill', 'fill', 2, 2);
     
     # Fetcher Delay 
-    my $fetcher_delay_label = _preference_indent(Gtk2::Label->new(
+    my $fetcher_delay_label = left_indent(Gtk2::Label->new(
 		'Fetcher Delay:'));
     my $fetcher_delay_spin = Gtk2::SpinButton->new_with_range(0, 10, 1);
 
@@ -156,7 +189,7 @@ sub preferences_cb {
 
     # Notebook page for Manga List
     my $list = Gtk2::Table->new(3, 3, FALSE);
-    $notebook->append_page(_preference_border_padding($list), 
+    $notebook->append_page(border_padding($list), 
 	    'Manga List');
     
 
@@ -164,7 +197,7 @@ sub preferences_cb {
 
     # Notebook page for Manga Viewer
     my $viewer = Gtk2::Table->new(3, 3, FALSE);
-    $notebook->append_page(_preference_border_padding($viewer), 
+    $notebook->append_page(border_padding($viewer), 
 	    'Viewer');
 
 
@@ -218,7 +251,7 @@ sub init_menu_bar {
 ###############################################################################
 # Initalizes the Preference Border Padding
 ###############################################################################
-sub _preference_border_padding {
+sub border_padding {
     my $widget = shift;
 
     my $align = Gtk2::Alignment->new(0, 0, 1, 1);
@@ -250,13 +283,27 @@ sub _preference_group_label {
 
 
 ###############################################################################
-# Initalizes the Preference Indent
+# Initalizes the left indent
 ###############################################################################
-sub _preference_indent {
+sub left_indent {
     my $widget = shift;
     
     my $align = Gtk2::Alignment->new(0, 0.5, 0, 0);
     $align->set_padding(0, 0, INDENT, 0);
+    $align->add($widget);
+
+    return $align;
+}
+
+
+###############################################################################
+# Initalizes the right indent
+###############################################################################
+sub right_indent {
+    my $widget = shift;
+    
+    my $align = Gtk2::Alignment->new(0, 0.5, 1, 0);
+    $align->set_padding(0, 0, 0, INDENT);
     $align->add($widget);
 
     return $align;

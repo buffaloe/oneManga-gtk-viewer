@@ -6,10 +6,13 @@ use Gtk2 '-init';
 
 use Gtk::Common;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;
+
+use constant IMAGE_WIDTH => 200;
+use constant IMAGE_HEIGHT => 340;
 
 ###############################################################################
 # Static Final Global Vars
@@ -21,8 +24,6 @@ my @TEXT_BOX_LIST = ('_gtk_title', '_gtk_ranking', '_gtk_aka',
 my @TEXT_BOX_LABEL = ('Title:', 'Ranking:', 'AKA:', 'Status:',
 	'Max Chapters:', 'Last Updated:', 'Categories', 'Author:', 'Artist:',
 	'Summary:');
-my $COVER_IMAGE_WIDTH = 200;
-my $COVER_IMAGE_HEIGHT = 340;
 
 
 ###############################################################################
@@ -231,7 +232,7 @@ sub init_cover_image {
     my ($self) = @_;
 
     $self->{_gtk_cover_image} = Gtk2::Image->new();
-    $self->{_gtk_cover_image}->set_size_request($COVER_IMAGE_WIDTH, $COVER_IMAGE_HEIGHT);
+    $self->{_gtk_cover_image}->set_size_request(IMAGE_WIDTH, IMAGE_HEIGHT);
 
     return $self->{_gtk_cover_image};
 }
@@ -331,19 +332,19 @@ sub set_cover_image {
     my ($self, $filename) = @_;
     defined $filename or die "Filename was not defined!";
 
-#    $self->{_gtk_cover_image}->set_size_request($COVER_IMAGE_WIDTH, $COVER_IMAGE_HEIGHT);
+#    $self->{_gtk_cover_image}->set_size_request(IMAGE_WIDTH, IMAGE_HEIGHT);
     $self->{_gtk_cover_image}->set_from_file($filename);
 
 #    my $pixbuf = $self->{_gtk_cover_image}->get_pixbuf();
 #    my $height = $pixbuf->get_height();
 #    my $width = $pixbuf->get_width();
 #
-#    if ($width > $COVER_IMAGE_WIDTH) {
+#    if ($width > IMAGE_WIDTH) {
 #	print "Cover Image is wider than the provided widget!\n";
 #    }
 #
-#    if ($height > $COVER_IMAGE_HEIGHT) {
-#	$self->{_gtk_cover_image}->set_size_request($COVER_IMAGE_WIDTH, $height);
+#    if ($height > IMAGE_HEIGHT) {
+#	$self->{_gtk_cover_image}->set_size_request(IMAGE_WIDTH, $height);
 #    }
 }
 
