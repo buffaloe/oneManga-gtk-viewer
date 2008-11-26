@@ -5,6 +5,7 @@ use strict;
 use Gtk2 '-init';
 
 use Gtk::Common qw(:padding);
+use Gtk::Bookmarks;
 use Exception;
 
 our $VERSION = '0.03';
@@ -33,7 +34,7 @@ my @MENU_ITEM = (
  [  "BestFit",	'gtk-zoom-fit',	"_Best Fit",	undef,		"Best Fit",	undef ],
 
  [  "AddBookmark",	undef,	"_Add Bookmark",	"<control>D",   "Bookmark this Manga",	undef ],
- [  "EditBookmarks",	undef,	"_Edit Bookmarks",	"<control>B",   "Edit the Bookmarks",	undef ],
+ [  "EditBookmarks",	undef,	"_Edit Bookmarks",	"<control>B",   "Edit the Bookmarks",	\&_bookmarks_edit_cb ],
 );
 
 my $MENU_INFO = "
@@ -161,6 +162,17 @@ sub display_window {
     $self->{_gtk_window}->show_all();
 }
 
+
+###############################################################################
+# The Bookmark Edit window callback
+###############################################################################
+sub _bookmarks_edit_cb {
+    my ($callback_data, $callback_action, $widget) = @_;
+
+    # TODO: Quick and dirty
+    my $bookmark = Gtk::Bookmarks->new(500,300);
+    $bookmark->display_window();
+}
 
 1;
 __END__

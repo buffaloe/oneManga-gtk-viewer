@@ -5,8 +5,9 @@ use strict;
 use Gtk2 '-init';
 
 use Gtk::Common;
+use Exception;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;
@@ -31,7 +32,10 @@ my @TEXT_BOX_LABEL = ('Title:', 'Ranking:', 'AKA:', 'Status:',
 ###############################################################################
 sub new {
     my ($class, $width, $height) = @_;
-    
+    throw MyException::Gtk_List(
+	    error => 'Width or Height of the window is undefined!')
+	unless (defined $width and defined $height);
+
     my $self = {
 	_gtk_window		=> undef,
 	_gtk_list_select	=> undef,
@@ -67,43 +71,76 @@ sub _initalize {
     $self->{_gtk_window}->set_title($WINDOW_TITLE);
     $self->{_gtk_window}->set_default_size($width, $height);
 
-    # TODO: May want to refactor this out and define the interface in the
-    # initalizer
+    # TODO: Provide a hook for the model/controller/etc to be notifyed when
+    # the window is closed/destroyed so they can perform cleanup
     $self->{_gtk_window}->signal_connect(delete_event => sub {
-	    Gtk2->main_quit; TRUE});
+	    $self->{_gtk_window}->destroy(); TRUE});
 
-    # Create the VBox that will hold the menu bar and the VPaned for 
-    # the table/manga info
+
+    # Create the VBox that will hold the MenuBar and the VPaned/HPaned
+    # panels for the Manga Table of information and search column
     my $root_vbox = Gtk2::VBox->new();
     $self->{_gtk_window}->add($root_vbox);
-    $root_vbox->pack_start($self->init_menu_bar(), FALSE, FALSE, 0);
-    
+    $root_vbox->pack_start(Gtk::Common->new()->init_menu_bar(),
+	    FALSE, FALSE, 0);
+
+    # Create the HPaned that will hold the Grouping of the Manga and 
+    # the Table/Manga information
+    my $root_hpaned = Gtk2::HPaned->new();
+    $root_vbox->pack_start($root_hpaned, TRUE, TRUE, 0);
+
+
+    # Create and Pack in the Grouping table into the HPaned
+    # TODO: Export this section to a function to take care of the stuff
+    my $grouping_table = $self->init_table();
+    $root_hpaned->pack1($grouping_table, FALSE, TRUE);
+
+
     # Create the VPaned that will hold the table/manga info
     my $root_vpaned = Gtk2::VPaned->new(); 
-    $root_vbox->pack_start($root_vpaned, TRUE, TRUE, 0);
- 
-    # Create the Frame with indented shadow type to make the grab-bar appear
-    # popped out for the VPaned
-    my $table_frame = Gtk2::Frame->new();
-    $table_frame->set_shadow_type('in');
-    $table_frame->add($self->init_table());
-    $root_vpaned->pack1($table_frame, TRUE, TRUE);
-   
-    # Create the HBox that will hold the manga cover-image and the manga
+    $root_hpaned->pack2($root_vpaned, TRUE, TRUE);
+
+
+    # Pack in the Table for the Manga information
+    # TODO: Export this section to a function to take care of the stuff
+    my $manga_list_table = $self->init_table();
+    $root_vpaned->pack1($manga_list_table, TRUE, TRUE);
+
+
+    # Create the HBox that holds the manga Cover-Image and the Manga
     # information block
     my $info_hbox = Gtk2::HBox->new();
-    
-    # Create the Frame with indented shadow type to make the grab-bar appear
-    # popped out for the VPaned
-    my $info_frame = Gtk2::Frame->new();
-    $info_frame->set_shadow_type('in');
-    $info_frame->add($info_hbox);
-    $root_vpaned->pack2($info_frame, FALSE, TRUE);
+    my $info_scroll = Gtk2::ScrolledWindow->new();
+    $info_scroll->set_policy('never', 'automatic');
+    $info_scroll->add_with_viewport($info_hbox);
+    $root_vpaned->pack2($info_scroll, FALSE, TRUE);
 
     # Pack in the cover image and detailed information widgets
     $info_hbox->pack_start($self->init_cover_image(), FALSE, FALSE, 0);
     $info_hbox->pack_start($self->init_detailed_info(), TRUE, TRUE, 0);
+
+
+# Create the Frame with indented shadow type to make the grab-bar appear
+    # popped out for the VPaned
+#    my $table_frame = Gtk2::Frame->new();
+#    $table_frame->set_shadow_type('in');
+#    $table_frame->add($self->init_table());
+#    $root_vpaned->pack1($table_frame, TRUE, TRUE);
+   
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ###############################################################################
