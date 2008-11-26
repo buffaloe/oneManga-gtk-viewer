@@ -5,6 +5,7 @@ use warnings;
 use Gtk2 '-init';
 
 use Control::Viewer;
+use Model::Viewer;
 use Util::Exception;
 
 ###############################################################################
@@ -27,11 +28,11 @@ $SIG{__DIE__} = sub {
 # Main execution
 ###############################################################################
 if (($#ARGV + 1) == 0) {
-    
-    my $gui1 = Control::Viewer->new();
-    
-    Gtk2->main;
+   
+    my $model = Model::Viewer->new();
+    my $gui1 = Control::Viewer->new($model);
 
+    Gtk2->main;
 
 } elsif ((($#ARGV + 1) != 1) or ((($#ARGV + 1) == 1) and not ($ARGV[0] eq "test"))) {
     die "Invaild args!\n";

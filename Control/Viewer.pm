@@ -18,14 +18,16 @@ my $WIDTH = 300;
 my $HEIGHT = 600;
 my $TITLE = 'Viewer';
 
+
 ###############################################################################
 # Constructor
 ###############################################################################
 sub new {
-    my ($class) = @_;
+    my ($class, $model) = @_;
 
     my $self = {
-	_viewer	    => undef
+	_viewer	    => undef,
+	_model	    => $model
     };
     bless $self, $class;
 
