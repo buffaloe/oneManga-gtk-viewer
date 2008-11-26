@@ -36,8 +36,8 @@ my @MENU_ITEM = (
  [  "EditMenu",	undef,	    "_Edit" ],
  [  "HelpMenu",	undef,	    "_Help" ],
  #  name,	stock id,	label,	    accelerator,    tooltip,	func 
- [  "Close",	'gtk-close',	"_Close",   "<control>C",   "Close",	\&_close_cb ],
- [  "Quit",	'gtk-quit',	"_Quit",    "<control>Q",   "Quit",	\&_quit_cb ],
+ [  "Close",	'gtk-close',	"_Close",   "<control>C",   "Close",	undef ],
+ [  "Quit",	'gtk-quit',	"_Quit",    "<control>Q",   "Quit",	undef ],
  [  "About",	'gtk-about',	"_About",   "<control>A",   "About",	\&_about_cb ],
  [  "Preferences",  'gtk-preferences',	"Pr_eferences",	undef,   "Preferences",	\&_preferences_cb ],
 );
@@ -67,38 +67,20 @@ my $MENU_INFO2 = "
     </menubar>
 </ui>";
 
+
 ###############################################################################
 # Constructor
 ###############################################################################
 sub new {
-    my ($class) = @_;
+    my ($class, $window, $close_cb, $quit_cb) = @_;
 
     my $self = {
-	_accel	=> undef
+	_window => $window,
+	_close	=> $close_cb,
+	_quit	=> $quit_cb
     };
     bless $self, $class;
     return $self;
-}
-
-
-###############################################################################
-# The Close Callback
-###############################################################################
-sub _close_cb {
-    my ($callback_data, $callback_action, $widget) = @_;
-
-    print "Close callback invoked\n";
-}
-
-
-###############################################################################
-# The Quit Callback
-###############################################################################
-sub _quit_cb {
-    my ($callback_data, $callback_action, $widget) = @_;
-    
-    # TODO: Quick and dirty
-    Gtk2->main_quit();
 }
 
 
@@ -240,9 +222,20 @@ sub init_menu_bar {
 	$ui->add_ui_from_string($info) unless not defined $info;
 	$ui->add_ui_from_string($MENU_INFO2);
     };
-   
+
+
+    # Setup the callbacks
+    my $action = $ui->get_action('/ui/MenuBar/FileMenu/Close');
+    $action->signal_connect(activate => $self->{_close},
+	    $self->{_window});
+    
+    $action = $ui->get_action('/ui/MenuBar/FileMenu/Quit');
+    $action->signal_connect(activate => $self->{_quit},
+	    $self->{_window});
+
+
     # Maybe useful to return an accel group to the window so it can set it
-    #$window->add_accel_group ($ui->get_accel_group);
+    $self->{_window}->add_accel_group ($ui->get_accel_group);
 
     return $ui->get_widget("/MenuBar");
 }

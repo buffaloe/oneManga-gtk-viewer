@@ -28,7 +28,7 @@ $SIG{__DIE__} = sub {
 ###############################################################################
 if (($#ARGV + 1) == 0) {
     
-    my $gui1 = Control::Viewer->new(100, 200);
+    my $gui1 = Control::Viewer->new();
     
     Gtk2->main;
 

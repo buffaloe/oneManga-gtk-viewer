@@ -21,8 +21,6 @@ use constant PAGE_COMBOBOX_WIDTH => 187;
 ###############################################################################
 # Static Final Global Vars
 ###############################################################################
-my $WINDOW_TITLE = 'Viewer';
-
 my @MENU_ITEM = (
  #  name,		stock id,   label
  [  "ViewMenu",		undef,      "_View" ],
@@ -69,17 +67,23 @@ my $MENU_INFO = "
 # Constructor
 ###############################################################################
 sub new {
-    my ($class, $width, $height) = @_;
+    my ($class, $width, $height, $title, $close_cb, $quit_cb) = @_;
     throw Util::MyException::Gtk_Viewer(
 	    error => 'Width or Height of the window is undefined!')
 	unless (defined $width and defined $height);
+    throw Util::MyException::Gtk_Viewer(
+	    error => 'The Window Title is undefined')
+	unless (defined $title);
+    throw Util::MyException::Gtk_Viewer(
+	    error => 'The Callbacks were not defined!')
+	unless (defined $close_cb and defined $quit_cb);
 
     my $self = {
 	_gtk_window	=> undef
     };
     bless $self, $class;
 
-    $self->_initalize($width, $height);
+    $self->_initalize($width, $height, $title, $close_cb, $quit_cb);
     return $self;
 }
 
@@ -88,27 +92,27 @@ sub new {
 # Initalize this window with all of the GTK settings
 ###############################################################################
 sub _initalize {
-    my ($self, $width, $height) = @_;
+    my ($self, $width, $height, $title, $close_cb, $quit_cb) = @_;
 
     # Create and setup the root window
     $self->{_gtk_window} = Gtk2::Window->new();
-    # TODO: Setup so that its "Manga Name - Window Title"
-    $self->{_gtk_window}->set_title($WINDOW_TITLE);
+    $self->{_gtk_window}->set_title($title);
     $self->{_gtk_window}->set_default_size($width, $height);
 
     # TODO: Provide a hook for the model/controller/etc to be notifyed
     # when this window is closed/destroyed so that they can perform cleanup
-    $self->{_gtk_window}->signal_connect(delete_event => sub {
-	    $self->{_gtk_window}->destroy(); TRUE});
+    $self->{_gtk_window}->signal_connect(delete_event => $close_cb);
 
 
     # Create the VBox that holds the MenuBar, Chapter/Page widgets and
     # Pagation widgets along with the actual manga display
     my $root_vbox = Gtk2::VBox->new();
     $self->{_gtk_window}->add($root_vbox);
-    $root_vbox->pack_start(View::Common->new()->init_menu_bar(
-		\@MENU_ITEM, $MENU_INFO), FALSE, FALSE, 0);
 
+    my $common = View::Common->new($self->{_gtk_window}, 
+	    $close_cb, $quit_cb);
+    $root_vbox->pack_start($common->init_menu_bar(
+		\@MENU_ITEM, $MENU_INFO), FALSE, FALSE, 0);
 
     # Combo Box HBox
     my $combo_hbox = Gtk2::HBox->new();
