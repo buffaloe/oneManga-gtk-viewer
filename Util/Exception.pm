@@ -1,4 +1,4 @@
-package Exception;
+package Util::MyException;
 #use strict;
 use warnings;
 use 5.008008;

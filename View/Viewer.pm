@@ -1,12 +1,12 @@
-package Gtk::Viewer;
+package View::Viewer;
 use warnings;
 use strict;
 
 use Gtk2 '-init';
 
-use Gtk::Common qw(:padding);
-use Gtk::Bookmarks;
-use Exception;
+use View::Common qw(:padding);
+use View::Bookmarks;
+use Util::Exception;
 
 our $VERSION = '0.03';
 
@@ -27,6 +27,7 @@ my @MENU_ITEM = (
  #  name,		stock id,   label
  [  "ViewMenu",		undef,      "_View" ],
  [  "BookmarksMenu",	undef,      "_Bookmarks" ],
+ [  "GoMenu",		undef,      "_Go" ],
  #  name,       stock id,       label,		accelerator,    tooltip,	func 
  [  "ZoomIn",	'gtk-zoom-in',	"_Zoom In",	"<control>plus",   "Zoom In",	undef ],
  [  "ZoomOut",	'gtk-zoom-out',	"Zoom _Out",	"<control>minus",   "Zoom Out",	undef ],
@@ -35,6 +36,9 @@ my @MENU_ITEM = (
 
  [  "AddBookmark",	undef,	"_Add Bookmark",	"<control>D",   "Bookmark this Manga",	undef ],
  [  "EditBookmarks",	undef,	"_Edit Bookmarks",	"<control>B",   "Edit the Bookmarks",	\&_bookmarks_edit_cb ],
+ 
+ [  "Back",	'gtk-go-back',	    "_Back",	"<alt>left",	"Go Back a Page",	undef ],
+ [  "Forward",	'gtk-go-forward',   "_Forward",	"<alt>right",   "Go Forward a Page",	undef ],
 );
 
 my $MENU_INFO = "
@@ -53,6 +57,11 @@ my $MENU_INFO = "
 	    <menuitem action='EditBookmarks'/>
 	    <separator/>
 	</menu>
+
+	<menu action='GoMenu'>
+	    <menuitem action='Back'/>
+	    <menuitem action='Forward'/>
+	</menu>
     </menubar>
 </ui>";
 
@@ -61,7 +70,7 @@ my $MENU_INFO = "
 ###############################################################################
 sub new {
     my ($class, $width, $height) = @_;
-    throw MyException::Gtk_Viewer(
+    throw Util::MyException::Gtk_Viewer(
 	    error => 'Width or Height of the window is undefined!')
 	unless (defined $width and defined $height);
 
@@ -97,7 +106,7 @@ sub _initalize {
     # Pagation widgets along with the actual manga display
     my $root_vbox = Gtk2::VBox->new();
     $self->{_gtk_window}->add($root_vbox);
-    $root_vbox->pack_start(Gtk::Common->new()->init_menu_bar(
+    $root_vbox->pack_start(View::Common->new()->init_menu_bar(
 		\@MENU_ITEM, $MENU_INFO), FALSE, FALSE, 0);
 
 
@@ -134,7 +143,7 @@ sub _initalize {
     
     $root_vbox->pack_start($scroll_image, TRUE, TRUE, 0);
 
-
+    
     # Button HBox for the back/forward buttons
     my $button_hbox = Gtk2::HBox->new();
 
@@ -170,7 +179,7 @@ sub _bookmarks_edit_cb {
     my ($callback_data, $callback_action, $widget) = @_;
 
     # TODO: Quick and dirty
-    my $bookmark = Gtk::Bookmarks->new(500,300);
+    my $bookmark = View::Bookmarks->new(500,300);
     $bookmark->display_window();
 }
 

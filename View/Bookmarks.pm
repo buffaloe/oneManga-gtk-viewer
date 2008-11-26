@@ -1,10 +1,10 @@
-package Gtk::Bookmarks;
+package View::Bookmarks;
 use warnings;
 use strict;
 
 use Gtk2 '-init';
 
-use Gtk::Common;
+use View::Common;
 
 our $VERSION = '0.01';
 
@@ -58,7 +58,7 @@ sub _initalize {
 sub init_menu_bar {
     my ($self) = @_;
 
-    return Gtk::Common->new()->init_menu_bar();
+    return View::Common->new()->init_menu_bar();
 }
 
 

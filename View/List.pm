@@ -1,11 +1,11 @@
-package Gtk::List;
+package View::List;
 use warnings;
 use strict;
 
 use Gtk2 '-init';
 
-use Gtk::Common;
-use Exception;
+use View::Common;
+use Util::Exception;
 
 our $VERSION = '0.04';
 
@@ -32,7 +32,7 @@ my @TEXT_BOX_LABEL = ('Title:', 'Ranking:', 'AKA:', 'Status:',
 ###############################################################################
 sub new {
     my ($class, $width, $height) = @_;
-    throw MyException::Gtk_List(
+    throw Util::MyException::Gtk_List(
 	    error => 'Width or Height of the window is undefined!')
 	unless (defined $width and defined $height);
 
@@ -81,7 +81,7 @@ sub _initalize {
     # panels for the Manga Table of information and search column
     my $root_vbox = Gtk2::VBox->new();
     $self->{_gtk_window}->add($root_vbox);
-    $root_vbox->pack_start(Gtk::Common->new()->init_menu_bar(),
+    $root_vbox->pack_start(View::Common->new()->init_menu_bar(),
 	    FALSE, FALSE, 0);
 
     # Create the HPaned that will hold the Grouping of the Manga and 
@@ -143,6 +143,16 @@ sub _initalize {
 
 
 
+
+
+
+
+
+
+
+
+
+
 ###############################################################################
 # Initalizes the Custom entries for the generic Menu Bar
 ###############################################################################
@@ -163,7 +173,7 @@ sub init_menu_bar {
 
   
 
-    return Gtk::Common->new()->init_menu_bar($view_menu);
+    return View::Common->new()->init_menu_bar($view_menu);
 }
 
 

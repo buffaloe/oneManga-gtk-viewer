@@ -1,4 +1,4 @@
-package Gtk::Common;
+package View::Common;
 use warnings;
 use strict;
 
