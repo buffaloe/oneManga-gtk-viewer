@@ -16,7 +16,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'padding'} } );
 our @EXPORT = qw();
 
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;
@@ -130,6 +130,32 @@ sub set_ui_manager_callbacks {
     }
 }
 
+
+###############################################################################
+# Sets the Close and Quit callback
+###############################################################################
+sub set_close_quit_callback {
+    my ($self, $close_callback, $quit_callback) = @_;
+
+    my @tmp = (
+	    { path => 'Close',	callback => $close_callback },
+	    { path => 'Quit',	callback => $quit_callback });
+
+    foreach (@tmp) {
+	$self->set_ui_manager_callbacks(({
+		    path => '/ui/MenuBar/FileMenu/'.$_->{path},
+		    signal => 'activate',
+		    callback => $_->{callback},
+		    callback_data => $self->{_window}}));
+    }
+}
+
+
+
+###############################################################################
+###############################################################################
+# These blocks of function below are private functions
+###############################################################################
 
 ###############################################################################
 # Displays the about dialog

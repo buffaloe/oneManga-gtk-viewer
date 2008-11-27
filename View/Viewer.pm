@@ -8,7 +8,7 @@ use View::Common qw(:padding);
 use View::Bookmarks;
 use Util::Exception;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;
@@ -224,47 +224,45 @@ sub page_combo_box {
 }
 
 
-###############################################################################
-# Sets the close callback
-###############################################################################
-sub set_close_callback {
-    my ($self, $callback) = @_;
 
-    $self->{_gtk_window}->signal_connect(delete_event => $callback);
-    $self->{_common}->set_ui_manager_callbacks((
-		{ path => '/ui/MenuBar/FileMenu/Close',
-		signal => 'activate',
-		callback => $callback,
-		callback_data => $self->{_gtk_window}}));
+###############################################################################
+# Sets the close and quit callback
+###############################################################################
+sub set_close_quit_callback {
+    my ($self, $close_callback, $quit_callback) = @_;
+
+    $self->{_gtk_window}->signal_connect(delete_event => $close_callback);
+    $self->{_common}->set_close_quit_callback($close_callback, $quit_callback);
 }
 
 
 ###############################################################################
-# Sets the quit callback
+# Sets the zoom_* group of callbacks
 ###############################################################################
-sub set_quit_callback {
-    my ($self, $callback) = @_;
+sub set_zoom_callback {
+    my ($self, $zoom_in, $zoom_out, $normal, $best_fit) = @_;
 
-    $self->{_common}->set_ui_manager_callbacks((
-		{ path => '/ui/MenuBar/FileMenu/Quit',
-		signal => 'activate',
-		callback => $callback,
-		callback_data => $self->{_gtk_window}}));
+    my @tmp = (
+	    { path => 'ZoomIn',	    callback => $zoom_in },
+	    { path => 'ZoomOut',    callback => $zoom_out },
+	    { path => 'Normal',	    callback => $normal },
+            { path => 'BestFit',    callback => $best_fit });
+
+    foreach (@tmp) {
+        $self->set_ui_manager_callbacks(({
+                    path => '/ui/MenuBar/ViewMenu/'.$_->{path},
+                    signal => 'activate',
+                    callback => $_->{callback}}));
+    }
 }
 
 
-# [  "ZoomIn",	'gtk-zoom-in',	"_Zoom In",	"<control>plus",    "Zoom In",	    undef ],
-# [  "ZoomOut",	'gtk-zoom-out',	"Zoom _Out",	"<control>minus",   "Zoom Out",	    undef ],
-# [  "Normal",	'gtk-zoom-100',	"_Normal Size",	"<control>0",	    "Normal Size",  undef ],
-# [  "BestFit",	'gtk-zoom-fit',	"_Best Fit",	undef,		    "Best Fit",	    undef ],
-#
-# [  "AddBookmark",	undef,	"_Add Bookmark",	"<control>D",   "Bookmark this Manga",	undef ],
-# [  "EditBookmarks",	undef,	"_Edit Bookmarks",	"<control>B",   "Edit the Bookmarks",	\&_bookmarks_edit_cb ],
-# 
 # [  "Back",	'gtk-go-back',	    "_Back",	"<alt>left",	"Go Back a Page",	undef ],
 # [  "Forward",	'gtk-go-forward',   "_Forward",	"<alt>right",   "Go Forward a Page",	undef ],
-
-
+#	<menu action='GoMenu'>
+#	    <menuitem action='Back'/>
+#	    <menuitem action='Forward'/>
+#	</menu>
 
 
 

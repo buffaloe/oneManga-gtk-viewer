@@ -5,7 +5,7 @@ use strict;
 use Util::Exception;
 use View::Viewer;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;
@@ -71,8 +71,9 @@ sub _initalize {
 
     # Initalizes the View::Viewer View now
     my $view = View::Viewer->new($WIDTH, $HEIGHT);
-    $view->set_close_callback($close_callback);
-    $view->set_quit_callback($quit_callback);
+    $view->set_close_quit_callback($close_callback, $quit_callback);
+
+
 
 
     # Initalize the needed values for the chapter_combo_box
@@ -101,6 +102,8 @@ sub _initalize {
     
     $view->page_combo_box($model2, $page_column, $tmp_first_iter2,
 	    $page_callback);
+
+
 
 
     # Testing
