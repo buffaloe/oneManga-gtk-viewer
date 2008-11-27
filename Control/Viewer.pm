@@ -74,7 +74,11 @@ sub _initalize {
     $view->set_close_quit_callback($close_callback, $quit_callback);
 
 
-
+    # Initalize the callback for the page combo box
+    my $page_callback = sub {
+	my ($combo_box) = @_;
+	TRUE
+    };
 
     # Initalize the needed values for the chapter_combo_box
     my $model = $self->{_model}->get_chapters();
@@ -82,28 +86,21 @@ sub _initalize {
     my $tmp_first_iter = $model->get_iter_first();
     my $chapter_callback = sub {
 	my ($combo_box) = @_;
+	my $iter = $combo_box->get_active_iter();
 
-	TRUE
-    };
+	my $page_model = $self->{_model}->get_pages($iter);
+	my $page_column = $self->{_model}->get_pages_name_column();
 
-    $view->chapter_combo_box($model, $chapter_column, $tmp_first_iter,
-	    $chapter_callback);
-
-
-    # Initalize the needed values for the page_combo_box
-    my $model2 = $self->{_model}->get_pages($tmp_first_iter);
-    my $page_column = $self->{_model}->get_pages_name_column();
-    my $tmp_first_iter2 = $model2->get_iter_first();
-    my $page_callback = sub {
-	my ($combo_box) = @_;
+	$view->page_combo_box($page_model, $page_column,
+		$page_model->get_iter_first());
 
 	TRUE
     };
     
-    $view->page_combo_box($model2, $page_column, $tmp_first_iter2,
+    $view->set_chapter_page_combo_box_callback($chapter_callback,
 	    $page_callback);
 
-
+    $view->chapter_combo_box($model, $chapter_column, $tmp_first_iter);
 
 
     # Testing

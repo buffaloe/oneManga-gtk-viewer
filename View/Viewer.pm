@@ -181,48 +181,55 @@ sub _bookmarks_edit_cb {
 
 
 ###############################################################################
-# Set the content of the _gtk_chapter ComboBox and set up the callback
+# Set the model and selection of the Chapter combo box
 ###############################################################################
 sub chapter_combo_box {
-    my ($self, $content, $column, $selection, $callback) = @_;
+    my ($self, $content, $column, $selection) = @_;
 
     # Setup the content
     $self->{_gtk_chapter}->set_model($content);
 
     my $render = Gtk2::CellRendererText->new();
+    $self->{_gtk_chapter}->clear();
     $self->{_gtk_chapter}->pack_start($render, FALSE);
     $self->{_gtk_chapter}->add_attribute($render, 
 	    text => $column);
+    
 
     # Set the current selection
     $self->{_gtk_chapter}->set_active_iter($selection);
-
-    # Setup the callback
-    $self->{_gtk_chapter}->signal_connect(changed => $callback);
 }
 
 
 ###############################################################################
-# Set the content of the _gtk_page ComboBox and set up the callback
+# Set the model and selection of the Page combo box
 ###############################################################################
 sub page_combo_box {
-    my ($self, $content, $column, $selection, $callback) = @_;
+    my ($self, $content, $column, $selection) = @_;
 
     # Setup the content
     $self->{_gtk_page}->set_model($content);
 
     my $render = Gtk2::CellRendererText->new();
+    $self->{_gtk_page}->clear();
     $self->{_gtk_page}->pack_start($render, FALSE);
     $self->{_gtk_page}->add_attribute($render, 
 	    text => $column);
 
     # Set the current selection
     $self->{_gtk_page}->set_active_iter($selection);
-
-    # Setup the callback
-    $self->{_gtk_page}->signal_connect(changed => $callback);
 }
 
+
+###############################################################################
+# Set the Chapter and Page ComboBox callback
+###############################################################################
+sub set_chapter_page_combo_box_callback {
+    my ($self, $chapter_callback, $page_callback) = @_;
+    
+    $self->{_gtk_chapter}->signal_connect(changed => $chapter_callback);
+    $self->{_gtk_page}->signal_connect(changed => $page_callback);
+}
 
 
 ###############################################################################
