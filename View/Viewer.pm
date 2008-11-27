@@ -80,7 +80,8 @@ sub new {
 
     my $self = {
 	_gtk_window	=> undef,
-	_gtk_chapter	=> undef
+	_gtk_chapter	=> undef,
+	_gtk_page	=> undef
     };
     bless $self, $class;
 
@@ -128,13 +129,13 @@ sub _initalize {
    
     # Pages
     my $page_label = Gtk2::Label->new('Pages:');
-    my $page_combo = Gtk2::ComboBox->new();
+    $self->{_gtk_page} = Gtk2::ComboBox->new();
     # TODO: Need to find a better way of forcing the width of the page combo
     # box so that its not ate up by the chapters combo box
-    $page_combo->set_size_request(PAGE_COMBOBOX_WIDTH, -1);
+    $self->{_gtk_page}->set_size_request(PAGE_COMBOBOX_WIDTH, -1);
 
     $combo_hbox->pack_start($page_label, FALSE, FALSE, 0);
-    $combo_hbox->pack_start(right_indent($page_combo), FALSE, FALSE, 0);
+    $combo_hbox->pack_start(right_indent($self->{_gtk_page}), FALSE, FALSE, 0);
 
 
     # The Manga page Image
@@ -210,6 +211,27 @@ sub chapter_combo_box {
     $self->{_gtk_chapter}->signal_connect(changed => $callback);
 }
 
+
+###############################################################################
+# Set the content of the _gtk_page ComboBox and set up the callback
+###############################################################################
+sub page_combo_box {
+    my ($self, $content, $column, $selection, $callback) = @_;
+
+    # Setup the content
+    $self->{_gtk_page}->set_model($content);
+
+    my $render = Gtk2::CellRendererText->new();
+    $self->{_gtk_page}->pack_start($render, FALSE);
+    $self->{_gtk_page}->add_attribute($render, 
+	    text => $column);
+
+    # Set the current selection
+    $self->{_gtk_page}->set_active_iter($selection);
+
+    # Setup the callback
+    $self->{_gtk_page}->signal_connect(changed => $callback);
+}
 
 1;
 __END__

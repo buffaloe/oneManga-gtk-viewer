@@ -88,6 +88,19 @@ sub _initalize {
 	    $chapter_callback);
 
 
+    # Initalize the needed values for the page_combo_box
+    my $model2 = $self->{_model}->get_pages($tmp_first_iter);
+    my $page_column = $self->{_model}->get_pages_name_column();
+    my $tmp_first_iter2 = $model2->get_iter_first();
+    my $page_callback = sub {
+	my ($combo_box) = @_;
+
+	TRUE
+    };
+    
+    $view->page_combo_box($model2, $page_column, $tmp_first_iter2,
+	    $page_callback);
+
 
     # Testing
     $view->display_window();
