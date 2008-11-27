@@ -70,8 +70,9 @@ sub _initalize {
 
 
     # Initalizes the View::Viewer View now
-    my $view = View::Viewer->new($WIDTH, $HEIGHT,
-	    $window_title, $close_callback, $quit_callback);
+    my $view = View::Viewer->new($WIDTH, $HEIGHT);
+    $view->set_close_callback($close_callback);
+    $view->set_quit_callback($quit_callback);
 
 
     # Initalize the needed values for the chapter_combo_box

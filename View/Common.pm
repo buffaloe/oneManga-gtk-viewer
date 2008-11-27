@@ -72,15 +72,62 @@ my $MENU_INFO2 = "
 # Constructor
 ###############################################################################
 sub new {
-    my ($class, $window, $close_cb, $quit_cb) = @_;
+    my ($class, $window) = @_;
 
     my $self = {
-	_window => $window,
-	_close	=> $close_cb,
-	_quit	=> $quit_cb
+	_window	=> $window,
+	_ui	=> undef
     };
     bless $self, $class;
     return $self;
+}
+
+
+###############################################################################
+# Initalizes the Menu Bar
+###############################################################################
+sub init_menu_bar {
+    my ($self, $item, $info) = @_;
+    my @item = @{$item} if _is_array($item);
+
+    # Create an Action Group
+    my $actions = Gtk2::ActionGroup->new("Actions");
+    $actions->add_actions(\@MENU_ITEM, undef);
+    $actions->add_actions(\@item, undef) if _is_array($item);
+
+    # Create the UIManager
+    $self->{_ui} = Gtk2::UIManager->new();
+    $self->{_ui}->insert_action_group($actions, 0);
+
+    eval {
+	$self->{_ui}->add_ui_from_string($MENU_INFO1);
+	$self->{_ui}->add_ui_from_string($info) unless not defined $info;
+	$self->{_ui}->add_ui_from_string($MENU_INFO2);
+    };
+
+
+    # Set the accelerator onto the window so that its usable
+    $self->{_window}->add_accel_group($self->{_ui}->get_accel_group);
+
+    return $self->{_ui}->get_widget("/MenuBar");
+}
+
+
+###############################################################################
+# Setup the callbacks for the ui_manager, it expects a list of hashs in this
+# format: { path => '', signal => '' callback => /&ref, callback_data = $ref }
+###############################################################################
+sub set_ui_manager_callbacks {
+    my $self = shift;
+    my @hash_list = @_;
+
+    # There seems to be no clean way of flushing pre-existing signal
+    foreach (@hash_list) {
+	my $action = $self->{_ui}->get_action($_->{path});
+
+	$action->signal_connect(($_->{signal}) => $_->{callback},
+		$_->{callback_data});
+    }
 }
 
 
@@ -112,6 +159,7 @@ sub _about_cb {
 
 
 ###############################################################################
+# TODO: Not completed
 # Initalizes the preferences Dialog
 ###############################################################################
 sub _preferences_cb {
@@ -183,11 +231,7 @@ sub _preferences_cb {
 	    'Viewer');
 
 
-
-
-
-
-
+    
     # show and interact modally -- blocks until the user
     # activates a response.
     $dialog->show_all();
@@ -202,61 +246,7 @@ sub _preferences_cb {
 
 
 ###############################################################################
-# Initalizes the Menu Bar, 
-###############################################################################
-sub init_menu_bar {
-    my ($self, $item, $info) = @_;
-    my @item = @{$item} if _is_array($item);
-
-    # Create an Action Group
-    my $actions = Gtk2::ActionGroup->new("Actions");
-    $actions->add_actions(\@MENU_ITEM, undef);
-    $actions->add_actions(\@item, undef) if _is_array($item);
-
-    # Create the UIManager
-    my $ui = Gtk2::UIManager->new();
-    $ui->insert_action_group($actions, 0);
-
-    eval {
-	$ui->add_ui_from_string($MENU_INFO1);
-	$ui->add_ui_from_string($info) unless not defined $info;
-	$ui->add_ui_from_string($MENU_INFO2);
-    };
-
-
-    # Setup the callbacks
-    my $action = $ui->get_action('/ui/MenuBar/FileMenu/Close');
-    $action->signal_connect(activate => $self->{_close},
-	    $self->{_window});
-    
-    $action = $ui->get_action('/ui/MenuBar/FileMenu/Quit');
-    $action->signal_connect(activate => $self->{_quit},
-	    $self->{_window});
-
-
-    # Maybe useful to return an accel group to the window so it can set it
-    $self->{_window}->add_accel_group ($ui->get_accel_group);
-
-    return $ui->get_widget("/MenuBar");
-}
-
-
-###############################################################################
-# Initalizes the Preference Border Padding
-###############################################################################
-sub border_padding {
-    my $widget = shift;
-
-    my $align = Gtk2::Alignment->new(0, 0, 1, 1);
-    $align->set_padding(VPADDING, VPADDING, HPADDING, HPADDING);
-    $align->add($widget);
-
-    return $align;
-}
-
-
-###############################################################################
-# Initalizes the Preference 'Group' Label
+# Private preference group label
 ###############################################################################
 sub _preference_group_label {
     my $label = shift;
@@ -272,6 +262,52 @@ sub _preference_group_label {
     $label_align->add($label_widget);
 
     return $label_align;
+}
+
+
+###############################################################################
+# Check if a reference passed to it is indeed an array reference
+###############################################################################
+sub _is_array {
+    my ($ref) = @_;
+    # Firstly arrays need to be references, throw
+    #  out non-references early.
+    return FALSE unless ref $ref;
+
+    # Now try and eval a bit of code to treat the
+    #  reference as an array.  If it complains
+    #  in the 'Not an ARRAY reference' then we're
+    #  sure it's not an array, otherwise it was.
+    eval {
+	my $a = @$ref;
+    };
+    if ($@=~/^Not an ARRAY reference/) {
+	return FALSE;
+    } elsif ($@) {
+	die "Unexpected error in eval: $@\n";
+    } else {
+	return TRUE;
+    }
+}
+
+
+
+###############################################################################
+###############################################################################
+# These blocks of functions below are exported into the caller's namespace
+###############################################################################
+
+###############################################################################
+# Provides a border padding around the given widget
+###############################################################################
+sub border_padding {
+    my $widget = shift;
+
+    my $align = Gtk2::Alignment->new(0, 0, 1, 1);
+    $align->set_padding(VPADDING, VPADDING, HPADDING, HPADDING);
+    $align->add($widget);
+
+    return $align;
 }
 
 
@@ -301,33 +337,6 @@ sub right_indent {
 
     return $align;
 }
-
-
-###############################################################################
-# Check if a reference passed to it is indeed an array reference
-###############################################################################
-sub _is_array {
-    my ($ref) = @_;
-    # Firstly arrays need to be references, throw
-    #  out non-references early.
-    return FALSE unless ref $ref;
-
-    # Now try and eval a bit of code to treat the
-    #  reference as an array.  If it complains
-    #  in the 'Not an ARRAY reference' then we're
-    #  sure it's not an array, otherwise it was.
-    eval {
-	my $a = @$ref;
-    };
-    if ($@=~/^Not an ARRAY reference/) {
-	return FALSE;
-    } elsif ($@) {
-	die "Unexpected error in eval: $@\n";
-    } else {
-	return TRUE;
-    }
-}
-
 
 1;
 __END__

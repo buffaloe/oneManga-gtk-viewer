@@ -26,11 +26,11 @@ my @MENU_ITEM = (
  [  "ViewMenu",		undef,      "_View" ],
  [  "BookmarksMenu",	undef,      "_Bookmarks" ],
  [  "GoMenu",		undef,      "_Go" ],
- #  name,       stock id,       label,		accelerator,    tooltip,	func 
- [  "ZoomIn",	'gtk-zoom-in',	"_Zoom In",	"<control>plus",   "Zoom In",	undef ],
- [  "ZoomOut",	'gtk-zoom-out',	"Zoom _Out",	"<control>minus",   "Zoom Out",	undef ],
- [  "Normal",	'gtk-zoom-100',	"_Normal Size",	"<control>0",   "Normal Size",	undef ],
- [  "BestFit",	'gtk-zoom-fit',	"_Best Fit",	undef,		"Best Fit",	undef ],
+ #  name,       stock id,       label,		accelerator,	    tooltip,	    func 
+ [  "ZoomIn",	'gtk-zoom-in',	"_Zoom In",	"<control>plus",    "Zoom In",	    undef ],
+ [  "ZoomOut",	'gtk-zoom-out',	"Zoom _Out",	"<control>minus",   "Zoom Out",	    undef ],
+ [  "Normal",	'gtk-zoom-100',	"_Normal Size",	"<control>0",	    "Normal Size",  undef ],
+ [  "BestFit",	'gtk-zoom-fit',	"_Best Fit",	undef,		    "Best Fit",	    undef ],
 
  [  "AddBookmark",	undef,	"_Add Bookmark",	"<control>D",   "Bookmark this Manga",	undef ],
  [  "EditBookmarks",	undef,	"_Edit Bookmarks",	"<control>B",   "Edit the Bookmarks",	\&_bookmarks_edit_cb ],
@@ -67,25 +67,20 @@ my $MENU_INFO = "
 # Constructor
 ###############################################################################
 sub new {
-    my ($class, $width, $height, $title, $close_cb, $quit_cb) = @_;
+    my ($class, $width, $height) = @_;
     throw Util::MyException::Gtk_Viewer(
 	    error => 'Width or Height of the window is undefined!')
 	unless (defined $width and defined $height);
-    throw Util::MyException::Gtk_Viewer(
-	    error => 'The Window Title is undefined')
-	unless (defined $title);
-    throw Util::MyException::Gtk_Viewer(
-	    error => 'The Callbacks were not defined!')
-	unless (defined $close_cb and defined $quit_cb);
 
     my $self = {
+	_common		=> undef,
 	_gtk_window	=> undef,
 	_gtk_chapter	=> undef,
 	_gtk_page	=> undef
     };
     bless $self, $class;
 
-    $self->_initalize($width, $height, $title, $close_cb, $quit_cb);
+    $self->_initalize($width, $height);
     return $self;
 }
 
@@ -94,16 +89,12 @@ sub new {
 # Initalize this window with all of the GTK settings
 ###############################################################################
 sub _initalize {
-    my ($self, $width, $height, $title, $close_cb, $quit_cb) = @_;
+    my ($self, $width, $height) = @_;
 
     # Create and setup the root window
     $self->{_gtk_window} = Gtk2::Window->new();
-    $self->{_gtk_window}->set_title($title);
     $self->{_gtk_window}->set_default_size($width, $height);
-
-    # TODO: Provide a hook for the model/controller/etc to be notifyed
-    # when this window is closed/destroyed so that they can perform cleanup
-    $self->{_gtk_window}->signal_connect(delete_event => $close_cb);
+    $self->{_common} = View::Common->new($self->{_gtk_window});
 
 
     # Create the VBox that holds the MenuBar, Chapter/Page widgets and
@@ -111,9 +102,8 @@ sub _initalize {
     my $root_vbox = Gtk2::VBox->new();
     $self->{_gtk_window}->add($root_vbox);
 
-    my $common = View::Common->new($self->{_gtk_window}, 
-	    $close_cb, $quit_cb);
-    $root_vbox->pack_start($common->init_menu_bar(
+    # Generate the menu bar
+    $root_vbox->pack_start($self->{_common}->init_menu_bar(
 		\@MENU_ITEM, $MENU_INFO), FALSE, FALSE, 0);
 
     # Combo Box HBox
@@ -232,6 +222,57 @@ sub page_combo_box {
     # Setup the callback
     $self->{_gtk_page}->signal_connect(changed => $callback);
 }
+
+
+###############################################################################
+# Sets the close callback
+###############################################################################
+sub set_close_callback {
+    my ($self, $callback) = @_;
+
+    $self->{_gtk_window}->signal_connect(delete_event => $callback);
+    $self->{_common}->set_ui_manager_callbacks((
+		{ path => '/ui/MenuBar/FileMenu/Close',
+		signal => 'activate',
+		callback => $callback,
+		callback_data => $self->{_gtk_window}}));
+}
+
+
+###############################################################################
+# Sets the quit callback
+###############################################################################
+sub set_quit_callback {
+    my ($self, $callback) = @_;
+
+    $self->{_common}->set_ui_manager_callbacks((
+		{ path => '/ui/MenuBar/FileMenu/Quit',
+		signal => 'activate',
+		callback => $callback,
+		callback_data => $self->{_gtk_window}}));
+}
+
+
+# [  "ZoomIn",	'gtk-zoom-in',	"_Zoom In",	"<control>plus",    "Zoom In",	    undef ],
+# [  "ZoomOut",	'gtk-zoom-out',	"Zoom _Out",	"<control>minus",   "Zoom Out",	    undef ],
+# [  "Normal",	'gtk-zoom-100',	"_Normal Size",	"<control>0",	    "Normal Size",  undef ],
+# [  "BestFit",	'gtk-zoom-fit',	"_Best Fit",	undef,		    "Best Fit",	    undef ],
+#
+# [  "AddBookmark",	undef,	"_Add Bookmark",	"<control>D",   "Bookmark this Manga",	undef ],
+# [  "EditBookmarks",	undef,	"_Edit Bookmarks",	"<control>B",   "Edit the Bookmarks",	\&_bookmarks_edit_cb ],
+# 
+# [  "Back",	'gtk-go-back',	    "_Back",	"<alt>left",	"Go Back a Page",	undef ],
+# [  "Forward",	'gtk-go-forward',   "_Forward",	"<alt>right",   "Go Forward a Page",	undef ],
+
+
+
+
+
+
+
+
+
+
 
 1;
 __END__
