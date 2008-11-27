@@ -46,7 +46,7 @@ sub _initalize {
 
     # The Viewer Window Title
     # TODO: Pull this from the model and create a 'Manga name - Viewer'
-    my $window_title = $TITLE;
+    my $window_title = $self->{_model}->get_name()." - $TITLE";
 
 
     # Create all of the Callback hooks needed
@@ -72,6 +72,21 @@ sub _initalize {
     # Initalizes the View::Viewer View now
     my $view = View::Viewer->new($WIDTH, $HEIGHT,
 	    $window_title, $close_callback, $quit_callback);
+
+
+    # Initalize the needed values for the chapter_combo_box
+    my $model = $self->{_model}->get_chapters();
+    my $chapter_column = $self->{_model}->get_chapters_name_column();
+    my $tmp_first_iter = $model->get_iter_first();
+    my $chapter_callback = sub {
+	my ($combo_box) = @_;
+
+	TRUE
+    };
+
+    $view->chapter_combo_box($model, $chapter_column, $tmp_first_iter,
+	    $chapter_callback);
+
 
 
     # Testing

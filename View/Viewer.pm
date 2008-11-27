@@ -79,7 +79,8 @@ sub new {
 	unless (defined $close_cb and defined $quit_cb);
 
     my $self = {
-	_gtk_window	=> undef
+	_gtk_window	=> undef,
+	_gtk_chapter	=> undef
     };
     bless $self, $class;
 
@@ -120,10 +121,10 @@ sub _initalize {
 
     # Chapters
     my $chapter_label = left_indent(Gtk2::Label->new('Chapters:'));
-    my $chapter_combo = Gtk2::ComboBox->new();
+    $self->{_gtk_chapter} = Gtk2::ComboBox->new();
     
     $combo_hbox->pack_start($chapter_label, FALSE, FALSE, 0);
-    $combo_hbox->pack_start($chapter_combo, TRUE, TRUE, 0);
+    $combo_hbox->pack_start($self->{_gtk_chapter}, TRUE, TRUE, 0);
    
     # Pages
     my $page_label = Gtk2::Label->new('Pages:');
@@ -186,6 +187,29 @@ sub _bookmarks_edit_cb {
     my $bookmark = View::Bookmarks->new(500,300);
     $bookmark->display_window();
 }
+
+
+###############################################################################
+# Set the content of the _gtk_chapter ComboBox and set up the callback
+###############################################################################
+sub chapter_combo_box {
+    my ($self, $content, $column, $selection, $callback) = @_;
+
+    # Setup the content
+    $self->{_gtk_chapter}->set_model($content);
+
+    my $render = Gtk2::CellRendererText->new();
+    $self->{_gtk_chapter}->pack_start($render, FALSE);
+    $self->{_gtk_chapter}->add_attribute($render, 
+	    text => $column);
+
+    # Set the current selection
+    $self->{_gtk_chapter}->set_active_iter($selection);
+
+    # Setup the callback
+    $self->{_gtk_chapter}->signal_connect(changed => $callback);
+}
+
 
 1;
 __END__
