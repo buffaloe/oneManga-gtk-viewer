@@ -22,7 +22,8 @@ use constant COLUMN_CHP_ID	    => 0;
 use constant COLUMN_PAGE_ID	    => 1;
 use constant COLUMN_PAGE_NUMBER	    => 2;
 use constant COLUMN_PAGE_NAME	    => 3;
-use constant NUM_COLUMNS_PAGE	    => 4;
+use constant COLUMN_PAGE_TMP_PIC    => 4;
+use constant NUM_COLUMNS_PAGE	    => 5;
 
 
 ###############################################################################
@@ -44,45 +45,45 @@ my @chp_data = (
 # Sample Page Data
 # <Chapter ID>, <Page ID>, <Page number>, <Page url/name>
 my @pg_data = ( # Chp_id = 0
-	[{ chp_id => 0, pg_id => 0, number => 1, name => '01' },
-	 { chp_id => 0, pg_id => 1, number => 2, name => '02' },
-	 { chp_id => 0, pg_id => 2, number => 3, name => '03' },
-	 { chp_id => 0, pg_id => 3, number => 4, name => '04' }],
+	[{ chp_id => 0, pg_id => 0, number => 1, name => '01', pic => '00.jpg' },
+	 { chp_id => 0, pg_id => 1, number => 2, name => '02', pic => '01.jpg' },
+	 { chp_id => 0, pg_id => 2, number => 3, name => '03', pic => '02.jpg' },
+	 { chp_id => 0, pg_id => 3, number => 4, name => '04', pic => '03.jpg' }],
 	# Chp_id = 1
-	[{ chp_id => 1, pg_id => 4, number => 1, name => '05' },
-	 { chp_id => 1, pg_id => 5, number => 2, name => '06' },
-	 { chp_id => 1, pg_id => 6, number => 3, name => '07' },
-	 { chp_id => 1, pg_id => 7, number => 4, name => '08' }],
+	[{ chp_id => 1, pg_id => 4, number => 1, name => '05', pic => '04.jpg' },
+	 { chp_id => 1, pg_id => 5, number => 2, name => '06', pic => '05-06.jpg' },
+	 { chp_id => 1, pg_id => 6, number => 3, name => '07', pic => '07.jpg' },
+	 { chp_id => 1, pg_id => 7, number => 4, name => '08', pic => '08.jpg' }],
 	# Chp_id = 2
-	[{ chp_id => 2, pg_id => 8, number => 1, name => '09' },
-	 { chp_id => 2, pg_id => 9, number => 2, name => '10' },
-	 { chp_id => 2, pg_id => 10, number => 3, name => '11' },
-	 { chp_id => 2, pg_id => 11, number => 4, name => '12' }],
+	[{ chp_id => 2, pg_id => 8, number => 1, name => '09', pic => '09.jpg' },
+	 { chp_id => 2, pg_id => 9, number => 2, name => '10', pic => '10.jpg' },
+	 { chp_id => 2, pg_id => 10, number => 3, name => '11', pic => '99.jpg' },
+	 { chp_id => 2, pg_id => 11, number => 4, name => '12', pic => '99.jpg' }],
 	# Chp_id = 3
-	[{ chp_id => 3, pg_id => 12, number => 1, name => '13' },
-	 { chp_id => 3, pg_id => 13, number => 2, name => '14' },
-	 { chp_id => 3, pg_id => 14, number => 3, name => '15' },
-	 { chp_id => 3, pg_id => 15, number => 4, name => '16' }],
+	[{ chp_id => 3, pg_id => 12, number => 1, name => '13', pic => '99.jpg' },
+	 { chp_id => 3, pg_id => 13, number => 2, name => '14', pic => '99.jpg' },
+	 { chp_id => 3, pg_id => 14, number => 3, name => '15', pic => '99.jpg' },
+	 { chp_id => 3, pg_id => 15, number => 4, name => '16', pic => '99.jpg' }],
 	# Chp_id = 4
-	[{ chp_id => 4, pg_id => 16, number => 1, name => '17' },
-	 { chp_id => 4, pg_id => 17, number => 2, name => '18' },
-	 { chp_id => 4, pg_id => 18, number => 3, name => '19' },
-	 { chp_id => 4, pg_id => 19, number => 4, name => '20' }],
+	[{ chp_id => 4, pg_id => 16, number => 1, name => '17', pic => '99.jpg' },
+	 { chp_id => 4, pg_id => 17, number => 2, name => '18', pic => '99.jpg' },
+	 { chp_id => 4, pg_id => 18, number => 3, name => '19', pic => '99.jpg' },
+	 { chp_id => 4, pg_id => 19, number => 4, name => '20', pic => '99.jpg' }],
 	# Chp_id = 5
-	[{ chp_id => 5, pg_id => 20, number => 1, name => '21' },
-	 { chp_id => 5, pg_id => 21, number => 2, name => '22' },
-	 { chp_id => 5, pg_id => 22, number => 3, name => '23' },
-	 { chp_id => 5, pg_id => 23, number => 4, name => '24' }],
+	[{ chp_id => 5, pg_id => 20, number => 1, name => '21', pic => '99.jpg' },
+	 { chp_id => 5, pg_id => 21, number => 2, name => '22', pic => '99.jpg' },
+	 { chp_id => 5, pg_id => 22, number => 3, name => '23', pic => '99.jpg' },
+	 { chp_id => 5, pg_id => 23, number => 4, name => '24', pic => '99.jpg' }],
 	# Chp_id = 6
-	[{ chp_id => 6, pg_id => 24, number => 1, name => '25' },
-	 { chp_id => 6, pg_id => 25, number => 2, name => '26' },
-	 { chp_id => 6, pg_id => 26, number => 3, name => '27' },
-	 { chp_id => 6, pg_id => 27, number => 4, name => '28' }],
+	[{ chp_id => 6, pg_id => 24, number => 1, name => '25', pic => '99.jpg' },
+	 { chp_id => 6, pg_id => 25, number => 2, name => '26', pic => '99.jpg' },
+	 { chp_id => 6, pg_id => 26, number => 3, name => '27', pic => '99.jpg' },
+	 { chp_id => 6, pg_id => 27, number => 4, name => '28', pic => '99.jpg' }],
 	# Chp_id = 7
-	[{ chp_id => 7, pg_id => 28, number => 1, name => '29' },
-	 { chp_id => 7, pg_id => 29, number => 2, name => '30' },
-	 { chp_id => 7, pg_id => 30, number => 3, name => '31' },
-	 { chp_id => 7, pg_id => 31, number => 4, name => '32' }]);
+	[{ chp_id => 7, pg_id => 28, number => 1, name => '29', pic => '99.jpg' },
+	 { chp_id => 7, pg_id => 29, number => 2, name => '30', pic => '99.jpg' },
+	 { chp_id => 7, pg_id => 30, number => 3, name => '31', pic => '99.jpg' },
+	 { chp_id => 7, pg_id => 31, number => 4, name => '32', pic => '99.jpg' }]);
 
 	
 
@@ -94,7 +95,8 @@ sub new {
 
     my $self = {
 	_chapter_model	=> undef,
-	_page_model	=> undef
+	_page_model	=> undef,
+	_cur_page_model	=> undef
     };
     bless $self, $class;
 
@@ -129,7 +131,7 @@ sub _init {
     my @return;
     foreach my $i (0 .. $#pg_data) {
 	my $tmp = Gtk2::ListStore->new('Glib::Int', 'Glib::Int', 
-	    'Glib::Int', 'Glib::String');
+	    'Glib::Int', 'Glib::String', 'Glib::String');
 	
 	foreach (@{$pg_data[$i]}) {
 	    my $iter = $tmp->append;
@@ -137,7 +139,8 @@ sub _init {
 		    COLUMN_CHP_ID,	$_->{chp_id},
 		    COLUMN_PAGE_ID,	$_->{pg_id},
 		    COLUMN_PAGE_NUMBER,	$_->{number},
-		    COLUMN_PAGE_NAME,	$_->{name}
+		    COLUMN_PAGE_NAME,	$_->{name},
+		    COLUMN_PAGE_TMP_PIC,$_->{pic}
 	    );
 	}
 	push (@return, $tmp);
@@ -185,6 +188,8 @@ sub get_pages {
     my $idx = $self->{_chapter_model}->get_value($chapter_iter, 
 	    COLUMN_CHAPTER_ID);
 
+    $self->{_cur_page_model} = $pg_list[$idx];
+
     return $pg_list[$idx];
 }
 
@@ -195,6 +200,19 @@ sub get_pages {
 sub get_pages_name_column {
     my ($self) = @_;
     return COLUMN_PAGE_NAME;
+}
+
+
+###############################################################################
+# Return a file path to the picture
+###############################################################################
+sub get_image_path {
+    my ($self, $page_iter) = @_;
+    
+    my $path = $self->{_cur_page_model}->get_value($page_iter, 
+	    COLUMN_PAGE_TMP_PIC);
+
+    return "tmp-data/$path";
 }
 
 

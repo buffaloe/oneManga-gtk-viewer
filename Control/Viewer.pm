@@ -77,6 +77,11 @@ sub _initalize {
     # Initalize the callback for the page combo box
     my $page_callback = sub {
 	my ($combo_box) = @_;
+	my $iter = $combo_box->get_active_iter();
+
+	my $image_path = $self->{_model}->get_image_path($iter);
+	$view->set_image($image_path);
+
 	TRUE
     };
 

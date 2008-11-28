@@ -76,7 +76,8 @@ sub new {
 	_common		=> undef,
 	_gtk_window	=> undef,
 	_gtk_chapter	=> undef,
-	_gtk_page	=> undef
+	_gtk_page	=> undef,
+	_gtk_image	=> undef
     };
     bless $self, $class;
 
@@ -129,13 +130,13 @@ sub _initalize {
 
 
     # The Manga page Image
-    my $image = Gtk2::Image->new();
+    $self->{_gtk_image} = Gtk2::Image->new();
     # TODO: Look into maybe replacing this with a per page basis
-    $image->set_size_request(IMAGE_WIDTH, IMAGE_HEIGHT);
+    $self->{_gtk_image}->set_size_request(IMAGE_WIDTH, IMAGE_HEIGHT);
 
     my $scroll_image = Gtk2::ScrolledWindow->new();
     $scroll_image->set_policy('automatic', 'automatic');
-    $scroll_image->add_with_viewport($image);
+    $scroll_image->add_with_viewport($self->{_gtk_image});
     
     $root_vbox->pack_start($scroll_image, TRUE, TRUE, 0);
 
@@ -177,6 +178,16 @@ sub _bookmarks_edit_cb {
     # TODO: Quick and dirty
     my $bookmark = View::Bookmarks->new(500,300);
     $bookmark->display_window();
+}
+
+
+###############################################################################
+# Sets the image widget to load the filepath to the image
+###############################################################################
+sub set_image {
+    my ($self, $image_path) = @_;
+
+    $self->{_gtk_image}->set_from_file($image_path);
 }
 
 
