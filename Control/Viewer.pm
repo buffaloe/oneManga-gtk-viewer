@@ -80,7 +80,9 @@ sub _initalize {
 	my $iter = $combo_box->get_active_iter();
 
 	my $image_path = $self->{_model}->get_image_path($iter);
-	$view->set_image($image_path);
+
+	my $pixbuf = Gtk2::Gdk::Pixbuf->new_from_file($image_path);
+	$view->set_image_pixbuf($pixbuf);
 
 	TRUE
     };
@@ -106,6 +108,46 @@ sub _initalize {
 	    $page_callback);
 
     $view->chapter_combo_box($model, $chapter_column, $tmp_first_iter);
+
+    
+    # Zoom stuff
+    my $zoom_in = sub {
+	my $pixbuf = $view->get_image_pixbuf();
+
+	my $width = $pixbuf->get_width();
+	my $height = $pixbuf->get_height();
+
+	print "pre [ $width x $height ]\n";
+
+	my $scale_width = int($width * 1.25);
+	my $scale_height = int($height * 1.25);
+	
+	print "scaled [ $scale_width x $scale_height ]\n";
+
+	$pixbuf->scale_simple(int($scale_width * 1.25), 
+		int($scale_height * 1.25),
+		'hyper');
+	
+	
+	$width = $pixbuf->get_width();
+	$height = $pixbuf->get_height();
+	print "post [ $width x $height ]\n";
+
+	$view->set_image_pixbuf($pixbuf);
+    };
+    my $zoom_out = sub {
+	print "[ @_ ]\n";
+    };
+    my $normal = sub {
+	print "[ @_ ]\n";
+    };
+    my $bestfit = sub {
+	print "[ @_ ]\n";
+    };
+
+    $view->set_zoom_callback($zoom_in, $zoom_out, $normal, $bestfit);
+
+
 
 
     # Testing

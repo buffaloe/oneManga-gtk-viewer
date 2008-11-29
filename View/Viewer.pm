@@ -132,7 +132,7 @@ sub _initalize {
     # The Manga page Image
     $self->{_gtk_image} = Gtk2::Image->new();
     # TODO: Look into maybe replacing this with a per page basis
-    $self->{_gtk_image}->set_size_request(IMAGE_WIDTH, IMAGE_HEIGHT);
+#    $self->{_gtk_image}->set_size_request(IMAGE_WIDTH, IMAGE_HEIGHT);
 
     my $scroll_image = Gtk2::ScrolledWindow->new();
     $scroll_image->set_policy('automatic', 'automatic');
@@ -182,12 +182,22 @@ sub _bookmarks_edit_cb {
 
 
 ###############################################################################
-# Sets the image widget to load the filepath to the image
+# Sets the image widget to load the pixbuf of the image
 ###############################################################################
-sub set_image {
-    my ($self, $image_path) = @_;
+sub set_image_pixbuf {
+    my ($self, $image_pixbuf) = @_;
 
-    $self->{_gtk_image}->set_from_file($image_path);
+    $self->{_gtk_image}->set_from_pixbuf($image_pixbuf);
+}
+
+
+###############################################################################
+# Sets the image widget return the pixbuf of the image
+###############################################################################
+sub get_image_pixbuf {
+    my ($self) = @_;
+
+    return $self->{_gtk_image}->get_pixbuf();
 }
 
 
@@ -267,10 +277,10 @@ sub set_zoom_callback {
             { path => 'BestFit',    callback => $best_fit });
 
     foreach (@tmp) {
-        $self->set_ui_manager_callbacks(({
+        $self->{_common}->set_ui_manager_callbacks({
                     path => '/ui/MenuBar/ViewMenu/'.$_->{path},
                     signal => 'activate',
-                    callback => $_->{callback}}));
+                    callback => $_->{callback}});
     }
 }
 
@@ -281,13 +291,6 @@ sub set_zoom_callback {
 #	    <menuitem action='Back'/>
 #	    <menuitem action='Forward'/>
 #	</menu>
-
-
-
-
-
-
-
 
 
 1;

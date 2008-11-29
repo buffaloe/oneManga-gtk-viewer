@@ -125,8 +125,12 @@ sub set_ui_manager_callbacks {
     foreach (@hash_list) {
 	my $action = $self->{_ui}->get_action($_->{path});
 
-	$action->signal_connect(($_->{signal}) => $_->{callback},
-		$_->{callback_data});
+	if (defined $_->{callback_data}) {
+	    $action->signal_connect(($_->{signal}) => $_->{callback},
+		    $_->{callback_data});
+	} else {
+	    $action->signal_connect(($_->{signal}) => $_->{callback});
+	}
     }
 }
 
