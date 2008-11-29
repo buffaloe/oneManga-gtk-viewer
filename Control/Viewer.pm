@@ -124,10 +124,11 @@ sub _initalize {
 	
 	print "scaled [ $scale_width x $scale_height ]\n";
 
-	$pixbuf->scale_simple(int($scale_width * 1.25), 
+	my $test = $pixbuf->scale_simple(int($scale_width * 1.25), 
 		int($scale_height * 1.25),
 		'hyper');
-	
+
+	$pixbuf = $test;
 	
 	$width = $pixbuf->get_width();
 	$height = $pixbuf->get_height();
