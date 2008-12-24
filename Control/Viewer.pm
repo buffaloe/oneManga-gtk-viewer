@@ -10,6 +10,8 @@ our $VERSION = '0.02';
 use constant TRUE   => 1;
 use constant FALSE  => 0;
 
+use constant ZOOM   => 1.25;
+
 
 ###############################################################################
 # Static Final Global Vars
@@ -17,6 +19,7 @@ use constant FALSE  => 0;
 my $WIDTH = 300;
 my $HEIGHT = 600;
 my $TITLE = 'Viewer';
+my $IF_HEIGHT = undef; # 1 = scale to height first, 0 = scale to width first
 
 
 ###############################################################################
@@ -79,10 +82,7 @@ sub _initalize {
 	my ($combo_box) = @_;
 	my $iter = $combo_box->get_active_iter();
 
-	my $image_path = $self->{_model}->get_image_path($iter);
-
-	my $pixbuf = Gtk2::Gdk::Pixbuf->new_from_file($image_path);
-	$view->set_image_pixbuf($pixbuf);
+	$view->set_image_pixbuf($self->{_model}->load_page_pixbuf($iter));
 
 	TRUE
     };
@@ -109,41 +109,81 @@ sub _initalize {
 
     $view->chapter_combo_box($model, $chapter_column, $tmp_first_iter);
 
-    
+   
+    my $cur_zoom = 0;
+
     # Zoom stuff
     my $zoom_in = sub {
-	my $pixbuf = $view->get_image_pixbuf();
+	my $pixbuf = $self->{_model}->cached_page_pixbuf();
 
 	my $width = $pixbuf->get_width();
 	my $height = $pixbuf->get_height();
 
-	print "pre [ $width x $height ]\n";
-
-	my $scale_width = int($width * 1.25);
-	my $scale_height = int($height * 1.25);
+	$cur_zoom++;
+	my ($scale_width, $scale_height) = ($width, $height);
+	if ($cur_zoom > 0) {
+	    $scale_width = int($width * ($cur_zoom * ZOOM));
+	    $scale_height = int($height * ($cur_zoom * ZOOM));
+	} elsif($cur_zoom < 0) {
+	    $scale_width = int($width / ((-$cur_zoom) * ZOOM));
+	    $scale_height = int($height / ((-$cur_zoom) * ZOOM));
+	}
 	
-	print "scaled [ $scale_width x $scale_height ]\n";
-
-	my $test = $pixbuf->scale_simple(int($scale_width * 1.25), 
-		int($scale_height * 1.25),
-		'hyper');
-
-	$pixbuf = $test;
-	
-	$width = $pixbuf->get_width();
-	$height = $pixbuf->get_height();
-	print "post [ $width x $height ]\n";
-
-	$view->set_image_pixbuf($pixbuf);
+	$view->set_image_pixbuf($pixbuf->scale_simple($scale_width, 
+		    $scale_height,
+		    'hyper'));
     };
     my $zoom_out = sub {
-	print "[ @_ ]\n";
+	my $pixbuf = $self->{_model}->cached_page_pixbuf();
+
+	my $width = $pixbuf->get_width();
+	my $height = $pixbuf->get_height();
+
+	$cur_zoom--;
+	my ($scale_width, $scale_height) = ($width, $height);
+	if ($cur_zoom > 0) {
+	    $scale_width = int($width / ($cur_zoom * ZOOM));
+	    $scale_height = int($height / ($cur_zoom * ZOOM));
+	} elsif($cur_zoom < 0) {
+	    $scale_width = int($width / ((-$cur_zoom) * ZOOM));
+	    $scale_height = int($height / ((-$cur_zoom) * ZOOM));
+	}
+	
+	$view->set_image_pixbuf($pixbuf->scale_simple($scale_width, 
+		    $scale_height,
+		    'hyper'));
     };
     my $normal = sub {
-	print "[ @_ ]\n";
+	my $pixbuf = $self->{_model}->cached_page_pixbuf();
+	$view->set_image_pixbuf($pixbuf);
     };
     my $bestfit = sub {
-	print "[ @_ ]\n";
+	my ($width, $height) = $view->get_image_size();
+	my $pixbuf = $self->{_model}->cached_page_pixbuf();
+	my $pwidth = $pixbuf->get_width();
+	my $pheight = $pixbuf->get_height();
+
+	# Aspect ratio
+	my $pratio = $pwidth / $pheight;
+	my $ratio = $width / $height;
+
+	if ($pratio > $ratio) {
+	    if ($IF_HEIGHT) {
+		$height = int($width / $pratio);
+	    } else {
+		$width = int($height * $pratio);
+	    }
+	} elsif ($pratio < $ratio) {
+	    if ($IF_HEIGHT) {
+		$width = int($height * $pratio);
+	    } else {
+		$height = int($width / $pratio);
+	    }
+	}
+	
+	$view->set_image_pixbuf($pixbuf->scale_simple($width-20, 
+		    $height-20,
+		    'hyper'));
     };
 
     $view->set_zoom_callback($zoom_in, $zoom_out, $normal, $bestfit);

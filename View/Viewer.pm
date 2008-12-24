@@ -77,7 +77,9 @@ sub new {
 	_gtk_window	=> undef,
 	_gtk_chapter	=> undef,
 	_gtk_page	=> undef,
-	_gtk_image	=> undef
+	_gtk_image	=> undef,
+	_gtk_disp_width => undef,
+	_gtk_disp_height => undef
     };
     bless $self, $class;
 
@@ -140,6 +142,12 @@ sub _initalize {
     
     $root_vbox->pack_start($scroll_image, TRUE, TRUE, 0);
 
+    # This is so that whenever the scroll widget resize, the latest size is stored
+    $scroll_image->signal_connect('size-allocate' => sub {
+	    my ($widget, $size) = @_;
+	    $self->{_gtk_disp_width} = $size->width;
+	    $self->{_gtk_disp_height} = $size->height;
+	    });
     
     # Button HBox for the back/forward buttons
     my $button_hbox = Gtk2::HBox->new();
@@ -158,6 +166,15 @@ sub _initalize {
 
 }
 
+
+###############################################################################
+# Return the (width x height)
+###############################################################################
+sub get_image_size {
+    my ($self) = @_;
+    
+    return ($self->{_gtk_disp_width}, $self->{_gtk_disp_height});
+}
 
 ###############################################################################
 # Display the window

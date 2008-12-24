@@ -96,7 +96,8 @@ sub new {
     my $self = {
 	_chapter_model	=> undef,
 	_page_model	=> undef,
-	_cur_page_model	=> undef
+	_cur_page_model	=> undef,
+	_cur_page_pixbuf => undef
     };
     bless $self, $class;
 
@@ -204,15 +205,25 @@ sub get_pages_name_column {
 
 
 ###############################################################################
-# Return a file path to the picture
+# Return an PixBuf of the current page image
 ###############################################################################
-sub get_image_path {
+sub load_page_pixbuf {
     my ($self, $page_iter) = @_;
     
     my $path = $self->{_cur_page_model}->get_value($page_iter, 
 	    COLUMN_PAGE_TMP_PIC);
+    
+    $self->{_cur_page_pixbuf} = Gtk2::Gdk::Pixbuf->new_from_file("tmp-data/$path");
+    return $self->{_cur_page_pixbuf};
+}
 
-    return "tmp-data/$path";
+
+###############################################################################
+# Return the currently cached pixbuf, mainly for zooming functions
+###############################################################################
+sub cached_page_pixbuf {
+    my ($self) = @_;
+    return $self->{_cur_page_pixbuf};
 }
 
 
