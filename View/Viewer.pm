@@ -153,11 +153,11 @@ sub _initalize {
     $button_hbox_align->add($button_hbox);
     $root_vbox->pack_start($button_hbox_align, FALSE, FALSE, 0);
 
-    my $back = Gtk2::Button->new_from_stock('gtk-go-back');
-    my $forward = Gtk2::Button->new_from_stock('gtk-go-forward');
+    $self->{_gtk_back} = Gtk2::Button->new_from_stock('gtk-go-back');
+    $self->{_gtk_forward} = Gtk2::Button->new_from_stock('gtk-go-forward');
 
-    $button_hbox->pack_start($back, FALSE, TRUE, 0);
-    $button_hbox->pack_end($forward, FALSE, TRUE, 0);
+    $button_hbox->pack_start($self->{_gtk_back}, FALSE, TRUE, 0);
+    $button_hbox->pack_end($self->{_gtk_forward}, FALSE, TRUE, 0);
 
 }
 
@@ -305,12 +305,27 @@ sub set_zoom_callback {
 }
 
 
-# [  "Back",	'gtk-go-back',	    "_Back",	"<alt>left",	"Go Back a Page",	undef ],
-# [  "Forward",	'gtk-go-forward',   "_Forward",	"<alt>right",   "Go Forward a Page",	undef ],
-#	<menu action='GoMenu'>
-#	    <menuitem action='Back'/>
-#	    <menuitem action='Forward'/>
-#	</menu>
+###############################################################################
+# Sets the close and quit callback
+###############################################################################
+sub set_back_forward_callback {
+    my ($self, $back_callback, $forward_callback) = @_;
+
+    my @tmp = (
+	    { path => 'Back',	    callback => $back_callback,	    button => $self->{_gtk_back} },
+            { path => 'Forward',    callback => $forward_callback,  button => $self->{_gtk_forward} });
+
+    foreach (@tmp) {
+        $self->{_common}->set_ui_manager_callbacks({
+                    path => '/ui/MenuBar/GoMenu/'.$_->{path},
+                    signal => 'activate',
+                    callback => $_->{callback}});
+	
+	$self->{_common}->get_action_from_ui_manager(
+		'/ui/MenuBar/GoMenu/'.$_->{path})->connect_proxy(
+		    $_->{button});
+    }
+}
 
 
 1;

@@ -150,6 +150,17 @@ sub _initalize {
     $view->set_zoom_callback($zoom_in, $zoom_out, $normal, $bestfit);
 
 
+    # Back/forward Callback
+    my $back = sub {
+	print "hi\n";
+    };
+
+    my $forward = sub {
+	print "bye\n";
+    };
+
+    $view->set_back_forward_callback($back, $forward);
+
 
 
 
