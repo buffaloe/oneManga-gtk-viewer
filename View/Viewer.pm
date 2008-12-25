@@ -8,7 +8,7 @@ use View::Common qw(:padding);
 use View::Bookmarks;
 use Util::Exception;
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;

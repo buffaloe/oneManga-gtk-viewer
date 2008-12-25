@@ -3,23 +3,26 @@ use warnings;
 use strict;
 
 use Util::Exception;
+use Util::Config;
 use View::Viewer;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;
 
 use constant ZOOM   => 1.25;
+use constant BLOCK  => 'Viewer';
 
 
 ###############################################################################
 # Static Final Global Vars
 ###############################################################################
+my $CONFIG = Util::Config->new();
+
 my $WIDTH = 300;
 my $HEIGHT = 600;
 my $TITLE = 'Viewer';
-my $IF_HEIGHT = undef; # 1 = scale to height first, 0 = scale to width first
 
 
 ###############################################################################
@@ -27,7 +30,6 @@ my $IF_HEIGHT = undef; # 1 = scale to height first, 0 = scale to width first
 ###############################################################################
 sub new {
     my ($class, $model) = @_;
-
     my $self = {
 	_viewer	    => undef,
 	_model	    => $model
@@ -168,13 +170,13 @@ sub _initalize {
 	my $ratio = $width / $height;
 
 	if ($pratio > $ratio) {
-	    if ($IF_HEIGHT) {
+	    if ($CONFIG->get_param(BLOCK, "scale_to_height")) {
 		$height = int($width / $pratio);
 	    } else {
 		$width = int($height * $pratio);
 	    }
 	} elsif ($pratio < $ratio) {
-	    if ($IF_HEIGHT) {
+	    if ($CONFIG->get_param(BLOCK, "scale_to_height")) {
 		$width = int($height * $pratio);
 	    } else {
 		$height = int($width / $pratio);

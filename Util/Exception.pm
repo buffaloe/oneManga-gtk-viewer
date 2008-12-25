@@ -72,6 +72,11 @@ use Exception::Class (
            isa		=> 'MyException',
            description	=> 'Gtk_Viewer related exceptions',
        },
+       
+       'MyException::Config' => {
+           isa		=> 'MyException',
+           description	=> 'Configuration related exceptions',
+       },
 );
 
 1;
