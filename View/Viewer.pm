@@ -73,13 +73,14 @@ sub new {
 	unless (defined $width and defined $height);
 
     my $self = {
-	_common		=> undef,
-	_gtk_window	=> undef,
-	_gtk_chapter	=> undef,
-	_gtk_page	=> undef,
-	_gtk_image	=> undef,
-	_gtk_disp_width => undef,
-	_gtk_disp_height => undef
+	_common		    => undef,
+	_gtk_window	    => undef,
+	_gtk_chapter	    => undef,
+	_gtk_page	    => undef,
+	_gtk_image	    => undef,
+	_gtk_scroll_image   => undef,
+	_gtk_disp_width	    => undef,
+	_gtk_disp_height    => undef
     };
     bless $self, $class;
 
@@ -136,19 +137,13 @@ sub _initalize {
     # TODO: Look into maybe replacing this with a per page basis
 #    $self->{_gtk_image}->set_size_request(IMAGE_WIDTH, IMAGE_HEIGHT);
 
-    my $scroll_image = Gtk2::ScrolledWindow->new();
-    $scroll_image->set_policy('automatic', 'automatic');
-    $scroll_image->add_with_viewport($self->{_gtk_image});
+    $self->{_gtk_scroll_image} = Gtk2::ScrolledWindow->new();
+    $self->{_gtk_scroll_image}->set_policy('automatic', 'automatic');
+    $self->{_gtk_scroll_image}->add_with_viewport($self->{_gtk_image});
     
-    $root_vbox->pack_start($scroll_image, TRUE, TRUE, 0);
+    $root_vbox->pack_start($self->{_gtk_scroll_image}, TRUE, TRUE, 0);
+   
 
-    # This is so that whenever the scroll widget resize, the latest size is stored
-    $scroll_image->signal_connect('size-allocate' => sub {
-	    my ($widget, $size) = @_;
-	    $self->{_gtk_disp_width} = $size->width;
-	    $self->{_gtk_disp_height} = $size->height;
-	    });
-    
     # Button HBox for the back/forward buttons
     my $button_hbox = Gtk2::HBox->new();
 
@@ -172,7 +167,7 @@ sub _initalize {
 ###############################################################################
 sub get_image_size {
     my ($self) = @_;
-    
+  
     return ($self->{_gtk_disp_width}, $self->{_gtk_disp_height});
 }
 
@@ -285,13 +280,14 @@ sub set_close_quit_callback {
 # Sets the zoom_* group of callbacks
 ###############################################################################
 sub set_zoom_callback {
-    my ($self, $zoom_in, $zoom_out, $normal, $best_fit) = @_;
+    my ($self, $zoom_in, $zoom_out, $normal, $best_fit_action, 
+	    $best_fit_window) = @_;
 
     my @tmp = (
 	    { path => 'ZoomIn',	    callback => $zoom_in },
 	    { path => 'ZoomOut',    callback => $zoom_out },
 	    { path => 'Normal',	    callback => $normal },
-            { path => 'BestFit',    callback => $best_fit });
+            { path => 'BestFit',    callback => $best_fit_action });
 
     foreach (@tmp) {
         $self->{_common}->set_ui_manager_callbacks({
@@ -299,6 +295,22 @@ sub set_zoom_callback {
                     signal => 'activate',
                     callback => $_->{callback}});
     }
+
+    # This is for whenever the scroll widget resizes, it will update the
+    # best_fit_window action
+    my ($pwidth, $pheight) = (0, 0);
+    $self->{_gtk_scroll_image}->signal_connect('size-allocate' => sub {
+		my ($widget, $size) = @_;
+		$self->{_gtk_disp_width} = $size->width;
+		$self->{_gtk_disp_height} = $size->height;
+
+		print "lala: $widget, $size\n";
+		if ($pwidth != $size->width or $pheight != $size->height) {
+		    $pwidth = $size->width;
+		    $pheight = $size->height;
+		    &$best_fit_window;
+		}
+	    });
 }
 
 

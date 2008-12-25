@@ -7,7 +7,7 @@ use Config::Simple;
 use Util::Exception;
 
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;

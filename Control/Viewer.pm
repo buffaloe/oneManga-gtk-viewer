@@ -6,13 +6,15 @@ use Util::Exception;
 use Util::Config;
 use View::Viewer;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;
 
 use constant ZOOM   => 1.25;
 use constant BLOCK  => 'Viewer';
+use constant SCALE_TO_HEIGHT => 'scale_to_height';
+use constant SCALE_TYPE	=> 'scale_type';
 
 
 ###############################################################################
@@ -32,7 +34,8 @@ sub new {
     my ($class, $model) = @_;
     my $self = {
 	_viewer	    => undef,
-	_model	    => $model
+	_model	    => $model,
+	_zoom	    => 0
     };
     bless $self, $class;
 
@@ -84,8 +87,9 @@ sub _initalize {
 	my ($combo_box) = @_;
 	my $iter = $combo_box->get_active_iter();
 
-	$view->set_image_pixbuf($self->{_model}->load_page_pixbuf($iter));
-
+	$view->set_image_pixbuf(
+		$self->_pixbuf_scaler($self->{_model}->load_page_pixbuf($iter),
+		    $self->{_zoom}));
 	TRUE
     };
 
@@ -102,7 +106,6 @@ sub _initalize {
 
 	$view->page_combo_box($page_model, $page_column,
 		$page_model->get_iter_first());
-
 	TRUE
     };
     
@@ -111,91 +114,119 @@ sub _initalize {
 
     $view->chapter_combo_box($model, $chapter_column, $tmp_first_iter);
 
-   
-    my $cur_zoom = 0;
-
+  
+    my $bestfit = FALSE;
     # Zoom stuff
     my $zoom_in = sub {
 	my $pixbuf = $self->{_model}->cached_page_pixbuf();
 
-	my $width = $pixbuf->get_width();
-	my $height = $pixbuf->get_height();
-
-	$cur_zoom++;
-	my ($scale_width, $scale_height) = ($width, $height);
-	if ($cur_zoom > 0) {
-	    $scale_width = int($width * ($cur_zoom * ZOOM));
-	    $scale_height = int($height * ($cur_zoom * ZOOM));
-	} elsif($cur_zoom < 0) {
-	    $scale_width = int($width / ((-$cur_zoom) * ZOOM));
-	    $scale_height = int($height / ((-$cur_zoom) * ZOOM));
-	}
-	
-	$view->set_image_pixbuf($pixbuf->scale_simple($scale_width, 
-		    $scale_height,
-		    'hyper'));
+	$bestfit = FALSE;
+	$view->set_image_pixbuf(
+		$self->_pixbuf_scaler($pixbuf, ++$self->{_zoom}));
     };
+
     my $zoom_out = sub {
 	my $pixbuf = $self->{_model}->cached_page_pixbuf();
 
+	$bestfit = FALSE;
+	$view->set_image_pixbuf(
+		$self->_pixbuf_scaler($pixbuf, --$self->{_zoom}));
+    };
+
+    my $normal = sub {
+	my $pixbuf = $self->{_model}->cached_page_pixbuf();
+	
+	$bestfit = FALSE;
+	$self->{_zoom} = 0;
+	$view->set_image_pixbuf($pixbuf);
+    };
+
+    my $bestfit_action = sub {
+	$bestfit = TRUE;
+	$self->{_zoom} = 0;
+	
+	my $pixbuf = $self->{_model}->cached_page_pixbuf();
+	
+	$view->set_image_pixbuf(
+		$self->_pixbuf_bestfit_scaler($pixbuf, (map { $_ - 20 } 
+		    $view->get_image_size())));
+    };
+
+    my $bestfit_window = sub {
+	if ($bestfit) {
+	    my $pixbuf = $self->{_model}->cached_page_pixbuf();
+	    
+	    $view->set_image_pixbuf(
+		    $self->_pixbuf_bestfit_scaler($pixbuf, (map { $_ - 20 } 
+			$view->get_image_size())));
+	}
+    };
+
+    $view->set_zoom_callback($zoom_in, $zoom_out, $normal, $bestfit_action, 
+	    $bestfit_window);
+
+
+
+
+
+    # TODO: Testing
+    $view->display_window();
+
+}
+
+
+###############################################################################
+# The Pixbuf Scaler
+###############################################################################
+sub _pixbuf_scaler {
+    my ($self, $pixbuf, $zoom) = @_;
+
+    my $width = $pixbuf->get_width();
+    my $height = $pixbuf->get_height();
+
+    my ($scale_width, $scale_height) = ($width, $height);
+    if ($zoom > 0) {
+	$scale_width = int($width * ($zoom * ZOOM));
+	$scale_height = int($height * ($zoom * ZOOM));
+    } elsif($zoom < 0) {
+	$scale_width = int($width / ((-$zoom) * ZOOM));
+	$scale_height = int($height / ((-$zoom) * ZOOM));
+    }
+    
+    return $pixbuf->scale_simple($scale_width, $scale_height,
+	    $CONFIG->get_param(BLOCK, SCALE_TYPE));
+}
+
+
+###############################################################################
+# The Pixbuf Best Fit Scaler
+###############################################################################
+sub _pixbuf_bestfit_scaler {
+    my ($self, $pixbuf, $width_widget, $height_widget) = @_;
+
 	my $width = $pixbuf->get_width();
 	my $height = $pixbuf->get_height();
 
-	$cur_zoom--;
-	my ($scale_width, $scale_height) = ($width, $height);
-	if ($cur_zoom > 0) {
-	    $scale_width = int($width / ($cur_zoom * ZOOM));
-	    $scale_height = int($height / ($cur_zoom * ZOOM));
-	} elsif($cur_zoom < 0) {
-	    $scale_width = int($width / ((-$cur_zoom) * ZOOM));
-	    $scale_height = int($height / ((-$cur_zoom) * ZOOM));
-	}
-	
-	$view->set_image_pixbuf($pixbuf->scale_simple($scale_width, 
-		    $scale_height,
-		    'hyper'));
-    };
-    my $normal = sub {
-	my $pixbuf = $self->{_model}->cached_page_pixbuf();
-	$view->set_image_pixbuf($pixbuf);
-    };
-    my $bestfit = sub {
-	my ($width, $height) = $view->get_image_size();
-	my $pixbuf = $self->{_model}->cached_page_pixbuf();
-	my $pwidth = $pixbuf->get_width();
-	my $pheight = $pixbuf->get_height();
-
 	# Aspect ratio
-	my $pratio = $pwidth / $pheight;
-	my $ratio = $width / $height;
+	my $ratio_image = $width / $height;
+	my $ratio_widget = $width_widget / $height_widget;
 
-	if ($pratio > $ratio) {
-	    if ($CONFIG->get_param(BLOCK, "scale_to_height")) {
-		$height = int($width / $pratio);
+	if ($ratio_image > $ratio_widget) {
+	    if ($CONFIG->get_param(BLOCK, SCALE_TO_HEIGHT)) {
+		$height_widget = int($width_widget / $ratio_image);
 	    } else {
-		$width = int($height * $pratio);
+		$width_widget = int($height_widget * $ratio_image);
 	    }
-	} elsif ($pratio < $ratio) {
-	    if ($CONFIG->get_param(BLOCK, "scale_to_height")) {
-		$width = int($height * $pratio);
+	} elsif ($ratio_image < $ratio_widget) {
+	    if ($CONFIG->get_param(BLOCK, SCALE_TO_HEIGHT)) {
+		$width_widget = int($height_widget * $ratio_image);
 	    } else {
-		$height = int($width / $pratio);
+		$height_widget = int($width_widget / $ratio_image);
 	    }
 	}
 	
-	$view->set_image_pixbuf($pixbuf->scale_simple($width-20, 
-		    $height-20,
-		    'hyper'));
-    };
-
-    $view->set_zoom_callback($zoom_in, $zoom_out, $normal, $bestfit);
-
-
-
-
-    # Testing
-    $view->display_window();
-
+	return $pixbuf->scale_simple($width_widget, $height_widget,
+		$CONFIG->get_param(BLOCK, SCALE_TYPE));
 }
 
 
