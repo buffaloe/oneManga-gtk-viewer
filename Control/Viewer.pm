@@ -115,12 +115,10 @@ sub _initalize {
     $view->chapter_combo_box($model, $chapter_column, $tmp_first_iter);
 
   
-    my $bestfit = FALSE;
     # Zoom stuff
     my $zoom_in = sub {
 	my $pixbuf = $self->{_model}->cached_page_pixbuf();
 
-	$bestfit = FALSE;
 	$view->set_image_pixbuf(
 		$self->_pixbuf_scaler($pixbuf, ++$self->{_zoom}));
     };
@@ -128,7 +126,6 @@ sub _initalize {
     my $zoom_out = sub {
 	my $pixbuf = $self->{_model}->cached_page_pixbuf();
 
-	$bestfit = FALSE;
 	$view->set_image_pixbuf(
 		$self->_pixbuf_scaler($pixbuf, --$self->{_zoom}));
     };
@@ -136,13 +133,11 @@ sub _initalize {
     my $normal = sub {
 	my $pixbuf = $self->{_model}->cached_page_pixbuf();
 	
-	$bestfit = FALSE;
 	$self->{_zoom} = 0;
 	$view->set_image_pixbuf($pixbuf);
     };
 
-    my $bestfit_action = sub {
-	$bestfit = TRUE;
+    my $bestfit = sub {
 	$self->{_zoom} = 0;
 	
 	my $pixbuf = $self->{_model}->cached_page_pixbuf();
@@ -152,18 +147,7 @@ sub _initalize {
 		    $view->get_image_size())));
     };
 
-    my $bestfit_window = sub {
-	if ($bestfit) {
-	    my $pixbuf = $self->{_model}->cached_page_pixbuf();
-	    
-	    $view->set_image_pixbuf(
-		    $self->_pixbuf_bestfit_scaler($pixbuf, (map { $_ - 20 } 
-			$view->get_image_size())));
-	}
-    };
-
-    $view->set_zoom_callback($zoom_in, $zoom_out, $normal, $bestfit_action, 
-	    $bestfit_window);
+    $view->set_zoom_callback($zoom_in, $zoom_out, $normal, $bestfit);
 
 
 

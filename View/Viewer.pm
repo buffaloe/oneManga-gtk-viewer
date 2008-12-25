@@ -280,14 +280,13 @@ sub set_close_quit_callback {
 # Sets the zoom_* group of callbacks
 ###############################################################################
 sub set_zoom_callback {
-    my ($self, $zoom_in, $zoom_out, $normal, $best_fit_action, 
-	    $best_fit_window) = @_;
+    my ($self, $zoom_in, $zoom_out, $normal, $best_fit) = @_;
 
     my @tmp = (
 	    { path => 'ZoomIn',	    callback => $zoom_in },
 	    { path => 'ZoomOut',    callback => $zoom_out },
 	    { path => 'Normal',	    callback => $normal },
-            { path => 'BestFit',    callback => $best_fit_action });
+            { path => 'BestFit',    callback => $best_fit });
 
     foreach (@tmp) {
         $self->{_common}->set_ui_manager_callbacks({
@@ -298,19 +297,11 @@ sub set_zoom_callback {
 
     # This is for whenever the scroll widget resizes, it will update the
     # best_fit_window action
-    my ($pwidth, $pheight) = (0, 0);
     $self->{_gtk_scroll_image}->signal_connect('size-allocate' => sub {
-		my ($widget, $size) = @_;
-		$self->{_gtk_disp_width} = $size->width;
-		$self->{_gtk_disp_height} = $size->height;
-
-		print "lala: $widget, $size\n";
-		if ($pwidth != $size->width or $pheight != $size->height) {
-		    $pwidth = $size->width;
-		    $pheight = $size->height;
-		    &$best_fit_window;
-		}
-	    });
+		    my ($widget, $size) = @_;
+		    $self->{_gtk_disp_width} = $size->width;
+		    $self->{_gtk_disp_height} = $size->height;
+		});
 }
 
 
