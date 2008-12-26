@@ -82,13 +82,17 @@ sub _initalize {
     $view->set_close_quit_callback($close_callback, $quit_callback);
 
 
+    # The current page/chapter iter
+    my $page_iter;
+    my $chapter_iter;
+
     # Initalize the callback for the page combo box
     my $page_callback = sub {
 	my ($combo_box) = @_;
-	my $iter = $combo_box->get_active_iter();
+	$page_iter = $combo_box->get_active_iter();
 
 	$view->set_image_pixbuf(
-		$self->_pixbuf_scaler($self->{_model}->load_page_pixbuf($iter),
+		$self->_pixbuf_scaler($self->{_model}->load_page_pixbuf($page_iter),
 		    $self->{_zoom}));
 	TRUE
     };
@@ -96,25 +100,25 @@ sub _initalize {
     # Initalize the needed values for the chapter_combo_box
     my $model = $self->{_model}->get_chapters();
     my $chapter_column = $self->{_model}->get_chapters_name_column();
-    my $tmp_first_iter = $model->get_iter_first();
+    
     my $chapter_callback = sub {
 	my ($combo_box) = @_;
-	my $iter = $combo_box->get_active_iter();
+	$chapter_iter = $combo_box->get_active_iter();
 
-	my $page_model = $self->{_model}->get_pages($iter);
+	my $page_model = $self->{_model}->get_pages($chapter_iter);
 	my $page_column = $self->{_model}->get_pages_name_column();
 
-	$view->page_combo_box($page_model, $page_column,
-		$page_model->get_iter_first());
+	$view->page_combo_box($page_model, $page_column);
+	$view->set_page_iter($page_model->get_iter_first());
 	TRUE
     };
     
     $view->set_chapter_page_combo_box_callback($chapter_callback,
 	    $page_callback);
+    $view->chapter_combo_box($model, $chapter_column);
+    $view->set_chapter_iter($model->get_iter_first());
+ 
 
-    $view->chapter_combo_box($model, $chapter_column, $tmp_first_iter);
-
-  
     # Zoom stuff
     my $zoom_in = sub {
 	my $pixbuf = $self->{_model}->cached_page_pixbuf();
@@ -150,13 +154,57 @@ sub _initalize {
     $view->set_zoom_callback($zoom_in, $zoom_out, $normal, $bestfit);
 
 
+#my $page_iter;
+#    my $chapter_iter;
     # Back/forward Callback
     my $back = sub {
-	print "hi\n";
+	my $page_model = $self->{_model}->get_pages($chapter_iter);
+	my $tmp_page_path = $page_model->get_path($page_iter);
+	
+	if ($tmp_page_path->prev()) {
+	    $view->set_page_iter($page_model->get_iter($tmp_page_path));
+	} else {
+	    my $chapter_model = $self->{_model}->get_chapters();
+	    my $tmp_chapter_path = $chapter_model->get_path($chapter_iter);
+
+	    if ($tmp_chapter_path->prev()) {
+		my $tmp_iter = $chapter_model->get_iter($tmp_chapter_path);
+		$page_model = $self->{_model}->get_pages($tmp_iter);
+
+		$view->set_chapter_iter($tmp_iter);
+
+		# kludge but I don't know any other way
+		my $tmp = $page_model->get_iter_first();
+		while ($page_model->iter_next($tmp)) {$tmp = $page_model->iter_next($tmp);}
+
+		$view->set_page_iter($tmp);
+
+	    } else {
+		
+		die "Out of chapters and pages to iter through\n";
+	    }
+	}
     };
 
     my $forward = sub {
-	print "bye\n";
+	my $page_model = $self->{_model}->get_pages($chapter_iter);
+	my $tmp_page_iter = $page_model->iter_next($page_iter);
+
+	if (defined $tmp_page_iter) {
+	    $view->set_page_iter($tmp_page_iter);
+	} else {
+	    my $chapter_model = $self->{_model}->get_chapters();
+	    my $tmp_chapter_iter = $chapter_model->iter_next($chapter_iter);
+
+	    if (defined $tmp_chapter_iter) {
+		$page_model = $self->{_model}->get_pages($tmp_chapter_iter);
+		$view->set_chapter_iter($tmp_chapter_iter);
+		$view->set_page_iter($page_model->get_iter_first());
+	    } else {
+
+		die "Out of chapters and pages to iter through\n";
+	    }
+	}
     };
 
     $view->set_back_forward_callback($back, $forward);

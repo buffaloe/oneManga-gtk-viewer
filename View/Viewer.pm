@@ -214,6 +214,17 @@ sub get_image_pixbuf {
 
 
 ###############################################################################
+# Set the set the active selection of the Chapter combo box
+###############################################################################
+sub set_chapter_iter {
+    my ($self, $selection) = @_;
+
+    # Set the current selection
+    $self->{_gtk_chapter}->set_active_iter($selection);
+}
+
+
+###############################################################################
 # Set the model and selection of the Chapter combo box
 ###############################################################################
 sub chapter_combo_box {
@@ -227,10 +238,17 @@ sub chapter_combo_box {
     $self->{_gtk_chapter}->pack_start($render, FALSE);
     $self->{_gtk_chapter}->add_attribute($render, 
 	    text => $column);
-    
+}
+
+
+###############################################################################
+# Set the set the active selection of the Page combo box
+###############################################################################
+sub set_page_iter {
+    my ($self, $selection) = @_;
 
     # Set the current selection
-    $self->{_gtk_chapter}->set_active_iter($selection);
+    $self->{_gtk_page}->set_active_iter($selection);
 }
 
 
@@ -248,9 +266,6 @@ sub page_combo_box {
     $self->{_gtk_page}->pack_start($render, FALSE);
     $self->{_gtk_page}->add_attribute($render, 
 	    text => $column);
-
-    # Set the current selection
-    $self->{_gtk_page}->set_active_iter($selection);
 }
 
 
