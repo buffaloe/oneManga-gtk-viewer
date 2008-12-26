@@ -42,11 +42,8 @@ sub new {
 sub _initalize {
     my ($self) = @_;
 
-    my $config = new Config::Simple("onemangarc") or throw MyException::Config(
+    $self->{_config} = new Config::Simple("onemangarc") or throw MyException::Config(
 	error => "Config failed to load");
-    $config->autosave('ini');
-
-    $self->{_config} = $config;
 }
 
 
@@ -70,6 +67,27 @@ sub set_param {
     my @value = @_;
 
     $self->{_config}->param($block.".".$parm, @value);
+}
+
+
+###############################################################################
+# Reload the config file
+###############################################################################
+sub reload {
+    my ($self) = @_;
+
+    $self->{_config} = new Config::Simple("onemangarc") or throw MyException::Config(
+	error => "Config failed to load");
+}
+
+
+###############################################################################
+# Save the config file
+###############################################################################
+sub save {
+    my ($self) = @_;
+
+    $self->{_config}->write();
 }
 
 

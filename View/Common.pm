@@ -16,7 +16,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'padding'} } );
 our @EXPORT = qw();
 
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;
@@ -26,6 +26,11 @@ use constant INDENT	=> 12;
 
 use constant VPADDING	    => 6;
 use constant LABEL_VPADDING => 18;
+
+use constant BLOCK  => 'Viewer';                        
+use constant SCALE_TO_HEIGHT => 'scale_to_height';      
+use constant SCALE_TYPE => 'scale_type';                
+
 
 ###############################################################################
 # Static Final Global Vars
@@ -66,6 +71,10 @@ my $MENU_INFO2 = "
 	</menu>
     </menubar>
 </ui>";
+
+
+my $CONFIG = Util::Config->new();
+my @SCALE_TYPE = ('nearest', 'tiles', 'bilinear', 'hyper');
 
 
 ###############################################################################
@@ -270,6 +279,36 @@ sub _preferences_cb {
     $notebook->append_page(border_padding($viewer), 
 	    'Viewer');
 
+    # Scaling Label
+    $viewer->attach(_preference_group_label('Scaling'), 
+	    1, 4, 1, 2, 'fill', 'fill', 2, 2);
+
+    # Scaling Type
+    my $scale_type_label = left_indent(Gtk2::Label->new(
+		'Scaling Type:'));
+    my $scale_type_dropdown = Gtk2::ComboBox->new_text();
+    foreach (@SCALE_TYPE) {
+	$scale_type_dropdown->append_text($_);
+    }
+    my $param = $CONFIG->get_param(BLOCK, SCALE_TYPE);
+    foreach (0 .. $#SCALE_TYPE) {
+	if ($param eq $SCALE_TYPE[$_]) {
+	    $scale_type_dropdown->set_active($_);
+	    last;
+	}
+    }
+
+    $viewer->attach($scale_type_label, 1, 2, 2, 3, 'fill', 'fill', 2, 2);
+    $viewer->attach($scale_type_dropdown, 2, 4, 2, 3, ['fill', 'expand'], 
+	    'fill', 2, 2);
+    
+
+    # Best Fit Label
+    $viewer->attach(_preference_group_label('Best Fit', TRUE), 
+	    1, 4, 3, 4, 'fill', 'fill', 2, 2);
+    
+
+
 
     
     # show and interact modally -- blocks until the user
@@ -277,6 +316,8 @@ sub _preferences_cb {
     $dialog->show_all();
     my $response = $dialog->run();
     if ($response eq 'ok') {
+	$CONFIG->set_param(BLOCK, SCALE_TYPE, $scale_type_dropdown->get_active_text());
+	$CONFIG->save();
     }
 
     # activating a response does not destroy the window,
