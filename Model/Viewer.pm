@@ -227,5 +227,20 @@ sub cached_page_pixbuf {
 }
 
 
+###############################################################################
+# Return the currently last "row" iter for the page model
+###############################################################################
+sub last_page_iter {
+    my ($self, $chapter_iter) = @_;
+
+    my $model = $self->get_pages($chapter_iter);
+    my $tmp = $model->get_iter_first();
+
+    while ($model->iter_next($tmp)) {$tmp = $model->iter_next($tmp);}
+
+    return $tmp;
+}
+
+
 1;
 __END__

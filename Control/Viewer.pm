@@ -169,15 +169,9 @@ sub _initalize {
 
 	    if ($tmp_chapter_path->prev()) {
 		my $tmp_iter = $chapter_model->get_iter($tmp_chapter_path);
-		$page_model = $self->{_model}->get_pages($tmp_iter);
 
 		$view->set_chapter_iter($tmp_iter);
-
-		# kludge but I don't know any other way
-		my $tmp = $page_model->get_iter_first();
-		while ($page_model->iter_next($tmp)) {$tmp = $page_model->iter_next($tmp);}
-
-		$view->set_page_iter($tmp);
+		$view->set_page_iter($self->{_model}->last_page_iter($tmp_iter));
 
 	    } else {
 		
