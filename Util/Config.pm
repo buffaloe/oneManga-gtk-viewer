@@ -29,8 +29,8 @@ sub new {
 	    _config => undef
 	};
 	$this = bless ($self, $class);
+	$this->_initalize();
     }
-    $this->_initalize();
 
     return $this;
 }
