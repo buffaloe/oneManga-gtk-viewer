@@ -25,24 +25,23 @@ sub new {
     my ($class) = @_;
     unless (defined $this) {
 	my $self = {
-	    _viewer	    => View::Preferences->new()
+	    _pref	    => View::Preferences->new()
 	};
 	$this = bless $self, $class;
-
-	# Initalizes the Preferences Controller
-	$this->_initalize();
     }
 
     return $this;
 }
 
 
+
 ###############################################################################
-# The Private Initalizer
+# Display the Preference window
 ###############################################################################
-sub _initalize {
+sub display {
     my ($self) = @_;
 
+    $self->{_pref}->display();
 }
 
 

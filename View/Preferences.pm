@@ -3,11 +3,10 @@ use warnings;
 use strict;
 
 use Gtk2 '-init';
-use Data::Dumper;
 
 use View::Common;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 use constant TRUE   => 1;
 use constant FALSE  => 0;
@@ -57,7 +56,7 @@ my @PREFERENCE_ITEM = (
  [  "General",
     #	type,		widget type,    label,			    Widget specific,    Widget specific Args
     [	"entry",	"dirbrowser",	"Cache Directory:",	    undef,		undef ],
-    [	"entry",	"spinbutton",	"Fetcher Delay:",	    \&_spinbutton,		[0, 10, 1] ]],
+    [	"entry",	"spinbutton",	"Fetcher Delay:",	    \&_spinbutton,	[0, 10, 1] ]],
  [  "Manga List",
     []],
  [  "Manga Viewer",
@@ -155,7 +154,7 @@ sub _initalize {
 			    
 			    $tab->attach(
 				    $widget_specific[0]->($widget_specific[1]),
-				    2, 4, $i, ($i + 1), ['fill', 'expand'],
+				    2, 3, $i, ($i + 1), ['fill', 'expand'],
 				    'fill', 2, 2);
 			
 			
@@ -164,13 +163,12 @@ sub _initalize {
 			    $tab->attach(View::Common::left_indent(
 					Gtk2::Label->new($label)),
 				    1, 2, $i, ($i + 1), 'fill', 'fill', 2, 2);
-
-			    $tab->attach(Gtk2::Entry->new(),
-				    2, 3, $i, ($i + 1), ['fill', 'expand'], 
+    
+			    $tab->attach(Gtk2::FileChooserButton->new('Browse...', 
+					'select-folder'),
+				    2, 4, $i, ($i + 1), ['fill', 'expand'], 
 				    'fill', 2, 2);
-			    
-			    $tab->attach(Gtk2::Button->new('_Browse...'),
-				    3, 4, $i, ($i + 1), 'fill', 'fill', 2, 2);
+				    
 			}
 		    }
 		}
@@ -178,13 +176,6 @@ sub _initalize {
 	    $i++;
 	}
     }
-    
-
-
-
-
-
-
 
 #    my $param = $CONFIG->get_param(BLOCK, SCALE_TYPE);
 #    foreach (0 .. $#SCALE_TYPE) {
@@ -193,19 +184,15 @@ sub _initalize {
 #	    last;
 #	}
 #    }
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
+###############################################################################
+# Display the preference window
+###############################################################################
+sub display {
+    my ($self) = @_;
+    
     # show and interact modally -- blocks until the user
     # activates a response.
     $self->{_ui}->show_all();
@@ -217,7 +204,6 @@ sub _initalize {
     # that's up to you.
     $self->{_ui}->destroy();
 }
-
 
 
 ###############################################################################

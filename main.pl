@@ -4,7 +4,8 @@ use warnings;
 
 use Gtk2 '-init';
 
-use Control::Preferences;
+use Model::Viewer;
+use Control::Viewer;
 use Util::Exception;
 
 ###############################################################################
@@ -28,10 +29,8 @@ $SIG{__DIE__} = sub {
 ###############################################################################
 if (($#ARGV + 1) == 0) {
    
-#    my $model = Model::Viewer->new();
-#    my $gui1 = Control::Viewer->new($model);
-
-    my $pref = Control::Preferences->new();
+    my $model = Model::Viewer->new();
+    my $gui1 = Control::Viewer->new($model);
 
     Gtk2->main;
 
