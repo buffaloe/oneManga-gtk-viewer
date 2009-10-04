@@ -1,0 +1,442 @@
+one Manga
+    Main List: (all on one list)
+    (Per Manga)
+	Title
+	    Aka:
+	One Manga Rank
+	Latest Chapter
+	Last Update - Date or 'completed or suspended', suspected 'coming'
+	Icon - "New series (within 15 days), or Series Updated (within 5 days)"
+
+    (All)
+	Category/Genre
+	Number of Manga in each category/Genre
+
+
+    Manga Info:
+    (Per chapter)
+	Chapter Name
+	Icon - Status (new)
+	Scans By
+	Date added
+
+
+    (Series Info)
+	Front page Picture
+	Title
+	Alternate Title
+	One Manga Rank
+	Categories within:
+	Author
+	Artist
+	Chapter status/number. (Number - status)
+	Summary
+
+    Manga Prior to Reading:
+	Chapter Title
+	Scanlated by:
+	Categories
+	Date added
+	Update Status:
+
+    Manga Page:
+	Chapter
+	Page
+	Manga Page Image/scanlation
+	Reading Direction
+
+
+
+Magafox
+    Main List: (Broken up into pages)
+    (Per Manga)
+	Icon - Open/Closed book - open (ongoing), closed (complete)
+	Title/series name
+	icon/text - hot, updated
+	Rating (0-5 stars)
+	Views
+	Chapters
+	Latest Chapter - Vol.[0-9][0-9] Ch.[0-9][0-9][0-9] on Date)
+
+    Manga Info:
+    (Series Info)
+	Title
+	Alternate Title/name seperated by a ';'
+	Year of Realease
+	Status
+	Author(s)
+	Artist(s)
+	Genre(s)
+	Reading Direction
+	Rank - Rank on site, and monthly view
+	Rating - Average, number of votes
+	Latest Chapters (list of them)
+	Summary
+	Manga Cover Page Image
+
+    (Per chapter)
+	Chapter name
+	Scanlator
+	Contributor
+	Date Added
+    
+    Manga Page:
+	Chapter - Vol/chapter
+	Page
+	Title
+	Manga page image/scanlation
+
+
+
+StopTazmo:
+    Main List: (one page)
+    (Page)
+	Most Viewed (15)
+	Tags (15)
+
+    (Per Manga)
+	Series Name
+	Last Updated
+	RSS Feed
+	Color (blue or green) + red (latest downloads), (VOLUMES)
+
+    Manga Info:
+    (per chapter)
+	File name
+	Mirror 1 (download)
+	Read online - Link
+	Date Added
+
+    Manga Page: (really slow and not reliable)
+	Manga Title
+	Chapter/Volume filename
+	Page filename within the chapter/volume file
+
+
+
+Manga Share:
+    Main List: (Series/directory) (one page)
+    (Per Manga)
+	Series Name
+	Last Updated - Date /or/ Time /or/ 'Archive'
+	Link to the page info
+
+    Manga Info: (multiple pages)
+    (Series Info)
+	Manga Main Page/Cut/Picture - May not match
+	Title
+	Author
+	Artist
+	Serialized in:
+	Summary
+	Genre(s)
+	User Rating - Flash with ranking from 1 to 10
+
+    (per Chapter) 
+	Updated
+	Release Name
+	    Icon (Latest)
+	Raw - Link? (checkmark) - If it has raw then its available on site
+	Language(s)
+	Comments
+	Link
+
+
+    Manga Page prior to reading:
+	Manga Image/Title - May match or not
+	Releases (one for each language)
+
+    (Each release)
+	Released
+	Group(s)
+	Comment
+
+	Possiably (lanuage)
+
+    (Raw links)
+	Type - Direct Download
+	Link - Download Link
+	Contributor
+
+
+    Manga/chapter Page:
+	Chapter Number - Title
+	Page
+	Manga Image/page
+
+
+
+
+
+MangaVolume
+    Main List: (multiple page)
+	Series Name
+	Chapters Available
+	Latest Chapter - (None uploaded possiable)
+	Last Update - (unknown if nothing uploaded)
+
+    Manga Info:
+    (Series Info)
+	Title
+	Summary
+	Series Genre(s)
+	Series Cover Page Image
+	Link to download entire series on the site (only if all is available)
+
+    (Per Chapter)
+	Chapter "Title"
+	Chapter "number"
+	Number of pages
+	Uploaded by
+
+	If the chapter is not available, there will be a "upload link"
+	and there would be no url to access the chapter itself
+
+    Manga/Chapter Page:
+	Series Title
+	Download Link (registered members only)
+	Chapter Name
+	Page Number
+	Manga Image/page
+
+
+MangaHut
+    Main List: (single page)
+    (Series Info)
+	Series Name
+	Latest Chapter
+	Alternative Name
+	Views Today
+	Views of all time
+	Rating (x/5)
+	Votes
+
+    (Page Info)
+	Top Series ever
+	Top Series today
+	Today Chapters
+	Genre List
+	    Explaination of each genre
+
+
+    Manga Info:
+    (Page info)
+	Title
+	Rating (x/5)
+	Votes
+	Front page Image (can get larger version)
+	Authors
+	Artist
+	Genre(s)
+	Summary/synopsis
+	Views Ever
+	Views today
+
+    (Chapters)
+	Name of the chapter
+	Title of the chapter
+	Date/time added (to the site)
+	Preminum - Member download
+	Views today
+	Views ever
+	Rating (x/5)
+	Votes
+	Scanlation Group (group)
+	Uploader
+	
+    Manga page info:
+	Title
+	Group
+	Categories
+	"Clean series"
+	Added (date/time)
+	Rating (x/5)
+	Votes
+	Views ever
+	Views today
+	Uploaded by:
+	Group
+
+
+    Manga Chapter/page:
+	Rating (x/5)
+	Votes
+	Views ever
+	Views today
+	Uploaded by:
+	Group
+	
+	Title
+	Chapter Title
+	Chapter lists (dropdown)
+	Pages list (dropdown)
+	Page/manga image
+
+
+
+MaxManga
+    Main List: (multiple page)
+    (Per manga/series)
+	Name
+	Small cover image
+	"first chapter" to "last chapter" number
+	Series info (completed or not)
+    
+    Manga Info:
+    (Page info)
+	Title
+	Category
+	Author/Artist
+	Last update
+	Icon (new if updated)
+	Chapters + red if on going
+	visit number
+	Summary
+
+    (Chapters)
+	Link
+	Icon next to the link if new
+
+
+    Manga Page info:
+	Page number
+	Manga page image/scan
+
+
+
+OurManga
+    Main List (single page)
+	Name/title
+	Chapters
+	Updated
+
+    Manga Info:
+    (Page Info)
+	Title
+	Summary
+	categories
+	author
+	artist
+	date updated
+	total chapter
+	status (ongoing irregular/etc)
+	page views
+	Manga cover page image
+	Warning if violent/etc
+
+    (Chapter info)
+	Title/chapter
+	scanned by
+	number of pages
+
+    Manga Page Info:
+	Page number
+	Chapter
+	Manga page/image
+
+
+AnyManga
+    Main List (single page)
+	Name/title
+	Copyright by - Probably Author/Artist
+	categories/genries
+	Number of volumes
+	Number of chapters
+	Update/new - Red [New] (added within last 14 days), green [upd] been updated with new chapters in last 7 days
+	alternative title
+
+    Manga Info:
+    (Page info)
+	Title
+	Alternative title
+	categories
+	info - volume, chapters, pages
+	manga scan by:
+	last update
+	status - (ongoing/etc)
+	Series summary/review
+
+    (Per volume)
+	Volume Image
+	Volume number/name
+	Chapters - number/name
+	Chapter name
+	status - [new] for recently updated chapters/new
+
+    (Other) - Recommendations
+	Title
+	copyright - author/artist
+	categories
+	volume/chapter numbers
+	alternative names
+
+    (Other) - Other manga by author
+	Title
+	copyright - author/artist
+	categories
+	volume/chapter numbers
+	alternative names
+
+    Manga Page Info:
+	"Info" - Volume, chapter, page
+	Author/artist
+	genre
+	Manga page/image
+
+    (suggestion)
+	Other managa to read
+	Title
+	Author
+	Genere
+
+
+Manga.animea.net
+    Main List (multiple page)
+    (page info)
+	Genres list - Icons for each genre
+	"list of new and hot manga/chapters"
+
+    (Manga list)
+	Title
+	Last chapter
+
+
+    Manga Info:
+    (Page info)
+	Title
+	Alternative Title
+	Authors
+	Artist
+	Released in
+	Genre
+	Status - completed/etc
+	Scanlation Status; (unknown/etc)
+	Summary
+
+	Main page cover and "previews"
+
+	Related manga
+	    Title
+	    Genere
+
+    (Manga list)
+	Read online icon
+	Download icon
+	Chapter number/title
+	Title of chapter
+	Last time it was updated (not sure, mouse over each to get that info)
+	Scanlator
+	Uploader
+	views
+
+    Prior to Manga page view:
+	Title
+	Date chapter uploaded
+	Versions (languages)
+	Download (if available)
+	Scanlator
+
+    Page/Manga view:
+	Chapter
+	Page
+	Page/manga image/page

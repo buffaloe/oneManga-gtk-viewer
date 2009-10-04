@@ -1,0 +1,281 @@
+Main List:
+    (Per manga)
+	Title
+	    Alternative Title (aka)
+	
+	Rank/Rating
+	    Rank - One Manga
+	    Rating (0-5 stars) - MagaFox
+	    Rating (x/5) - MangaHut
+	    Votes - MangaHut
+
+	Latest Chapter
+	    Vol.[0-9][0-9] Ch.[0-9][0-9][0-9] on Date - MagaFox
+	    (none - upload possiable) - MangaVolume
+
+	Last Update
+	    Date or 'completed/suspended/coming' - One Manga
+	    Vol.[0-9][0-9] Ch.[0-9][0-9][0-9] on Date - MagaFox
+	    Date /or/ Time /or/ 'Archive' - Manga Share
+	    (unknown if none uploaded) - MangaVolume
+
+	Icon 
+	    "New Series (15 days)" or "Series Updated (5 days) - One Manga
+	    Open/Closed book - Ongoing/Complete - Magafox
+
+	Text
+	    Hot/updated - MagaFox
+	    Color (blue/green/red) - StopTazmo
+	    Completed or not - MaxManga
+	    Red[new], green[upd] - AnyManga
+
+	Numbers of Views
+	    Views Today - MangaHut
+	    Views of All Time - MangaHut
+
+	Numbers of chapters
+	    Chapters Available - MangaVolume
+	    First chapter to last chapter number - MaxManga
+	    Number of chapters - AnyManga
+
+	Number of Volumes - AnyManga
+
+	RSS Feeds
+
+	Small Cover Image - MaxManga
+
+    
+    (All)
+	Category/Genre
+	    Number of Manga in each category/genre
+	    Tags - StopTazmo
+	    Explaination of each genre - MangaHut
+	    Icons for each genre - Manga.animea.net
+
+	Views
+	    Most viewed - StopTazmo
+	    Top Series Ever - MangaHut
+	    Top Series Today - MangaHut
+
+	Today Chapters - MangaHut
+
+
+
+Manga Info:
+    (Series Info)
+	Front Page Picture
+	    Main page/cut/picture - Maynot match - Manga Share
+	    Larger image - MangaHut
+
+	Title
+	    Alternative Title
+	    Alternative Title - Seperated by a ';' - MangaFox
+
+	Year of Release
+	    Released in - Manga.animea.net
+
+	Date Added
+
+	Rank/rating
+	    Rank - One Manga
+	    Rank - on site and monthly view - MangaFox
+	    Rating - Average number of votes - MangaFox
+	    User Rating - Flash (ranking 1 to 10) - Manga Share
+	    Rating (x/5) - MangaHut
+	    Votes - MangaHut
+
+	Categories
+
+	Authors
+
+	Artist
+
+	Chapter Status/Number (number - status)
+	    Status - Magafox
+	    Status (ongoing/irregular/etc) - OurManga
+	    Status - completed/etc - Manga.animea.net
+	    scanlation status - (unknown/etc) - Manga.animea.net
+
+	Summary
+
+	Views
+	    Monthly Views
+	    Most viewed - StopTazmo
+	    Top Series Ever - MangaHut
+	    Top Series Today - MangaHut
+	    Vist number - MaxManga
+	    Page Views - OurManga
+
+	Latest chapters (list of them) - MagaFox
+
+	Downloading
+	    Mirror 1 - StopTazmo
+	    Download entire series (only if all avail) - MangaVolume
+
+	Serialized in
+
+	Total
+	    Total chapters - OurManga
+	    Volumes, chapters, page - AnyManga
+
+	Warnings if clean - OurManga
+
+	Series review - AnyManga
+
+	(Other) - AnyManga - Other manga by author
+	    Title
+		alternative titles
+	    Copyright - Author/artist
+	    categories
+	    volume/chapter number
+
+	(Other) - AnyManga - Recommendations
+	    Title
+		alternative titles
+	    Copyright - Author/artist
+	    categories
+	    volume/chapter number
+
+	(Related manga) - Manga.animea.net
+	    title
+	    genre
+	    
+
+
+    (Per Chapter)
+	Chapter Name - Number
+	    Release Name - Manga Share
+	    Chapter "Title"/Chapter "number" - MangaVolume
+
+	Icon
+	    Status (new) - One Manga
+	    (lates) - Manga Share
+	    icon if new - MaxManga
+
+	Rating
+	    Rating (x/5) - MangaHut
+	    Votes - MangaHut
+
+	Scans By / Scanlator
+
+	Contributor
+
+	Date Added - to Site
+
+	Updated
+
+	Raw - Link (if has checkmark it is available on site) - Manga Share
+
+	Language(s)
+
+	Comments
+
+	Number of pages
+
+	uploaded by
+
+	Views
+	    Views today - MangaHut
+	    Views Ever - MangaHut
+	    views - Manga.animea.net
+
+	Number of pages
+
+	icons
+	    read online icon - Manga.animea.net
+	    download icon - Manga.animea.net
+
+
+    (Per Volume) ----------- AnyManga
+	Volume Image
+
+	Volume Number/name
+
+	(Per Chapter)
+		Chapters Number/Name
+
+		Chapter Name
+
+		Status - [new] for updated chapters
+
+
+
+Manga Prior to Reading:
+	Chapter Title
+
+	Scanlated By
+
+	Categories
+
+	Warnings
+	    Warning - OneManga
+	    "Clean Series" - MangaHut
+
+	Date Added
+
+	Update Status
+
+	Uploaded by
+
+	Releases (one for each language) - Manga Share
+	    Released
+	    Groups
+	    Comment
+	    Possiably (languages)
+
+	Raw Links - Manga Share
+	    Type - Direct download
+	    link - download link
+	    contributor
+	
+	Rating
+	    Rating (x/5) - MangaHut
+	    Votes - MangaHut
+	
+	Views
+	    Views today - MangaHut
+	    Views Ever - MangaHut
+
+	Versions
+	    Languages - Manga.animea.net
+
+
+
+Manga Page:
+	Title
+
+	Chapter
+	    Number/Title - One Manga
+	    Vol/Chapter - MagaFox
+	    Chapter Title - MangaHut
+	    Volume/Chapter/Page - AnyManga
+	    
+	Page Number
+
+	Reading Direction
+
+	Manga Page Image/scanlation
+
+	Download link (registered members only)
+
+	Uploaded by
+
+	Scanlation group
+
+	Genre/categories
+
+	Author/Artist
+	
+	Rating
+	    Rating (x/5) - MangaHut
+	    Votes - MangaHut
+	
+	Views
+	    Views today - MangaHut
+	    Views Ever - MangaHut
+
+	(Suggestion) - AnyManga
+	    other manga to read
+	    title
+	    author
+	    genere
