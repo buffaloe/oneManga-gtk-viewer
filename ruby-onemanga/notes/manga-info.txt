@@ -57,7 +57,7 @@ Series/Manga Info:
 
 
 
-Per Chapter:
+Per Chapter: (initalizer for the per chapter/page object?)
     
     Chapter Name / Number
 	Release name

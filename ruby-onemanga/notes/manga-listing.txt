@@ -1,4 +1,4 @@
-Per Manga on the Main List:
+Per Manga on the Main List: (Initalizer for per manga-info object?)
 
     Title
 	Alternative Titles

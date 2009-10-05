@@ -1,13 +1,15 @@
 Manga Page:
-    
-    Chapter
-	Number/title - One Manga
-	Vol/Chapter - MangaFox
-	Chapter Title - MangaHut
-	Volume/Chapter/Page - AnyManga
+   
+    Volume Number
+	Nil - If unknown/not used
+	Can be a list
 
-    Page Number
+    Chapter Title/Number
+	Can be a list
+
+    Page Number/Scan/etc
+	Can be a list
 
     Reading Direction
 
-    Manga Page Image/Scanlation
+    Page image/scanlation
