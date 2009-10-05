@@ -1,0 +1,45 @@
+Per Manga on the Main List:
+
+    Title
+	Alternative Titles
+
+    Rank
+	Rank on the site - One Manga
+
+    Rating
+	Rating (x/y) usually (x/5) stars - MangaFox/MangaHut
+	Votes
+
+    Latest Chapter
+	Vol.[0-9][0-9] Ch.[0-9][0-9][0-9] on Date - MagaFox
+
+    Number of Chapters
+	Chapters Available - Mangavolume
+	First to last chapter number - MaxManga
+	Number of chapters - AnyManga
+
+    Number of Volumes - AnyManga
+
+    Last Update
+	Date or 'completed/suspended/coming' - One Manga
+	Vol.[0-9][0-9] Ch.[0-9][0-9][0-9] on Date - MagaFox
+	Date /or/ Time /or/ 'Archive' - Manga Share
+	(unknown if none uploaded) - MangaVolume	
+
+    Status
+	hot - popular
+	updated - updated
+	completed
+	not completed
+	[new] - new
+	[upd] - updated
+
+
+
+
+On all Pages of the main list:
+
+    Category/Genre
+	Number of Manga in each category/genre
+	Explaination of each genre - MagaHut
+	Icons of each genre - Manga.animea.net

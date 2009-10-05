@@ -1,0 +1,13 @@
+Manga Page:
+    
+    Chapter
+	Number/title - One Manga
+	Vol/Chapter - MangaFox
+	Chapter Title - MangaHut
+	Volume/Chapter/Page - AnyManga
+
+    Page Number
+
+    Reading Direction
+
+    Manga Page Image/Scanlation

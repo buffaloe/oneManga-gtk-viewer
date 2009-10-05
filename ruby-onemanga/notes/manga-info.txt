@@ -1,0 +1,98 @@
+Series/Manga Info:
+
+    Front Page Picture
+	 Main page/cut/picture - maynot match - Manga Share
+
+    Title
+	Alternative Title
+	Multiple Alternative Titles - Seperated by a ';'
+
+    Categories/Genres
+	Multiple - Seperated by a ',' or etc...
+
+    Author
+	Multiple - Seperated by a ',' or etc...
+
+    Artist
+	Multiple - Seperated by a ',' or etc...
+	May be same as (Author)
+
+    Scanlation/Chapter Status
+	Status - "ongoing, irregular, etc"
+	Manga Status - "Completed, uncompleted, etc"
+	Scanlation status - "unknown, etc"
+
+    Summary
+
+    Total
+	Chapters - OurManga
+	Volumes, Chapters, Page - AnyManga
+
+    Latest Chapters
+	List - MangaFox
+	Chapter (number - status) - OneManga
+
+    Year of Release
+	Released in - Same thing
+
+
+    Serialized in
+	- Magzine its serialized in - MangaShare
+
+    Date Added
+	- Date it was added to the site
+
+    Rank
+	Site ranking
+	Votes - Number of votes
+
+    Rating
+	Rating (x/y) usually (x/5)
+	Votes - Number of votes
+
+    Views
+	Monthly Views
+	Visit number
+	Page Views
+
+
+
+Per Chapter:
+    
+    Chapter Name / Number
+	Release name
+	Chapter "title"/chapter "number"
+
+    Status
+	New - if new chapter
+	latest
+	update status
+
+    Scan By / Scanlator
+
+    Contributor / Uploaded by?
+
+    Date Added
+	Updated?
+
+    Views
+	Views Ever
+	Views Today
+	Page views
+
+    Number of Pages
+
+
+
+Per Volume: --- AnyManga
+
+    Volume cover Image
+
+    Volume Name / Number
+
+	(Per Chapter)
+	    Chapters Name / Number
+
+	    Status
+		[new] - updated chapters
+
