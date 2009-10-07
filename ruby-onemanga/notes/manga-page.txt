@@ -13,3 +13,51 @@ Manga Page:
     Reading Direction
 
     Page image/scanlation
+
+
+# Rough idea of the possiable
+# API Defination
+class MangaPages
+
+    image nextPage()
+    bool nextPage?()
+
+    image prevPage()
+    bool prevPage?()
+
+    image gotoPage(int)
+
+
+    image nextChapter()
+    bool nextChapter?()
+
+    image prevChapter()
+    bool prevChapter?()
+
+    image gotoChapter(int)
+
+
+    image nextVolume()
+    bool nextVolume?()
+    
+    image prevVolume()
+    bool prevVolume?()
+
+    image gotoVolume(int)
+
+
+    // Enum toRight, toLeft or something like that
+    ReadingDirection getReadingDirection()
+
+
+    int currentVolumeIndex?() 
+    int currentChapterIndex?() 
+    int currentPageIndex?() 
+   
+    array getVolumeList()
+    array getChapterList()
+    array getPageList()
+
+    MangaInfo getManga()
+    MangaSite getMangaSite()
+end

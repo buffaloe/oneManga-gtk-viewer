@@ -8,16 +8,41 @@
 #
 
 require 'gtk2'
+require 'DummyManga'
 
-builder = Gtk::Builder.new
-builder.add_from_file('view/manga-view.glade')
-builder.connect_signals {|handler| method(handler) }
+dummy = DummyManga::MangaPages.new
 
-window = builder.get_object('viewer_window')
+puts dummy
 
-window.show_all
-Gtk.main
+puts dummy.get_manga
 
+puts dummy.get_manga_site
+
+puts dummy.next_page
+
+
+puts dummy.goto_volume(5)
+
+puts dummy.reading_direction
+
+
+puts dummy.list_volumes
+
+
+
+#require 'gtk2'
+#
+#builder = Gtk::Builder.new
+#builder.add_from_file('view/manga-view.glade')
+#builder.connect_signals {|handler| method(handler) }
+#
+#window = builder.get_object('viewer_window')
+#
+#window.show_all
+#Gtk.main
+
+
+###############################################################################
 #window = Gtk::Window.new
 #button = Gtk::Button.new("Hello World")
 #
