@@ -14,6 +14,13 @@ module DummyManga
 
     class MangaPages
 
+	def initialize
+	    # Volume/chapter/page index
+	    @vol = 0
+	    @chp = 0
+	    @pg  = 0
+	end
+
 	# These two function returns the Manga, and the Site
 	# that this "Manga Page" is from
 	def get_manga
@@ -29,23 +36,36 @@ module DummyManga
 	#
 	# If there is a failure at fetching the image, it will throw an exception
 	def next_page
-	    return Gdk::Pixbuf.new(Gdk::Pixbuf::COLORSPACE_RGB, false, 8, 100, 100)
+	    if @pg > 1
+		return nil
+	    else
+		str = "DummyManga-Data/v#{@vol}c#{@chp}p#{@pg}.jpg"
+		@pg += 1
+
+		return Gdk::Pixbuf.new(str)
+	    end
 	end
 
 	def next_page?
-	    return true
+	    return (@pg > 1 ? false : true)
 	end
 	
 	
 	# Same thing as the "next_page" class of function
 	def prev_page
-	    return Gdk::Pixbuf.new(Gdk::Pixbuf::COLORSPACE_RGB, false, 8, 100, 100)
+	    if @pg < 1
+		return nil
+	    else
+		@pg -= 1
+		str = "DummyManga-Data/v#{@vol}c#{@chp}p#{@pg}.jpg"
+
+		return Gdk::Pixbuf.new(str)
+	    end
 	end
 
 	def prev_page?
-	    return true
+	    return (@pg < 1 ? false : true)
 	end
-
 
 	# This function will go to the page as specifyed in the index passed
 	# as a parameter, it will then return an image of that said page and
@@ -63,23 +83,39 @@ module DummyManga
 	# This function will return the next "MangaPages" object, which can
 	# be this current object if the Manga Site/Backend does not have the
 	# concept of "Chapters".  This function will return nil if there is
-	# no more chapters to fetch
+	# no more chapters to fetch, the "pages count is undefined at the moment"
 	def next_chapter
-	    return MangaPages.new
+	    if @chp > 1
+		return nil
+	    else
+		@chp += 1
+
+		# Reset the pages
+		@pg = 0
+		return self
+	    end
 	end
 
 	def next_chapter?
-	    return true
+	    return (@chp > 1 ? false : true)
 	end
 
 	
 	# Same thing as the "next_chapter" class of function
 	def prev_chapter
-	    return MangaPages.new
+	    if @chp < 1
+		return nil
+	    else
+		@chp -= 1
+
+		# Reset the pages
+		@pg = 0
+		return self
+	    end
 	end
 
 	def prev_chapter?
-	    return true
+	    return (@chp < 1 ? false : true)
 	end
 
 	
@@ -98,20 +134,38 @@ module DummyManga
 	# Regardless, the functionality here is the same as the
 	# "*_chapter" classes of function, just applied to volumes
 	def next_volume
-	    return MangaPages.new
+	    if @vol > 1
+		return nil
+	    else
+		@vol += 1
+
+		# Reset the chapters and pages
+		@chp = 0
+		@pg = 0
+		return self
+	    end
 	end
 
 	def next_volume?
-	    return true
+	    return (@vol > 1 ? false : true)
 	end
 
 
 	def prev_volume
-	    return MangaPages.new
+	    if @vol < 1
+		return nil
+	    else
+		@vol -= 1
+
+		# Reset the chapters and pages
+		@chp = 0
+		@pg = 0
+		return self
+	    end
 	end
 
 	def prev_volume?
-	    return true
+	    return (@vol < 1 ? false : true)
 	end
 
 	
@@ -133,15 +187,15 @@ module DummyManga
 	# MangaPages, in volumes/chapter/page, and if one of these
 	# function/class are not used it will return nil
 	def currentVolumeIndex
-	    return 1
+	    return @vol
 	end
 
 	def currentChapterIndex
-	    return 1
+	    return @chp
 	end
 
 	def currentPageIndex
-	    return 1
+	    return @pg
 	end
 
 
@@ -151,17 +205,22 @@ module DummyManga
 	# If its not used it will return nil also if there is problems
 	# fetching that information, it will also toss out an exception
 	def list_volumes
-	    return [MangaPages.new, self, MangaPages.new]
+	    return ["Vol 0", "Vol 1"]
 	end
 	
 	def list_chapters
-	    return [MangaPages.new, self, MangaPages.new]
+	    return ["Chp 0", "Chp 1"]
 	end
 	
 	def list_pages
-	    return [MangaPages.new, self, MangaPages.new]
+	    return ["Pg 0", "Pg 1"]
 	end
-    
+
+
+	# The to_s function
+	def to_s
+	    return "v#{@vol}c#{@chp}p#{@pg}"
+	end
     end
 end
 

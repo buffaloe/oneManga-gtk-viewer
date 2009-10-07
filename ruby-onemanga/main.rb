@@ -12,26 +12,33 @@ require 'DummyManga'
 
 dummy = DummyManga::MangaPages.new
 
-puts dummy
-
-puts dummy.get_manga
-
-puts dummy.get_manga_site
 
 puts dummy.next_page
-
-
-puts dummy.goto_volume(5)
-
-puts dummy.reading_direction
-
-
+puts dummy.next_page?
+puts dummy.prev_page
+puts dummy.prev_page?
+puts
+puts dummy
+puts
+puts dummy.next_chapter
+puts dummy.next_chapter?
+puts dummy.prev_chapter
+puts dummy.prev_chapter?
+puts
+puts dummy
+puts
+puts dummy.next_volume
+puts dummy.next_volume?
+puts dummy.prev_volume
+puts dummy.prev_volume?
+puts
+puts dummy
+puts
 puts dummy.list_volumes
+puts dummy.list_chapters
+puts dummy.list_pages
+puts
 
-
-
-#require 'gtk2'
-#
 #builder = Gtk::Builder.new
 #builder.add_from_file('view/manga-view.glade')
 #builder.connect_signals {|handler| method(handler) }
