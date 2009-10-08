@@ -14,36 +14,15 @@ module DummyManga
 
     class MangaPages
 
-	def initialize
+	def initialize (vol_exist, chp_exist)
+	    # Does Volume or Chapters matter
+	    @vol_exist = vol_exist
+	    @chp_exist = chp_exist
+
 	    # Volume/chapter/page index
 	    @vol = 0
 	    @chp = 0
 	    @pg  = 0
-
-	    # State machine states here
-	    #
-	    # If there is no more volumes left, there maybe
-	    # more chapters left, thus more pages left
-	    #
-	    # if there is no more chapters left, there maybe
-	    # more pages left
-	    #
-	    # if there is no more pages left, there maybe more
-	    # chapters left, however, if there is no more chapters left
-	    # there maybe more volumes left, if there is no more volumes
-	    # left, its done
-	    #
-	    # more vol, more chp, more pg   - +1 pg
-	    # more vol, more chp, no pg	    - +1 chp, pg = 0
-	    # more vol, no chp,   more pg   - +1 pg
-	    # more vol, no chp,   no pg	    - +1 vol, chp = 0, pg =0
-	    # no vol,   more chp, more pg   - +1 pg
-	    # no vol,   more chp, no pg	    - +1 chp, pg = 0
-	    # no vol,   no chp,   more pg   - +1 pg
-	    # no vol,   no chp,   no pg	    - +1 vol & exit
-	    @exist_more_vol = true
-	    @exist_more_chp = true
-	    @exist_more_pg  = true
 	end
 
 
@@ -62,45 +41,43 @@ module DummyManga
 	#
 	# If there is a failure at fetching the image, it will throw an exception
 	def next_page
-	    if @pg > 1
-		@exist_more_pg = false
-		return nil
-	    else
-		str = "DummyManga-Data/v#{@vol}c#{@chp}p#{@pg}.jpg"
-		@pg += 1
+	    if !@vol_exist & !@chp_exist
+		if @pg > 7
+		    return nil
+		else
+		    str = "DummyManga-Data/pg/p#{@pg}.jpg"
+		    @pg += 1
 
-		if @pg > 1
-		    @exist_more_pg = false
+		    return Gdk::Pixbuf.new(str)
 		end
-
-		return Gdk::Pixbuf.new(str)
 	    end
 	end
 
 	def next_page?
-	    return @exist_more_pg
+	    if !@vol_exist & !@chp_exist
+		return (@pg > 7) ? false : true
+	    end
 	end
 	
 	
 	# Same thing as the "next_page" class of function
 	def prev_page
-	    if @pg < 1
-		@exist_more_pg = false
-		return nil
-	    else
-		@pg -= 1
-		str = "DummyManga-Data/v#{@vol}c#{@chp}p#{@pg}.jpg"
-		
+	    if !@vol_exist & !@chp_exist
 		if @pg < 1
-		    @exist_more_pg = false
+		    return nil
+		else
+		    @pg -= 1
+		    str = "DummyManga-Data/pg/p#{@pg}.jpg"
+		    
+		    return Gdk::Pixbuf.new(str)
 		end
-
-		return Gdk::Pixbuf.new(str)
 	    end
 	end
 
 	def prev_page?
-	    return @exist_more_pg
+	    if !@vol_exist & !@chp_exist
+		return (@pg < 1) ? false : true
+	    end
 	end
 
 	# This function will go to the page as specifyed in the index passed
@@ -111,8 +88,8 @@ module DummyManga
 	# Also if the page as indicated by the index does not exist, it will
 	# throw an exception
 	def goto_page (index)
-	    puts index
-	    return Gdk::Pixbuf.new(Gdk::Pixbuf::COLORSPACE_RGB, false, 8, 100, 100)
+	    puts "not implemented"
+	    return nil
 	end
 
 
@@ -121,50 +98,33 @@ module DummyManga
 	# concept of "Chapters".  This function will return nil if there is
 	# no more chapters to fetch, the "pages count is undefined at the moment"
 	def next_chapter
-	    if @chp > 1
-		@exist_more_chp = false
-		return nil
-	    else
-		@chp += 1
-
-		if @chp > 1
-		    @exist_more_chp = false
-		else
-		    @exist_more_pg = true
-		    @pg = 0
-		end
-		return self
-	    end
+	    puts "not implemented"
+	    return nil
 	end
 
 	def next_chapter?
-	    return @exist_more_chp
+	    puts "not implemented"
+	    return nil
 	end
 
 	
 	# Same thing as the "next_chapter" class of function
 	def prev_chapter
-	    if @chp < 1
-		@exist_more_chp = false
-		return nil
-	    else
-		@chp -= 1
-
-		# No clue here yet
-		return self
-	    end
+	    puts "not implemented"
+	    return nil
 	end
 
 	def prev_chapter?
-	    return @exist_more_chp
+	    puts "not implemented"
+	    return nil
 	end
 
 	
 	# Same thing as the "goto_page" function, however with respect
 	# to chapters, the results is the same, but applied to chapters
 	def goto_chapter (index)
-	    puts index
-	    return MangaPages.new
+	    puts "not implemented"
+	    return nil
 	end
 	
 
@@ -175,53 +135,30 @@ module DummyManga
 	# Regardless, the functionality here is the same as the
 	# "*_chapter" classes of function, just applied to volumes
 	def next_volume
-	    if @vol > 1
-		@exist_more_vol = false
-		return nil
-	    else
-		@vol += 1
-	
-		if @vol > 1
-		    @exist_more_vol = false
-		else
-		    @exist_more_chp = true
-		    @chp = 0
-		    
-		    @exist_more_pg = true
-		    @pg = 0
-		end
-
-		return self
-	    end
+	    puts "not implemented"
+	    return nil
 	end
 
 	def next_volume?
-	    return @exist_more_vol
+	    puts "not implemented"
+	    return nil
 	end
 
 
 	def prev_volume
-	    if @vol < 1
-		@exist_more_vol = false
-		return nil
-	    else
-		@vol -= 1
-
-		# Reset the chapters and pages
-		@chp = 0
-		@pg = 0
-		return self
-	    end
+	    puts "not implemented"
+	    return nil
 	end
 
 	def prev_volume?
-	    return @exist_more_vol
+	    puts "not implemented"
+	    return nil
 	end
 
 	
 	def goto_volume (index)
-	    puts index
-	    return MangaPages.new
+	    puts "not implemented"
+	    return nil
 	end
 
 
@@ -237,11 +174,13 @@ module DummyManga
 	# MangaPages, in volumes/chapter/page, and if one of these
 	# function/class are not used it will return nil
 	def currentVolumeIndex
-	    return @vol
+	    puts "not implemented"
+	    return nil
 	end
 
 	def currentChapterIndex
-	    return @chp
+	    puts "not implemented"
+	    return nil
 	end
 
 	def currentPageIndex
@@ -255,11 +194,13 @@ module DummyManga
 	# If its not used it will return nil also if there is problems
 	# fetching that information, it will also toss out an exception
 	def list_volumes
-	    return ["Vol 0", "Vol 1"]
+	    puts "not implemented"
+	    return nil
 	end
 	
 	def list_chapters
-	    return ["Chp 0", "Chp 1"]
+	    puts "not implemented"
+	    return nil
 	end
 	
 	def list_pages
@@ -284,3 +225,26 @@ module MangaUtils
 	LEFT_TO_RIGHT = 2
     end
 end
+	    
+
+# State machine states here
+#
+# If there is no more volumes left, there maybe
+# more chapters left, thus more pages left
+#
+# if there is no more chapters left, there maybe
+# more pages left
+#
+# if there is no more pages left, there maybe more
+# chapters left, however, if there is no more chapters left
+# there maybe more volumes left, if there is no more volumes
+# left, its done
+#
+# more vol, more chp, more pg   - +1 pg
+# more vol, more chp, no pg	    - +1 chp, pg = 0
+# more vol, no chp,   more pg   - +1 pg
+# more vol, no chp,   no pg	    - +1 vol, chp = 0, pg =0
+# no vol,   more chp, more pg   - +1 pg
+# no vol,   more chp, no pg	    - +1 chp, pg = 0
+# no vol,   no chp,   more pg   - +1 pg
+# no vol,   no chp,   no pg	    - +1 vol & exit
