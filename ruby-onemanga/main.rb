@@ -25,25 +25,45 @@ image = builder.get_object('image')
 
 # Connect the Signals
 forward.signal_connect('clicked') do
-    if dummy.next_page? & dummy.next_chapter? & dummy.next_volume?
-	puts "Next page"
-	image.pixbuf = dummy.next_page
-    elsif dummy.next_chapter?
-	puts "Next chapter"
-	dummy = dummy.next_chapter
 
-	if dummy.next_page?
-	    puts "Next page - chapter"
-	    image.pixbuf = dummy.next_page
-	end
-    elsif dummy.next_volume?
+	puts "-"
+	puts dummy
+	puts "-"
+
+    if dummy.next_volume? & !dummy.next_chapter? & !dummy.next_page?
 	puts "Next volume"
 	dummy = dummy.next_volume
 
+
+	puts "+"
+	puts dummy
+	puts "+"
+
 	if dummy.next_page?
 	    puts "Next page - volume"
-	    image.pixbuf = dummy.next_page
+	    puts
+	    image.pixbuf = dummy.next_page # "First page" of a new volume
 	end
+
+    elsif dummy.next_chapter? & !dummy.next_page?
+	puts "Next chapter"
+	dummy = dummy.next_chapter
+	
+	puts "*"
+	puts dummy
+	puts "*"
+	
+	if dummy.next_page?
+	    puts "Next page - chapter"
+	    puts
+	    image.pixbuf = dummy.next_page # "first page" of a new chapter
+	end
+
+    elsif dummy.next_page?
+	puts "Next page"
+	puts
+	image.pixbuf = dummy.next_page
+
     else
 	puts "catchall"
     end

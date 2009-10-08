@@ -19,7 +19,33 @@ module DummyManga
 	    @vol = 0
 	    @chp = 0
 	    @pg  = 0
+
+	    # State machine states here
+	    #
+	    # If there is no more volumes left, there maybe
+	    # more chapters left, thus more pages left
+	    #
+	    # if there is no more chapters left, there maybe
+	    # more pages left
+	    #
+	    # if there is no more pages left, there maybe more
+	    # chapters left, however, if there is no more chapters left
+	    # there maybe more volumes left, if there is no more volumes
+	    # left, its done
+	    #
+	    # more vol, more chp, more pg   - +1 pg
+	    # more vol, more chp, no pg	    - +1 chp, pg = 0
+	    # more vol, no chp,   more pg   - +1 pg
+	    # more vol, no chp,   no pg	    - +1 vol, chp = 0, pg =0
+	    # no vol,   more chp, more pg   - +1 pg
+	    # no vol,   more chp, no pg	    - +1 chp, pg = 0
+	    # no vol,   no chp,   more pg   - +1 pg
+	    # no vol,   no chp,   no pg	    - +1 vol & exit
+	    @exist_more_vol = true
+	    @exist_more_chp = true
+	    @exist_more_pg  = true
 	end
+
 
 	# These two function returns the Manga, and the Site
 	# that this "Manga Page" is from
@@ -37,34 +63,44 @@ module DummyManga
 	# If there is a failure at fetching the image, it will throw an exception
 	def next_page
 	    if @pg > 1
+		@exist_more_pg = false
 		return nil
 	    else
 		str = "DummyManga-Data/v#{@vol}c#{@chp}p#{@pg}.jpg"
 		@pg += 1
+
+		if @pg > 1
+		    @exist_more_pg = false
+		end
 
 		return Gdk::Pixbuf.new(str)
 	    end
 	end
 
 	def next_page?
-	    return (@pg > 1 ? false : true)
+	    return @exist_more_pg
 	end
 	
 	
 	# Same thing as the "next_page" class of function
 	def prev_page
 	    if @pg < 1
+		@exist_more_pg = false
 		return nil
 	    else
 		@pg -= 1
 		str = "DummyManga-Data/v#{@vol}c#{@chp}p#{@pg}.jpg"
+		
+		if @pg < 1
+		    @exist_more_pg = false
+		end
 
 		return Gdk::Pixbuf.new(str)
 	    end
 	end
 
 	def prev_page?
-	    return (@pg < 1 ? false : true)
+	    return @exist_more_pg
 	end
 
 	# This function will go to the page as specifyed in the index passed
@@ -86,14 +122,15 @@ module DummyManga
 	# no more chapters to fetch, the "pages count is undefined at the moment"
 	def next_chapter
 	    if @chp > 1
+		@exist_more_chp = false
 		return nil
 	    else
 		@chp += 1
-		
-		# Reset the pages - only if its less than or equal to 1, other 
-		# wise that means the chapter is all done... and need to advance 
-		# to next volume?
-		if @chp <= 1
+
+		if @chp > 1
+		    @exist_more_chp = false
+		else
+		    @exist_more_pg = true
 		    @pg = 0
 		end
 		return self
@@ -101,25 +138,25 @@ module DummyManga
 	end
 
 	def next_chapter?
-	    return (@chp > 1 ? false : true)
+	    return @exist_more_chp
 	end
 
 	
 	# Same thing as the "next_chapter" class of function
 	def prev_chapter
 	    if @chp < 1
+		@exist_more_chp = false
 		return nil
 	    else
 		@chp -= 1
 
-		# Reset the pages
-		@pg = 0
+		# No clue here yet
 		return self
 	    end
 	end
 
 	def prev_chapter?
-	    return (@chp < 1 ? false : true)
+	    return @exist_more_chp
 	end
 
 	
@@ -139,16 +176,18 @@ module DummyManga
 	# "*_chapter" classes of function, just applied to volumes
 	def next_volume
 	    if @vol > 1
+		@exist_more_vol = false
 		return nil
 	    else
 		@vol += 1
-		
-		# Reset the chapters - only if its less than or equal to 1, other 
-		# wise that means the volume is all done
-		if @vol <= 1
+	
+		if @vol > 1
+		    @exist_more_vol = false
+		else
+		    @exist_more_chp = true
 		    @chp = 0
-		   
-		    # Not sure of this one yet
+		    
+		    @exist_more_pg = true
 		    @pg = 0
 		end
 
@@ -157,12 +196,13 @@ module DummyManga
 	end
 
 	def next_volume?
-	    return (@vol > 1 ? false : true)
+	    return @exist_more_vol
 	end
 
 
 	def prev_volume
 	    if @vol < 1
+		@exist_more_vol = false
 		return nil
 	    else
 		@vol -= 1
@@ -175,7 +215,7 @@ module DummyManga
 	end
 
 	def prev_volume?
-	    return (@vol < 1 ? false : true)
+	    return @exist_more_vol
 	end
 
 	
@@ -229,7 +269,7 @@ module DummyManga
 
 	# The to_s function
 	def to_s
-	    return "v#{@vol}c#{@chp}p#{@pg}"
+	    return "v:#{@vol} c:#{@chp} p:#{@pg} - v:#{@exist_more_vol} c:#{@exist_more_chp} p:#{@exist_more_pg}"
 	end
     end
 end
