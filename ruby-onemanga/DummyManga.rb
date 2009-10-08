@@ -89,7 +89,7 @@ module DummyManga
 		return nil
 	    else
 		@chp += 1
-
+		
 		# Reset the pages
 		@pg = 0
 		return self

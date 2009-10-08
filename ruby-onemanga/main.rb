@@ -12,41 +12,43 @@ require 'DummyManga'
 
 dummy = DummyManga::MangaPages.new
 
+builder = Gtk::Builder.new
+builder.add_from_file('view/manga-view.glade')
 
-puts dummy.next_page
-puts dummy.next_page?
-puts dummy.prev_page
-puts dummy.prev_page?
-puts
-puts dummy
-puts
-puts dummy.next_chapter
-puts dummy.next_chapter?
-puts dummy.prev_chapter
-puts dummy.prev_chapter?
-puts
-puts dummy
-puts
-puts dummy.next_volume
-puts dummy.next_volume?
-puts dummy.prev_volume
-puts dummy.prev_volume?
-puts
-puts dummy
-puts
-puts dummy.list_volumes
-puts dummy.list_chapters
-puts dummy.list_pages
-puts
+forward = builder.get_object('forward_button')
+back = builder.get_object('back_button')
 
-#builder = Gtk::Builder.new
-#builder.add_from_file('view/manga-view.glade')
+pages = builder.get_object('pages_combobox')
+chapter = builder.get_object('chapter_combobox')
+
+image = builder.get_object('image')
+
+# Connect the Signals
+forward.signal_connect('clicked') do
+    if dummy.next_page? & dummy.next_chapter? & dummy.next_volume?
+	puts "Next page"
+	image.pixbuf = dummy.next_page
+    elsif dummy.next_chapter? & dummy.next_volume?
+	puts "Next chapter"
+	dummy = dummy.next_chapter
+    elsif dummy.next_volume?
+	puts "Next volume"
+	dummy = dummy.next_volume
+    else
+	puts "catchall"
+    end
+end
+
+back.signal_connect('clicked') do
+    image.pixbuf = dummy.prev_page
+end
+
 #builder.connect_signals {|handler| method(handler) }
-#
-#window = builder.get_object('viewer_window')
-#
-#window.show_all
-#Gtk.main
+
+window = builder.get_object('viewer_window')
+
+window.show_all
+Gtk.main
 
 
 ###############################################################################
