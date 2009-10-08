@@ -90,8 +90,12 @@ module DummyManga
 	    else
 		@chp += 1
 		
-		# Reset the pages
-		@pg = 0
+		# Reset the pages - only if its less than or equal to 1, other 
+		# wise that means the chapter is all done... and need to advance 
+		# to next volume?
+		if @chp <= 1
+		    @pg = 0
+		end
 		return self
 	    end
 	end
@@ -138,10 +142,16 @@ module DummyManga
 		return nil
 	    else
 		@vol += 1
+		
+		# Reset the chapters - only if its less than or equal to 1, other 
+		# wise that means the volume is all done
+		if @vol <= 1
+		    @chp = 0
+		   
+		    # Not sure of this one yet
+		    @pg = 0
+		end
 
-		# Reset the chapters and pages
-		@chp = 0
-		@pg = 0
 		return self
 	    end
 	end

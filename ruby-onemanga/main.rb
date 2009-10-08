@@ -28,22 +28,26 @@ forward.signal_connect('clicked') do
     if dummy.next_page? & dummy.next_chapter? & dummy.next_volume?
 	puts "Next page"
 	image.pixbuf = dummy.next_page
-    elsif dummy.next_chapter? & dummy.next_volume?
+    elsif dummy.next_chapter?
 	puts "Next chapter"
 	dummy = dummy.next_chapter
+
+	if dummy.next_page?
+	    puts "Next page - chapter"
+	    image.pixbuf = dummy.next_page
+	end
     elsif dummy.next_volume?
 	puts "Next volume"
 	dummy = dummy.next_volume
+
+	if dummy.next_page?
+	    puts "Next page - volume"
+	    image.pixbuf = dummy.next_page
+	end
     else
 	puts "catchall"
     end
 end
-
-back.signal_connect('clicked') do
-    image.pixbuf = dummy.prev_page
-end
-
-#builder.connect_signals {|handler| method(handler) }
 
 window = builder.get_object('viewer_window')
 
