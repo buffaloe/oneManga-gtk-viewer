@@ -25,16 +25,38 @@ image = builder.get_object('image')
 
 # Load first image
 if dummy.next_page?
-    image.pixbuf = dummy.next_page
+    image.pixbuf = dummy.first_page
+
+    # Set the buttons status
+    back.sensitive = false
+
+    # Setup the combo boxs
+    list_store = Gtk::ListStore.new(String)
+    dummy.list_pages.each do |text|
+	(list_store.append())[0] = text
+    end
+
+    render = Gtk::CellRendererText.new
+    pages.pack_start(render, true)
+    pages.set_attributes(render, {"text" => 0})
+    
+    pages.model = list_store
+    pages.active = 0
 end
 
-# Connect the Signals
+
+# Connect the forward/back button Signals
 forward.signal_connect('clicked') do
     if dummy.next_page?
 	puts "Next page"
 	image.pixbuf = dummy.next_page
-    else
-	puts "catchall"
+
+	pages.active = dummy.currentPageIndex
+	back.sensitive = true
+    end
+
+    if !dummy.next_page?
+	forward.sensitive = false
     end
 end
 
@@ -42,15 +64,31 @@ back.signal_connect('clicked') do
     if dummy.prev_page?
 	puts "Prev page"
 	image.pixbuf = dummy.prev_page
-    else
-	puts "catchall"
+
+	pages.active = dummy.currentPageIndex
+	forward.sensitive = true
+    end
+    
+    if !dummy.prev_page?
+	back.sensitive = false
     end
 end
+
+
+# Connect the combo box selection
+pages.signal_connect('changed') do |combobox|
+    # Ignore changes that are from "forward/backward"
+    # setting the combobox active index
+    if combobox.active != dummy.currentPageIndex
+	puts "valid"
+	image.pixbuf = dummy.goto_page(combobox.active)
+    end
+end
+
 
 window = builder.get_object('viewer_window')
 
 window.show_all
-
 Gtk.main
 
 

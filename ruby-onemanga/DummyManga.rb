@@ -36,17 +36,29 @@ module DummyManga
 	    return MangaSite.new
 	end
 
+
+	# Returns an Pixbuf of the first page, this is to make the next/prev_page
+	# code to be simpler, plus when the manga viewer loads up it will want a
+	# pixbuf of the first page of the manga anyway (for now)
+	def first_page
+	    if !@vol_exist & !@chp_exist
+		str = "DummyManga-Data/pg/p#{@pg}.jpg"
+		return Gdk::Pixbuf.new(str)
+	    end
+	end
+
+
 	# Returns an Pixbuf of the page, if its past the last of the pages, it 
 	# will return nil to indicate its past the last page
 	#
 	# If there is a failure at fetching the image, it will throw an exception
 	def next_page
 	    if !@vol_exist & !@chp_exist
-		if @pg > 7
+		if @pg >= 7
 		    return nil
 		else
-		    str = "DummyManga-Data/pg/p#{@pg}.jpg"
 		    @pg += 1
+		    str = "DummyManga-Data/pg/p#{@pg}.jpg"
 
 		    return Gdk::Pixbuf.new(str)
 		end
@@ -55,7 +67,7 @@ module DummyManga
 
 	def next_page?
 	    if !@vol_exist & !@chp_exist
-		return (@pg > 7) ? false : true
+		return (@pg >= 7) ? false : true
 	    end
 	end
 	
@@ -204,7 +216,7 @@ module DummyManga
 	end
 	
 	def list_pages
-	    return ["Pg 0", "Pg 1"]
+	    return ["Pg 0", "Pg 1", "Pg 2", "Pg 3", "Pg 4", "Pg 5", "Pg 6", "Pg 7"]
 	end
 
 
