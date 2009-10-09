@@ -20,6 +20,7 @@ back = builder.get_object('back_button')
 
 pages = builder.get_object('pages_combobox')
 chapter = builder.get_object('chapters_combobox')
+volume = builder.get_object('volumes_combobox')
 
 image = builder.get_object('image')
 
@@ -87,8 +88,12 @@ end
 
 
 window = builder.get_object('viewer_window')
-
 window.show_all
+
+# Show/hide widgets
+#builder.get_object('chapters_hbox').hide_all
+builder.get_object('volumes_hbox').hide_all
+
 Gtk.main
 
 

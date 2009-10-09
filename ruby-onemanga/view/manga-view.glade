@@ -168,72 +168,136 @@
           <object class="GtkHBox" id="toolbar_hbox">
             <property name="visible">True</property>
             <child>
-              <object class="GtkAlignment" id="chapters_label_alignment">
+              <object class="GtkHBox" id="volumes_hbox">
                 <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="xscale">0</property>
-                <property name="yscale">0</property>
-                <property name="left_padding">12</property>
-                <property name="right_padding">6</property>
                 <child>
-                  <object class="GtkLabel" id="chapters_label">
+                  <object class="GtkAlignment" id="volumes_label_alignment">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Chapters:</property>
+                    <property name="xalign">0</property>
+                    <property name="xscale">0</property>
+                    <property name="yscale">0</property>
+                    <property name="left_padding">12</property>
+                    <property name="right_padding">6</property>
+                    <child>
+                      <object class="GtkLabel" id="volumes_label">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Volumes:</property>
+                      </object>
+                    </child>
                   </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="volumes_combobox_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yscale">0</property>
+                    <child>
+                      <object class="GtkComboBox" id="volumes_combobox">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkComboBox" id="chapters_combobox">
+              <object class="GtkHBox" id="chapters_hbox">
                 <property name="visible">True</property>
+                <child>
+                  <object class="GtkAlignment" id="chapters_label_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xscale">0</property>
+                    <property name="yscale">0</property>
+                    <property name="left_padding">12</property>
+                    <property name="right_padding">6</property>
+                    <child>
+                      <object class="GtkLabel" id="chapters_label">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Chapters:</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="chapters_combobox_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yscale">0</property>
+                    <child>
+                      <object class="GtkComboBox" id="chapters_combobox">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <object class="GtkAlignment" id="pages_label_alignment">
+              <object class="GtkHBox" id="pages_hbox">
                 <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="xscale">0</property>
-                <property name="yscale">0</property>
-                <property name="left_padding">12</property>
-                <property name="right_padding">6</property>
                 <child>
-                  <object class="GtkLabel" id="pages_label">
+                  <object class="GtkAlignment" id="pages_label_alignment">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Pages:</property>
+                    <property name="xalign">0</property>
+                    <property name="xscale">0</property>
+                    <property name="yscale">0</property>
+                    <property name="left_padding">12</property>
+                    <property name="right_padding">6</property>
+                    <child>
+                      <object class="GtkLabel" id="pages_label">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Pages:</property>
+                      </object>
+                    </child>
                   </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="pages_combobox_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yscale">0</property>
+                    <property name="right_padding">12</property>
+                    <child>
+                      <object class="GtkComboBox" id="pages_combobox">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
                 <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkAlignment" id="pages_combobox_alignment">
-                <property name="visible">True</property>
-                <property name="xalign">0</property>
-                <property name="yscale">0</property>
-                <property name="right_padding">12</property>
-                <child>
-                  <object class="GtkComboBox" id="pages_combobox">
-                    <property name="width_request">187</property>
-                    <property name="visible">True</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">3</property>
               </packing>
             </child>
           </object>

@@ -44,6 +44,8 @@ module DummyManga
 	    if !@vol_exist & !@chp_exist
 		str = "DummyManga-Data/pg/p#{@pg}.jpg"
 		return Gdk::Pixbuf.new(str)
+	    else
+		puts "not implemented"
 	    end
 	end
 
@@ -62,12 +64,16 @@ module DummyManga
 
 		    return Gdk::Pixbuf.new(str)
 		end
+	    else
+		puts "not implemented"
 	    end
 	end
 
 	def next_page?
 	    if !@vol_exist & !@chp_exist
 		return (@pg >= 7) ? false : true
+	    else
+		puts "not implemented"
 	    end
 	end
 	
@@ -83,12 +89,16 @@ module DummyManga
 		    
 		    return Gdk::Pixbuf.new(str)
 		end
+	    else
+		puts "not implemented"
 	    end
 	end
 
 	def prev_page?
 	    if !@vol_exist & !@chp_exist
 		return (@pg < 1) ? false : true
+	    else
+		puts "not implemented"
 	    end
 	end
 
@@ -100,8 +110,14 @@ module DummyManga
 	# Also if the page as indicated by the index does not exist, it will
 	# throw an exception
 	def goto_page (index)
-	    puts "not implemented"
-	    return nil
+	    if !@vol_exist & !@chp_exist
+		@pg = index
+		str = "DummyManga-Data/pg/p#{@pg}.jpg"
+		
+		return Gdk::Pixbuf.new(str)
+	    else
+		puts "not implemented"
+	    end
 	end
 
 
