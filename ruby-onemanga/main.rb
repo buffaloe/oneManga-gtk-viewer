@@ -10,7 +10,7 @@
 require 'gtk2'
 require 'DummyManga'
 
-dummy = DummyManga::MangaPages.new(false, false)
+dummy = DummyManga::MangaPages.new(false, true)
 
 builder = Gtk::Builder.new
 builder.add_from_file('view/manga-view.glade')

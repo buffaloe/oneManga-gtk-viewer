@@ -44,6 +44,9 @@ module DummyManga
 	    if !@vol_exist & !@chp_exist
 		str = "DummyManga-Data/pg/p#{@pg}.jpg"
 		return Gdk::Pixbuf.new(str)
+
+	    elsif !@vol_exist & @chp_exist
+		puts "todo"
 	    else
 		puts "not implemented"
 	    end
@@ -64,6 +67,8 @@ module DummyManga
 
 		    return Gdk::Pixbuf.new(str)
 		end
+	    elsif !@vol_exist & @chp_exist
+		puts "todo"
 	    else
 		puts "not implemented"
 	    end
@@ -72,6 +77,8 @@ module DummyManga
 	def next_page?
 	    if !@vol_exist & !@chp_exist
 		return (@pg >= 7) ? false : true
+	    elsif !@vol_exist & @chp_exist
+		puts "todo"
 	    else
 		puts "not implemented"
 	    end
@@ -89,6 +96,8 @@ module DummyManga
 		    
 		    return Gdk::Pixbuf.new(str)
 		end
+	    elsif !@vol_exist & @chp_exist
+		puts "todo"
 	    else
 		puts "not implemented"
 	    end
@@ -97,6 +106,8 @@ module DummyManga
 	def prev_page?
 	    if !@vol_exist & !@chp_exist
 		return (@pg < 1) ? false : true
+	    elsif !@vol_exist & @chp_exist
+		puts "todo"
 	    else
 		puts "not implemented"
 	    end
@@ -115,6 +126,8 @@ module DummyManga
 		str = "DummyManga-Data/pg/p#{@pg}.jpg"
 		
 		return Gdk::Pixbuf.new(str)
+	    elsif !@vol_exist & @chp_exist
+		puts "todo"
 	    else
 		puts "not implemented"
 	    end
@@ -126,33 +139,53 @@ module DummyManga
 	# concept of "Chapters".  This function will return nil if there is
 	# no more chapters to fetch, the "pages count is undefined at the moment"
 	def next_chapter
-	    puts "not implemented"
-	    return nil
+	    if !@vol_exist & @chp_exist
+		puts "todo"
+	    else
+		puts "not implemented"
+		return nil
+	    end
 	end
 
 	def next_chapter?
-	    puts "not implemented"
-	    return nil
+	    if !@vol_exist & @chp_exist
+		puts "todo"
+	    else
+		puts "not implemented"
+		return nil
+	    end
 	end
 
 	
 	# Same thing as the "next_chapter" class of function
 	def prev_chapter
-	    puts "not implemented"
-	    return nil
+	    if !@vol_exist & @chp_exist
+		puts "todo"
+	    else
+		puts "not implemented"
+		return nil
+	    end
 	end
 
 	def prev_chapter?
-	    puts "not implemented"
-	    return nil
+	    if !@vol_exist & @chp_exist
+		puts "todo"
+	    else
+		puts "not implemented"
+		return nil
+	    end
 	end
 
 	
 	# Same thing as the "goto_page" function, however with respect
 	# to chapters, the results is the same, but applied to chapters
 	def goto_chapter (index)
-	    puts "not implemented"
-	    return nil
+	    if !@vol_exist & @chp_exist
+		puts "todo"
+	    else
+		puts "not implemented"
+		return nil
+	    end
 	end
 	
 
