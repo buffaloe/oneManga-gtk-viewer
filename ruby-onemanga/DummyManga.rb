@@ -48,11 +48,14 @@ module DummyManga
 	    elsif !@vol_exist & @chp_exist
 		str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
 		return Gdk::Pixbuf.new(str)
+	    elsif @vol_exist & @chp_exist
+		str = "DummyManga-Data/vol_chp_pg/v#{@vol}c#{@chp}p#{@pg}.jpg"
+		return Gdk::Pixbuf.new(str)
 	    else
 		puts "not implemented"
 	    end
 	end
-	
+
 	# Returns an Pixbuf of the last page, this is to make the next/prev_page
 	# code to be simpler, plus when the manga viewer loads up it will want a
 	# pixbuf of the last page of the manga anyway (for now)
@@ -63,6 +66,9 @@ module DummyManga
 
 	    elsif !@vol_exist & @chp_exist
 		str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
+		return Gdk::Pixbuf.new(str)
+	    elsif @vol_exist & @chp_exist
+		str = "DummyManga-Data/vol_chp_pg/v#{@vol}c#{@chp}p#{@pg}.jpg"
 		return Gdk::Pixbuf.new(str)
 	    else
 		puts "not implemented"
@@ -93,6 +99,15 @@ module DummyManga
 
 		    return Gdk::Pixbuf.new(str)
 		end
+	    elsif @vol_exist & @chp_exist
+		if @pg >= 1
+		    return nil
+		else
+		    @pg += 1
+		    str = "DummyManga-Data/vol_chp_pg/v#{@vol}c#{@chp}p#{@pg}.jpg"
+
+		    return Gdk::Pixbuf.new(str)
+		end
 	    else
 		puts "not implemented"
 	    end
@@ -103,12 +118,14 @@ module DummyManga
 		return (@pg >= 7) ? false : true
 	    elsif !@vol_exist & @chp_exist
 		return (@pg >= 3) ? false : true
+	    elsif @vol_exist & @chp_exist
+		return (@pg >= 1) ? false : true
 	    else
 		puts "not implemented"
 	    end
 	end
-	
-	
+
+
 	# Same thing as the "next_page" class of function
 	def prev_page
 	    if !@vol_exist & !@chp_exist
@@ -117,7 +134,7 @@ module DummyManga
 		else
 		    @pg -= 1
 		    str = "DummyManga-Data/pg/p#{@pg}.jpg"
-		    
+
 		    return Gdk::Pixbuf.new(str)
 		end
 	    elsif !@vol_exist & @chp_exist
@@ -126,7 +143,16 @@ module DummyManga
 		else
 		    @pg -= 1
 		    str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
-		    
+
+		    return Gdk::Pixbuf.new(str)
+		end
+	    elsif @vol_exist & @chp_exist
+		if @pg < 1
+		    return nil
+		else
+		    @pg -= 1
+		    str = "DummyManga-Data/vol_chp_pg/v#{@vol}c#{@chp}p#{@pg}.jpg"
+
 		    return Gdk::Pixbuf.new(str)
 		end
 	    else
@@ -138,6 +164,8 @@ module DummyManga
 	    if !@vol_exist & !@chp_exist
 		return (@pg < 1) ? false : true
 	    elsif !@vol_exist & @chp_exist
+		return (@pg < 1) ? false : true
+	    elsif @vol_exist & @chp_exist
 		return (@pg < 1) ? false : true
 	    else
 		puts "not implemented"
@@ -155,12 +183,17 @@ module DummyManga
 	    if !@vol_exist & !@chp_exist
 		@pg = index
 		str = "DummyManga-Data/pg/p#{@pg}.jpg"
-		
+
 		return Gdk::Pixbuf.new(str)
 	    elsif !@vol_exist & @chp_exist
 		@pg = index
 		str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
-		
+
+		return Gdk::Pixbuf.new(str)
+	    elsif @vol_exist & @chp_exist
+		@pg = index
+		str = "DummyManga-Data/vol_chp_pg/v#{@vol}c#{@chp}p#{@pg}.jpg"
+
 		return Gdk::Pixbuf.new(str)
 	    else
 		puts "not implemented"
@@ -182,6 +215,15 @@ module DummyManga
 
 		    return self
 		end
+	    elsif @vol_exist & @chp_exist
+		if @chp >= 1
+		    return nil
+		else
+		    @chp += 1
+		    @pg = 0
+
+		    return self
+		end
 	    else
 		puts "not implemented"
 		return nil
@@ -191,13 +233,15 @@ module DummyManga
 	def next_chapter?
 	    if !@vol_exist & @chp_exist
 		return (@chp >= 1) ? false : true
+	    elsif @vol_exist & @chp_exist
+		return (@chp >= 1) ? false : true
 	    else
 		puts "not implemented"
 		return nil
 	    end
 	end
 
-	
+
 	# Same thing as the "next_chapter" class of function
 	def prev_chapter
 	    if !@vol_exist & @chp_exist
@@ -206,7 +250,16 @@ module DummyManga
 		else
 		    @chp -= 1
 		    @pg = 3
-		    
+
+		    return self
+		end
+	    elsif @vol_exist & @chp_exist
+		if @chp < 1
+		    return nil
+		else
+		    @chp -= 1
+		    @pg = 1
+
 		    return self
 		end
 	    else
@@ -218,13 +271,15 @@ module DummyManga
 	def prev_chapter?
 	    if !@vol_exist & @chp_exist
 		return (@chp < 1) ? false : true
+	    elsif @vol_exist & @chp_exist
+		return (@chp < 1) ? false : true
 	    else
 		puts "not implemented"
 		return nil
 	    end
 	end
 
-	
+
 	# Same thing as the "goto_page" function, however with respect
 	# to chapters, the results is the same, but applied to chapters
 	#
@@ -233,14 +288,19 @@ module DummyManga
 	    if !@vol_exist & @chp_exist
 		@pg = 0
 		@chp = index
-		
+
+		return first_page
+	    elsif @vol_exist & @chp_exist
+		@pg = 0
+		@chp = index
+
 		return first_page
 	    else
 		puts "not implemented"
 		return nil
 	    end
 	end
-	
+
 
 	# Most Manga Backend does not really have the concept of 
 	# Manga Volume so this class of function is somewhat redudant,
@@ -249,30 +309,55 @@ module DummyManga
 	# Regardless, the functionality here is the same as the
 	# "*_chapter" classes of function, just applied to volumes
 	def next_volume
-	    puts "not implemented"
-	    return nil
+	    if @vol_exist & @chp_exist
+		if @vol >= 1
+		    return nil
+		else
+		    @vol += 1
+		    @chp = 0
+		    @pg = 0
+
+		    return self
+		end
+	    end
 	end
 
 	def next_volume?
-	    puts "not implemented"
-	    return nil
+	    if @vol_exist & @chp_exist
+		return (@vol >= 1) ? false : true
+	    end
 	end
 
 
 	def prev_volume
-	    puts "not implemented"
-	    return nil
+	    if @vol_exist & @chp_exist
+		if @vol < 1
+		    return nil
+		else
+		    @vol -= 1
+		    @chp = 1
+		    @pg = 1
+
+		    return self
+		end
+	    end
 	end
 
 	def prev_volume?
-	    puts "not implemented"
-	    return nil
+	    if @vol_exist & @chp_exist
+		return (@vol < 1) ? false : true
+	    end
 	end
 
-	
+
 	def goto_volume (index)
-	    puts "not implemented"
-	    return nil
+	    if @vol_exist & @chp_exist
+		@pg = 0
+		@chp = 0
+		@vol = index
+
+		return first_page
+	    end
 	end
 
 
@@ -288,8 +373,7 @@ module DummyManga
 	# MangaPages, in volumes/chapter/page, and if one of these
 	# function/class are not used it will return nil
 	def currentVolumeIndex
-	    puts "not implemented"
-	    return nil
+	    return @vol
 	end
 
 	def currentChapterIndex
@@ -307,26 +391,31 @@ module DummyManga
 	# If its not used it will return nil also if there is problems
 	# fetching that information, it will also toss out an exception
 	def list_volumes
-	    puts "not implemented"
-	    return nil
+	    if @vol_exist & @chp_exist
+		return ["Vol 0", "Vol 1"]
+	    end
 	end
-	
+
 	def list_chapters
 	    if !@vol_exist & !@chp_exist
 		return nil
 	    elsif !@vol_exist & @chp_exist
+		return ["Chp 0", "Chp 1"]
+	    elsif @vol_exist & @chp_exist
 		return ["Chp 0", "Chp 1"]
 	    else
 		puts "not implemented"
 		return nil
 	    end
 	end
-	
+
 	def list_pages
 	    if !@vol_exist & !@chp_exist
 		return ["Pg 0", "Pg 1", "Pg 2", "Pg 3", "Pg 4", "Pg 5", "Pg 6", "Pg 7"]
 	    elsif !@vol_exist & @chp_exist
 		return ["Pg 0", "Pg 1", "Pg 2", "Pg 3"]
+	    elsif @vol_exist & @chp_exist
+		return ["Pg 0", "Pg 1"]
 	    else
 		puts "not implemented"
 		return nil
