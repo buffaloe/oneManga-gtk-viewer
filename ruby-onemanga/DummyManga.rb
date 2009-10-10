@@ -46,7 +46,24 @@ module DummyManga
 		return Gdk::Pixbuf.new(str)
 
 	    elsif !@vol_exist & @chp_exist
-		puts "todo"
+		str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
+		return Gdk::Pixbuf.new(str)
+	    else
+		puts "not implemented"
+	    end
+	end
+	
+	# Returns an Pixbuf of the last page, this is to make the next/prev_page
+	# code to be simpler, plus when the manga viewer loads up it will want a
+	# pixbuf of the last page of the manga anyway (for now)
+	def last_page
+	    if !@vol_exist & !@chp_exist
+		str = "DummyManga-Data/pg/p#{@pg}.jpg"
+		return Gdk::Pixbuf.new(str)
+
+	    elsif !@vol_exist & @chp_exist
+		str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
+		return Gdk::Pixbuf.new(str)
 	    else
 		puts "not implemented"
 	    end
@@ -68,7 +85,14 @@ module DummyManga
 		    return Gdk::Pixbuf.new(str)
 		end
 	    elsif !@vol_exist & @chp_exist
-		puts "todo"
+		if @pg >= 3
+		    return nil
+		else
+		    @pg += 1
+		    str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
+
+		    return Gdk::Pixbuf.new(str)
+		end
 	    else
 		puts "not implemented"
 	    end
@@ -78,7 +102,7 @@ module DummyManga
 	    if !@vol_exist & !@chp_exist
 		return (@pg >= 7) ? false : true
 	    elsif !@vol_exist & @chp_exist
-		puts "todo"
+		return (@pg >= 3) ? false : true
 	    else
 		puts "not implemented"
 	    end
@@ -97,7 +121,14 @@ module DummyManga
 		    return Gdk::Pixbuf.new(str)
 		end
 	    elsif !@vol_exist & @chp_exist
-		puts "todo"
+		if @pg < 1
+		    return nil
+		else
+		    @pg -= 1
+		    str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
+		    
+		    return Gdk::Pixbuf.new(str)
+		end
 	    else
 		puts "not implemented"
 	    end
@@ -107,7 +138,7 @@ module DummyManga
 	    if !@vol_exist & !@chp_exist
 		return (@pg < 1) ? false : true
 	    elsif !@vol_exist & @chp_exist
-		puts "todo"
+		return (@pg < 1) ? false : true
 	    else
 		puts "not implemented"
 	    end
@@ -127,7 +158,10 @@ module DummyManga
 		
 		return Gdk::Pixbuf.new(str)
 	    elsif !@vol_exist & @chp_exist
-		puts "todo"
+		@pg = index
+		str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
+		
+		return Gdk::Pixbuf.new(str)
 	    else
 		puts "not implemented"
 	    end
@@ -140,7 +174,14 @@ module DummyManga
 	# no more chapters to fetch, the "pages count is undefined at the moment"
 	def next_chapter
 	    if !@vol_exist & @chp_exist
-		puts "todo"
+		if @chp >= 1
+		    return nil
+		else
+		    @chp += 1
+		    @pg = 0
+
+		    return self
+		end
 	    else
 		puts "not implemented"
 		return nil
@@ -149,7 +190,7 @@ module DummyManga
 
 	def next_chapter?
 	    if !@vol_exist & @chp_exist
-		puts "todo"
+		return (@chp >= 1) ? false : true
 	    else
 		puts "not implemented"
 		return nil
@@ -160,7 +201,14 @@ module DummyManga
 	# Same thing as the "next_chapter" class of function
 	def prev_chapter
 	    if !@vol_exist & @chp_exist
-		puts "todo"
+		if @chp < 1
+		    return nil
+		else
+		    @chp -= 1
+		    @pg = 3
+		    
+		    return self
+		end
 	    else
 		puts "not implemented"
 		return nil
@@ -169,7 +217,7 @@ module DummyManga
 
 	def prev_chapter?
 	    if !@vol_exist & @chp_exist
-		puts "todo"
+		return (@chp < 1) ? false : true
 	    else
 		puts "not implemented"
 		return nil
@@ -179,9 +227,14 @@ module DummyManga
 	
 	# Same thing as the "goto_page" function, however with respect
 	# to chapters, the results is the same, but applied to chapters
+	#
+	# It defaults to the first page of each chapter
 	def goto_chapter (index)
 	    if !@vol_exist & @chp_exist
-		puts "todo"
+		@pg = 0
+		@chp = index
+		
+		return first_page
 	    else
 		puts "not implemented"
 		return nil
@@ -240,8 +293,7 @@ module DummyManga
 	end
 
 	def currentChapterIndex
-	    puts "not implemented"
-	    return nil
+	    return @chp
 	end
 
 	def currentPageIndex
@@ -260,12 +312,25 @@ module DummyManga
 	end
 	
 	def list_chapters
-	    puts "not implemented"
-	    return nil
+	    if !@vol_exist & !@chp_exist
+		return nil
+	    elsif !@vol_exist & @chp_exist
+		return ["Chp 0", "Chp 1"]
+	    else
+		puts "not implemented"
+		return nil
+	    end
 	end
 	
 	def list_pages
-	    return ["Pg 0", "Pg 1", "Pg 2", "Pg 3", "Pg 4", "Pg 5", "Pg 6", "Pg 7"]
+	    if !@vol_exist & !@chp_exist
+		return ["Pg 0", "Pg 1", "Pg 2", "Pg 3", "Pg 4", "Pg 5", "Pg 6", "Pg 7"]
+	    elsif !@vol_exist & @chp_exist
+		return ["Pg 0", "Pg 1", "Pg 2", "Pg 3"]
+	    else
+		puts "not implemented"
+		return nil
+	    end
 	end
 
 
