@@ -9,9 +9,87 @@ module DummyManga
     class MangaSite
     end
 
+    # Manga Info
     class MangaInfo
+
+	# Front/Cover Page Picture, will return a single image if there is only
+	# one image, otherwise it will return an array of images, it will also
+	# return nil if there is no front page image.  In case of manga that has
+	# one front page for each volume, it will just return an array of the
+	# pictures in sequial order from first to last volume
+	def cover_pages
+	    str = "DummyManga-Data/cover.jpg"
+	    return [Gdk::Pixbuf.new(str)]
+	end
+
+
+	# The title of the manga
+	def title
+	    return "Until Death Do Us Part"
+	end
+
+
+	# Returns the alternative titles of the manga, if there is more than one
+	# then this function will return a list of them
+	def alternative_titles
+	    return ["Shi ga Futari wo Wakatsu Made", "死がふたりを分かつまで",
+	    "直至死亡将我们分开", "Jusqu'à ce que la mort nous sépare",
+	    "Hasta que la muerte nos separe", "Bis der Tod uns scheidet"]
+	end
+
+
+	# Returns the list of categories/genres that the manga is in
+	def categories
+	    return ["Action", "Adventure", "Drama", "Mature",
+	    "Sci-fi", "Seinen", "Supernatural"]
+	end
+
+
+	# Return the list of authors
+	def authors
+	    return ["Takashige Hiroshi"]
+	end
+
+
+	# Return the list of artist
+	def artists
+	    return ["Double-s"]
+	end
+
+
+	# Manga Release status, such as irregular, unknown, regular
+	# IE the schedule that the translator/scanlators release new
+	# materials
+	def release_status
+	    return MangaUtils::MangaReleaseStatus::IRREGULAR
+	end
+
+	
+	# Manga Status, such as completed or incomplete
+	def status
+	    return MangaUtils::MangaStatus::UNCOMPLETED
+	end
+
+
+	# Manga Size/total - number of pages total, number of chapters,
+	# numbers of volumes in the manga, returns nil for unknown value,
+	# may get updated as the user progresses along?
+	def total_number
+	    return [10, 88, nil]
+	end
+
+	
+	#
+
     end
 
+
+
+
+
+
+
+    # Manga Pages
     class MangaPages
 
 	def initialize (vol_exist, chp_exist)
@@ -438,6 +516,17 @@ module MangaUtils
     class ReadingDirection
 	RIGHT_TO_LEFT = 1
 	LEFT_TO_RIGHT = 2
+    end
+
+    class MangaReleaseStatus
+	REGULAR = 1
+	IRREGULAR = 2 # Ongoing
+    end
+
+    class MangaStatus
+	COMPLETED = 1
+	UNCOMPLETED = 2
+	SUSPENDED = 3
     end
 end
 	    

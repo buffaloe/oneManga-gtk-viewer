@@ -2,6 +2,7 @@ Series/Manga Info:
 
     Front Page Picture
 	 Main page/cut/picture - maynot match - Manga Share
+	 Multiple if Volume based - AnyManga
 
     Title
 	Alternative Title
