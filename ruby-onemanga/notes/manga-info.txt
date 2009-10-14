@@ -43,7 +43,7 @@ Series/Manga Info:
     Date Added
 	- Date it was added to the site
 
-    Rank
+   Rank
 	Site ranking
 	Votes - Number of votes
 
@@ -71,15 +71,8 @@ Per Chapter: (initalizer for the per chapter/page object?)
 
     Scan By / Scanlator
 
-    Contributor / Uploaded by?
-
     Date Added
 	Updated?
-
-    Views
-	Views Ever
-	Views Today
-	Page views
 
     Number of Pages
 

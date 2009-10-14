@@ -9,7 +9,10 @@ module DummyManga
     class MangaSite
     end
 
-    # Manga Info
+    #######################################################################
+    # Per manga Information - Each object holds information on one manga
+    # TODO: Update this class
+    #######################################################################
     class MangaInfo
 
 	# Front/Cover Page Picture, will return a single image if there is only
@@ -79,17 +82,155 @@ module DummyManga
 	end
 
 	
-	#
+	# Latest Chapters...
+	def latest_chapter
+	    return "Until Death Do Us Part Vol.10 Ch.088"
+	end
 
+
+	# Year of release
+	def year_of_release
+	    return 2005  # Maybe a date object is better?
+	end
+
+	# Serialized in (magzines)
+	def serialized_in
+	    return nil
+	end
+
+	# Date/Time it was added to the site
+	def date_time_added
+	    return "Jun 2, 2008"
+	end
+
+
+	# Ranking on the site (rank, number of votes)
+	def site_ranking
+	    return [327, nil]
+	end
+
+
+	# Rating on the site for the manga (rating, out of, votes)
+	def rating
+	    return [4.97, 5.00, 320]
+	end
+
+
+	# Views (number, type [monthly, weekly, etc])
+	def views
+	    return [32484, MangaUtils::MangaViewType::MONTHLY]
+	end
+
+    end
+
+
+    #######################################################################
+    # Per Volume Information - Each object holds information on one volume
+    #######################################################################
+    class MangaVolumes
+
+	# If the manga volume has a specific title for each volume, return
+	# this volume's "title", otherwise return a nil
+	attr_reader :title
+
+	# Volume number, IE Vol 01, Vol 02, etc..
+	attr_reader :number
+
+	# Parent MangaInfo object - one object
+	attr_reader :manga_info
+
+	# Next & Previous volume object, if there is no more, it will be nil
+	attr_reader :next, :prev
+
+	# List of MangaChapters object assigned to this volume - Multiple object
+	attr_reader :chapters
+
+	# Cover page image for the volume
+	def cover_page
+	    return Gdk::Pixbuf.new(@cover_page_path)
+	end
+
+
+	# The class constructor
+	def initialize (title, number, manga_info, next_vol, prev_vol,
+			cover_page_path, chapters)
+	   @title = title
+	   @number = number
+	   @manga_info = manga_info
+	   @next = next_vol
+	   @prev = prev_vol
+
+	   @cover_page_path = cover_page_path
+
+	   @chapters = chapters
+	end
+    end
+
+
+    #######################################################################
+    # Per Chapter Information - each object holds information on one chapter
+    #######################################################################
+    class MangaChapters
+
+	# If the manga has an specific title for each chapter, otherwise
+	# its nil
+	attr_reader :title
+
+	# Chapter "number" - IE Chp 01, Chp 02...
+	attr_reader :number
+
+	# Chapter "Status" - IE is it a newly added chapter?
+	attr_reader :status
+	# ex: - MangaUtil::MangaChapterStatus::NEW
+
+	# Scanlator/Scanned by
+	attr_reader :scanlator
+
+	# The date that "this" chapter was added/updated
+	attr_reader :date_added
+
+	# Number of Pages in this chapter - Not sure if needed
+	attr_reader :num_pages
+
+
+	# Parent MangaVolume object - one object
+	attr_reader :volume
+
+	# Parent MangaInfo object - one object
+	attr_reader :manga_info
+
+	# Next & Previous chapter object, if there is no more, it will be nil
+	attr_reader :next, :prev
+
+	# The "MangaPages" Object, which takes care of pages/pagation - one object
+	attr_reader :pages
+	
+	
+	# The class constructor
+	def initialize (title, number, status, scanlator, date_added, number_of_pages,
+			volume, manga_info, next_chapter, prev_chapter, 
+			manga_pages)
+	    @title = title
+	    @number = number
+	    @status = status
+	    @scanlator = scanlator
+	    @date_added = date_added
+	    @num_pages = number_of_pages
+
+	    @volume = volume
+	    @manga_info = manga_info
+	    @next = next_chapter
+	    @prev = prev_chapter
+
+	    @pages = manga_pages
+	end
     end
 
 
 
 
-
-
-
     # Manga Pages
+    # TODO: Update this class
     class MangaPages
 
 	def initialize (vol_exist, chp_exist)
@@ -527,6 +668,17 @@ module MangaUtils
 	COMPLETED = 1
 	UNCOMPLETED = 2
 	SUSPENDED = 3
+    end
+
+    class MangaViewType
+	EVER = 1
+	MONTHLY = 2
+	WEEKLY = 3
+    end
+
+    class MangaChapterStatus
+	NEW = 1
+	NORMINAL = 2
     end
 end
 	    
