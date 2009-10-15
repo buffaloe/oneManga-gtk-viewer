@@ -6,121 +6,171 @@ module DummyManga
 
     require 'gtk2'
 
-    class MangaSite
+    # This is only a "meta" object for "constructing" the entire structure of
+    # this "dummy site"
+    class DummyMangaConstructor
     end
+
+
+    #######################################################################
+    # Per Manga Site Information - This really is the "root" for each site
+    # it holds the list of all manga, and some other informations that may
+    # be needed for displaying data/etc
+    #######################################################################
+    class MangaSite
+	# List of categories/genre of manga that are available on the site
+	attr_reader :categories
+
+	# List of all of the MangaInfo - multiple objects, on this site
+	attr_reader :mangas
+
+
+	# The class constructor
+	def initialize (categories, mangas)
+	    @categories = categories
+	    @mangas = mangas
+	end
+    end
+
 
     #######################################################################
     # Per manga Information - Each object holds information on one manga
-    # TODO: Update this class
     #######################################################################
     class MangaInfo
 
-	# Front/Cover Page Picture, will return a single image if there is only
-	# one image, otherwise it will return an array of images, it will also
-	# return nil if there is no front page image.  In case of manga that has
-	# one front page for each volume, it will just return an array of the
-	# pictures in sequial order from first to last volume
+	# Front page picture, it will return a single image if there is only one
+	# cover image.  However if there is more than one cover page image such
+	# as one cover page image per volume, it will return an array with the
+	# pictures in sequial order from first to last volume.
 	def cover_pages
-	    str = "DummyManga-Data/cover.jpg"
-	    return [Gdk::Pixbuf.new(str)]
+	    if @cover_page_paths.is_a? Array
+		ret = []
+		@cover_page_paths.each do |path|
+		    ret.push(Gdk::Pixbuf.new(path))
+		end
+	    else
+		ret = Gdk::Pixbuf.new(@cover_page_paths)
+	    end
+	    return ret
 	end
 
+	# Manga's Title
+	attr_reader :title
 
-	# The title of the manga
-	def title
-	    return "Until Death Do Us Part"
+	# Alternative Titles, there may be more than one.  If there is more than
+	# one an array will be returned, otherwise it'll return a nil
+	attr_reader :alt_titles
+
+	# The manga's Categories/Genres, if there is more than one, it will be
+	# returned as an array
+	attr_reader :categories
+
+	# Authors, if there is more than one its returned as an array
+	attr_reader :authors
+
+	# Artists, if there is more than one, its then returned as an array
+	attr_reader :artists
+
+	# Manga release schedule, such as irregular, regular, unknown, in other
+	# words the schedule that the scanlators releases new materials
+	attr_reader :release_schedule
+
+	# The state of the manga, IE is it completed, uncompleted, or 
+	# suspended?
+	attr_reader :state
+
+	# The status of the manga, is it newly updated, new addition, or "hot"
+	# meaning popular
+	attr_reader :status
+
+	# Manga size/total - number of pages, number of chapters, and number of
+	# volumes, anyway it will return nil for unknown values, this function
+	# won't actually hold the total number, it probably will query the list
+	# of volumes/chapters for that information...
+	def total
+	    return [10, 88, nil] # IE 10 vol, 88 chapters, unknown pages
 	end
 
+	# Latest chapter - A direct link to the latest chapter
+	attr_reader :latest_chapter
 
-	# Returns the alternative titles of the manga, if there is more than one
-	# then this function will return a list of them
-	def alternative_titles
-	    return ["Shi ga Futari wo Wakatsu Made", "死がふたりを分かつまで",
-	    "直至死亡将我们分开", "Jusqu'à ce que la mort nous sépare",
-	    "Hasta que la muerte nos separe", "Bis der Tod uns scheidet"]
+	# Last update - The last time it was updated
+	attr_reader :last_update
+
+	# Year of release - Date/time object perhaps?
+	attr_reader :release_year
+
+	# Which magzine it was serialized in
+	attr_reader :serialized_in
+
+	# date/time it was added to the site
+	attr_reader :when_added
+
+	# Ranking on the site
+	attr_reader :site_ranking
+
+	# Rating on the site for this manga (rating, out-of, votes)
+	attr_reader :rating
+
+	# Views (number, type(monthly, weekly, etc))
+	attr_reader :views
+
+
+	# Parent MangaSite
+	attr_reader :manga_site
+
+
+	# List of MangaVolumes, assigned to this manga - multiple objects
+	# if volumes are not used, will return a nil?
+	attr_reader :volumes
+
+	# List of MangaChapters, assigned to this manga - multiple objects
+	# if volumes are used, this will be a nil, otherwise if volume is
+	# not used and chapters are used this will return an array of MangaChapters
+	attr_reader :chapters
+
+
+	# List of MangaPages - Really a single object that deals with "pagation",
+	# if chapters or volumes are being used, this will return a nil, otherwise
+	# it will return a single object that deals with pagation, this part is not
+	# still certain yet...
+	attr_reader :pages
+
+
+	# The class constructor
+	def initialize (title, alt_titles, categories, authors, artists,
+			releases, state, status, total, latest_chapter, last_update,
+			release_year, serialized, add_date, ranking, rating, views,
+			manga_site, volumes, chapters, pages, cover_pages)
+	    @title = title
+	    @alt_titles = alt_titles
+	    @categories = categories
+	    @authors = authors
+	    @artists = artists
+
+	    @release_schedule = releases
+	    @state = state
+	    @status = status
+	    @total = total
+
+	    @latest_chapter = latest_chapter
+	    @last_update = last_update
+	    @release_year = release_year
+	    @serialized_in = serialized
+	    @when_added = add_date
+
+	    @site_ranking = ranking
+	    @rating = rating
+	    @views = views
+
+	    @manga_site = manga_site
+
+	    @volumes = volumes
+	    @chapters = chapters
+	    @pages = pages
+
+	    @cover_page_paths = cover_pages
 	end
-
-
-	# Returns the list of categories/genres that the manga is in
-	def categories
-	    return ["Action", "Adventure", "Drama", "Mature",
-	    "Sci-fi", "Seinen", "Supernatural"]
-	end
-
-
-	# Return the list of authors
-	def authors
-	    return ["Takashige Hiroshi"]
-	end
-
-
-	# Return the list of artist
-	def artists
-	    return ["Double-s"]
-	end
-
-
-	# Manga Release status, such as irregular, unknown, regular
-	# IE the schedule that the translator/scanlators release new
-	# materials
-	def release_status
-	    return MangaUtils::MangaReleaseStatus::IRREGULAR
-	end
-
-	
-	# Manga Status, such as completed or incomplete
-	def status
-	    return MangaUtils::MangaStatus::UNCOMPLETED
-	end
-
-
-	# Manga Size/total - number of pages total, number of chapters,
-	# numbers of volumes in the manga, returns nil for unknown value,
-	# may get updated as the user progresses along?
-	def total_number
-	    return [10, 88, nil]
-	end
-
-	
-	# Latest Chapters...
-	def latest_chapter
-	    return "Until Death Do Us Part Vol.10 Ch.088"
-	end
-
-
-	# Year of release
-	def year_of_release
-	    return 2005  # Maybe a date object is better?
-	end
-
-	# Serialized in (magzines)
-	def serialized_in
-	    return nil
-	end
-
-	# Date/Time it was added to the site
-	def date_time_added
-	    return "Jun 2, 2008"
-	end
-
-
-	# Ranking on the site (rank, number of votes)
-	def site_ranking
-	    return [327, nil]
-	end
-
-
-	# Rating on the site for the manga (rating, out of, votes)
-	def rating
-	    return [4.97, 5.00, 320]
-	end
-
-
-	# Views (number, type [monthly, weekly, etc])
-	def views
-	    return [32484, MangaUtils::MangaViewType::MONTHLY]
-	end
-
     end
 
 
@@ -154,15 +204,15 @@ module DummyManga
 	# The class constructor
 	def initialize (title, number, manga_info, next_vol, prev_vol,
 			cover_page_path, chapters)
-	   @title = title
-	   @number = number
-	   @manga_info = manga_info
-	   @next = next_vol
-	   @prev = prev_vol
+	    @title = title
+	    @number = number
+	    @manga_info = manga_info
+	    @next = next_vol
+	    @prev = prev_vol
 
-	   @cover_page_path = cover_page_path
+	    @cover_page_path = cover_page_path
 
-	   @chapters = chapters
+	    @chapters = chapters
 	end
     end
 
@@ -204,8 +254,8 @@ module DummyManga
 
 	# The "MangaPages" Object, which takes care of pages/pagation - one object
 	attr_reader :pages
-	
-	
+
+
 	# The class constructor
 	def initialize (title, number, status, scanlator, date_added, number_of_pages,
 			volume, manga_info, next_chapter, prev_chapter, 
