@@ -9,6 +9,185 @@ module DummyManga
     # This is only a "meta" object for "constructing" the entire structure of
     # this "dummy site"
     class DummyMangaConstructor
+
+	def initialize
+
+	    ##############################
+	    # Site Info
+	    ##############################
+
+	    # Site values/variables
+	    categories = ["Action", "Adventure", "Drama"]
+
+	    # Site Info
+	    @site_info = MangaSite.new(categories, nil)
+	    
+	    
+	    ##############################
+	    # Manga (1) Info
+	    ##############################
+	    cover_page = "DummyManga-Data/death/cover.jpg"
+
+	    title = "UNTIL DEATH DO US PART"
+	    alt_title = ["Shi ga Futari wo Wakatsu Made", "死がふたりを分かつまで"]
+	    categories = ["Action", "Drama"]
+	    authors = "Takashige Hiroshi"
+	    artists = "Double-s"
+	    schedule = MangaUtils::MangaReleaseStatus::REGULAR
+	    state = MangaUtils::MangaStatus::UNCOMPLETED
+	    status = MangaUtils::MangaChapterStatus::NEW
+	    total = [10, 88, nil]
+	    last_update = Time.utc(2009, 10, 3)
+	    release_year = Time.utc(2005)
+	    serialized = nil
+	    when_added = Time.utc(2008, 6, 2)
+	    site_ranking = 332
+	    rating = [4.97, 5, 320]
+	    views = [32372, MangaUtils::MangaViews::MONTHLY]
+	    
+	    summary = "A girl named Haruka Tōyama happens to be in the care of a certain company because she can see the future, but she wants to get away, so using her abilities she finds a blind though strong man and asks him to help her as a body guard 'till death do them part. The man, named Mamoru Hijikata, quickly dismisses her request as a joke from a small 12 year old kid, only to realize what shady business has beginning to unfold when people willing to do anything are desperately searching for the girl. As she predicted, Mamoru has past experience in shady business himself, and will not be pushed around easily by any criminal.
+	    
+	    ... Is 'protection' the only reason that Haruka approached Mamoru? Or could it be something else?"
+
+	    manga_info_one = MangaInfo.new(title, alt_title, categories, authors,
+					   artists, schedule, state, status, total,
+					   nil, last_update, release_year, serialized,
+					   when_added, site_ranking, rating, views, summary,
+					   @site_info, nil, nil, nil, cover_page)
+
+	    ##############################
+	    # Manga (2) Info
+	    ##############################
+	    cover_page = ["DummyManga-Data/anima/cover01.jpg",
+			    "DummyManga-Data/anima/cover02.jpg",
+			    "DummyManga-Data/anima/cover03.jpg"]
+
+	    title = "+Anima"
+	    alt_title = nil
+	    categories = ["Adventure", "Drama"]
+	    authors = "Mukai Natsumi"
+	    artists = "Mukai Natsumi"
+	    schedule = MangaUtils::MangaReleaseStatus::IRREGULAR
+	    state = MangaUtils::MangaStatus::UNCOMPLETED
+	    status = MangaUtils::MangaChapterStatus::NEW
+	    total = [nil, 40, nil]
+	    last_update = Time.utc(2008, 7, 27)
+	    release_year = nil
+	    serialized = nil
+	    when_added = Time.utc(2008, 3, 26)
+	    site_ranking = 52
+	    rating = nil
+	    views = nil
+
+	    summary = "Beings who possess animal-like powers walk among humans in this alternate universe. These mysterious mutants, the +Anima, are shunned by society. Four outcasts in particular--Cooro, a boy with crow-like powers; Husky, a fish-boy; Senri, a bear +Anima; and a girl named Nana, who wields the power of the bat--search for others like themselves while trying to gain acceptance in a world cruel to anyone or anything that is different."
+
+	    manga_info_two = MangaInfo.new(title, alt_title, categories, authors,
+					   artists, schedule, state, status, total,
+					   nil, last_update, release_year, serialized,
+					   when_added, site_ranking, rating, views, summary,
+					   @site_info, nil, nil, nil, cover_page)
+	    
+	    ##############################
+	    # Manga (1) Volume/Chapters/Pages
+	    ##############################
+	    
+	    # Volume 0
+	    title = "Killers"
+	    number = 0
+	    cover_page_path = "DummyManga-Data/death/cover.jpg"
+
+	    vol_zero = MangaVolumes.new(title, number, manga_info_one, nil, nil,
+					cover_page_path, nil)
+
+	    # Setup Chapter chp_zero
+	    # TODO: Define/set it up
+
+
+	    # Setup Chapter chp_one
+	    # TODO: Define/set it up
+
+
+	    # Volume 1
+	    title = "Nil?"
+	    number = 1
+	    cover_page_path = "DummyManga-Data/death/cover.jpg"
+
+	    vol_zero = MangaVolumes.new(title, number, manga_info_one, nil, nil,
+					cover_page_path, nil)
+	    
+	    # Setup Chapter chp_zero
+	    # TODO: Define/set it up
+
+
+	    # Setup Chapter chp_one
+	    # TODO: Define/set it up
+
+	    
+	    ##############################
+	    # Manga (2) Volume/Chapters/Pages
+	    ##############################
+
+	    # No Volumes, just Chapters/pages
+	    title = "Sleepy One"
+	    number = 0
+	    status = MangaUtils::MangaChapterStatus::NORMINAL
+	    scanlator = "Manga-Koekje"
+	    date = Time.utc(2008, 3, 26)
+	    num_pg = 4
+
+	    chp_zero = MangaChapters.new(title, number, status, scanlator, date,
+					  num_pg, nil, manga_info_two, nil, nil, nil)
+	   
+	    # Setup Pages for chp_zero
+	    # TODO: Define/set it up
+	    pages_zero = 1
+	  
+
+	    title = "Diary of the Tree Leaking Day"
+	    number = 1
+	    status = MangaUtils::MangaChapterStatus::NEW
+	    scanlator = "Manga-Koekje"
+	    date = Time.utc(2008, 3, 26)
+	    num_pg = 4
+
+	    chp_one = MangaChapters.new(title, number, status, scanlator, date,
+					  num_pg, nil, manga_info_two, nil, nil, nil)
+	    
+	    # Setup Pages for chp_one
+	    # TODO: Define/set it up
+	    pages_one = 1
+
+
+	    # Setup the prev/next chapters here
+	    chp_one.prev = chp_zero
+	    chp_zero.next = chp_one
+
+
+	    # Assign pages to chapters
+	    chp_zero.pages = pages_zero
+	    chp_one.pages = pages_one
+
+
+	    # Set manga_info_two's chapters list
+	    manga_info_two.chapters = [chp_zero, chp_one]
+	   
+
+	    ##############################
+	    # Manga Setup
+	    ##############################
+	    @site_info.mangas = [manga_info_one, manga_info_two]
+
+	end
+
+
+	# to_string for debugging
+	def to_s
+	    if (@site_info.is_a? Array)
+		return (@site_info.each {|site| site.to_s})
+	    else
+		return @site_info.to_s
+	    end
+	end
     end
 
 
@@ -29,6 +208,27 @@ module DummyManga
 	def initialize (categories, mangas)
 	    @categories = categories
 	    @mangas = mangas
+	end
+
+	
+	# Setter for manga list (Not offical)
+	attr_writer :mangas
+	
+	
+	# to_string for debugging
+	def to_s
+	    ret = "[MangaSite]\n"
+	    ret += "Categories: #{@categories.join(', ')}\n\n"
+	    
+	    if (@mangas.is_a? Array)
+		@mangas.each do |manga|
+		    ret += "[MangaInfo]\n#{manga.to_s}\n\n"
+		end
+	    else
+		ret += "[MangaInfo]\n#{manga.to_s}\n\n"
+	    end
+
+	    return ret
 	end
     end
 
@@ -72,24 +272,23 @@ module DummyManga
 	attr_reader :artists
 
 	# Manga release schedule, such as irregular, regular, unknown, in other
-	# words the schedule that the scanlators releases new materials
+	# words the schedule that the scanlators releases new materials - MangaUtil::ENUM
 	attr_reader :release_schedule
 
 	# The state of the manga, IE is it completed, uncompleted, or 
-	# suspended?
+	# suspended? - MangaUtil::ENUM
 	attr_reader :state
 
 	# The status of the manga, is it newly updated, new addition, or "hot"
-	# meaning popular
+	# meaning popular - MangaUtil::ENUM
 	attr_reader :status
 
 	# Manga size/total - number of pages, number of chapters, and number of
 	# volumes, anyway it will return nil for unknown values, this function
 	# won't actually hold the total number, it probably will query the list
 	# of volumes/chapters for that information...
-	def total
-	    return [10, 88, nil] # IE 10 vol, 88 chapters, unknown pages
-	end
+	# [10, 88, nil] - 10 Vol, 88 chp, unknown pages
+	attr_reader :total
 
 	# Latest chapter - A direct link to the latest chapter
 	attr_reader :latest_chapter
@@ -103,7 +302,7 @@ module DummyManga
 	# Which magzine it was serialized in
 	attr_reader :serialized_in
 
-	# date/time it was added to the site
+	# date/time it was added to the site - Date/time object
 	attr_reader :when_added
 
 	# Ranking on the site
@@ -112,8 +311,11 @@ module DummyManga
 	# Rating on the site for this manga (rating, out-of, votes)
 	attr_reader :rating
 
-	# Views (number, type(monthly, weekly, etc))
+	# Views (number, type(monthly, weekly, etc)) - MangaUtil::ENUM
 	attr_reader :views
+
+	# Summary - Summary of the manga itself
+	attr_reader :summary
 
 
 	# Parent MangaSite
@@ -141,7 +343,7 @@ module DummyManga
 	def initialize (title, alt_titles, categories, authors, artists,
 			releases, state, status, total, latest_chapter, last_update,
 			release_year, serialized, add_date, ranking, rating, views,
-			manga_site, volumes, chapters, pages, cover_pages)
+			summary, manga_site, volumes, chapters, pages, cover_pages)
 	    @title = title
 	    @alt_titles = alt_titles
 	    @categories = categories
@@ -162,6 +364,8 @@ module DummyManga
 	    @site_ranking = ranking
 	    @rating = rating
 	    @views = views
+	    
+	    @summary = summary
 
 	    @manga_site = manga_site
 
@@ -170,6 +374,101 @@ module DummyManga
 	    @pages = pages
 
 	    @cover_page_paths = cover_pages
+	end
+	
+	# Setter for chapters list (not offical)
+	attr_writer :chapters
+	
+	
+	# to_string for debugging
+	def to_s
+	    ret  = "Title: #{@title}\n"
+
+	    if (@alt_titles.is_a? Array)
+		ret += "Alt Titles: #{@alt_titles.join(', ')}\n"
+	    else
+		ret += "Alt Titles: #{@alt_titles}\n"
+	    end
+
+	    if (@authors.is_a? Array)
+		ret += "Authors: #{@authors.join(', ')}\n"
+	    else
+		ret += "Authors: #{@authors}\n"
+	    end
+
+	    if (@artists.is_a? Array)
+		ret += "Artists: #{@artists.join(', ')}\n"
+	    else
+		ret += "Artists: #{@artists}\n"
+	    end
+
+	    ret += "Release Schedule: #{@release_schedule}\n"
+	    ret += "State: #{@state}\n"
+	    ret += "Status: #{@status}\n"
+
+	    ret += "Total:\n\tVol: #{@total[0]}\n\tChp: #{@total[1]}\n\tPage: #{@total[2]}\n"
+
+	    ret += "Latest Chapter: #{@latest_chapter}\n"
+	    ret += "Last Update: #{@last_update}\n"
+	    ret += "Release Year: #{@release_year}\n"
+	    ret += "Serialized in: #{@serialized_in}\n"
+	    ret += "When Added: #{@when_added}\n"
+	    ret += "Site Ranking: #{@site_ranking}\n"
+
+	    if (@rating.nil?)
+		ret += "Rating:\n\tRating:\n\tVotes:\n"
+	    else
+		ret += "Rating:\n\tRating: (#{@rating[0]}/#{@rating[1]})\n\tVotes: #{@rating[2]}\n"
+	    end
+
+	    if (@views.nil?)
+		ret += "Views:\n\tNumber:\n\tType:\n"
+	    else
+		ret += "Views:\n\tNumber: #{@views[0]}\n\tType: #{@views[1]}\n"
+	    end
+
+	    ret += "Summary:\n****\n#{@summary}\n****\n"
+
+	    if (@volumes.is_a? Array)
+		@volumes.each do |vol|
+		    ret += "[MangaVolumes]\n#{vol.to_s}\n\n"
+		end
+	    else
+		if (@volumes.nil?)
+		    ret += "[MangaVolumes]\n-Not Used-\n\n"
+		else
+		    ret += "[MangaVolumes]\n#{@volumes.to_s}\n\n"
+		end
+	    end
+	    
+	    
+	    if (@chapters.is_a? Array)
+		@chapters.each do |chp|
+		    ret += "[MangaChapters]\n#{chp.to_s}\n\n"
+		end
+	    else
+		if (@chapters.nil?)
+		    ret += "[MangaChapters]\n-Not Used-\n\n"
+		else
+		    ret += "[MangaChapters]\n#{@chapters.to_s}\n\n"
+		end
+	    end
+	    
+	    
+	    if (@pages.is_a? Array)
+		@pages.each do |pg|
+		    ret += "[MangaPages]\n#{pg.to_s}\n\n"
+		end
+	    else
+		if (@pages.nil?)
+		    ret += "[MangaPages]\n-Not Used-\n\n"
+		else
+		    ret += "[MangaPages]\n#{@pages.to_s}\n\n"
+		end
+	    end
+
+
+	    return ret
 	end
     end
 
@@ -183,7 +482,7 @@ module DummyManga
 	# this volume's "title", otherwise return a nil
 	attr_reader :title
 
-	# Volume number, IE Vol 01, Vol 02, etc..
+	# Volume number, IE Vol 01, Vol 02, etc.. (Also used for sorting)
 	attr_reader :number
 
 	# Parent MangaInfo object - one object
@@ -214,6 +513,30 @@ module DummyManga
 
 	    @chapters = chapters
 	end
+	
+	
+	# to_string for debugging
+	def to_s
+	    ret  = "Title: #{@title}\n"
+	    ret += "Number: #{@number}\n"
+	    
+	    #ret += "Next/Prev:\n\tPrev: #{@prev}\n\tNext: #{@next}\n"
+
+	    if (@chapters.is_a? Array)
+		@chapters.each do |chp|
+		    ret += "[MangaChapters]\n#{chp.to_s}\n\n"
+		end
+	    else
+		if (@chapters.nil?)
+		    ret += "[MangaChapters]\n-Not Used-\n\n"
+		else
+		    ret += "[MangaChapters]\n#{@chapters.to_s}\n\n"
+		end
+	    end
+
+	    # TODO: Complete this
+	    return ret
+	end
     end
 
 
@@ -226,17 +549,17 @@ module DummyManga
 	# its nil
 	attr_reader :title
 
-	# Chapter "number" - IE Chp 01, Chp 02...
+	# Chapter "number" - IE Chp 01, Chp 02... (Also used for sorting)
 	attr_reader :number
 
-	# Chapter "Status" - IE is it a newly added chapter?
+	# Chapter "Status" - IE is it a newly added chapter? - MangaUtil::ENUM
 	attr_reader :status
 	# ex: - MangaUtil::MangaChapterStatus::NEW
 
 	# Scanlator/Scanned by
 	attr_reader :scanlator
 
-	# The date that "this" chapter was added/updated
+	# The date that "this" chapter was added/updated - Date/time object
 	attr_reader :date_added
 
 	# Number of Pages in this chapter - Not sure if needed
@@ -274,14 +597,105 @@ module DummyManga
 
 	    @pages = manga_pages
 	end
+	
+	# Setter for prev/next chapter (Not offical)
+	attr_writer :next
+	attr_writer :prev
+	
+	# Setter for pages (Not offical)
+	attr_writer :pages
+	
+	
+	# to_string for debugging
+	def to_s
+	    ret  = "Title: #{@title}\n"
+	    ret += "Number: #{@number}\n"
+	   
+	    #ret += "Next/Prev:\n\tPrev: #{@prev}\n\tNext: #{@next}\n"
+
+	    # TODO: Complete this
+	    return ret
+	end
+    end
+
+
+    #######################################################################
+    # Per "Page" Information - Information on each pages (really its the
+    # same object, but it simulates one object per page, it takes care of
+    # pagation)
+    #######################################################################
+    class MangaPages
+	# Returns a list of "names" for each page, ie "00 - credit"
+	attr_reader :page_titles
+
+
+	# Parent MangaChapter object - one object
+	attr_reader :chapter
+
+	# Parent MangaInfo object - one object
+	attr_reader :manga_info
+
+
+	# First/Last page picture
+	attr_reader :first, :last
+
+	# Next/Previous page picture
+	attr_reader :next, :prev
+
+
+	# Check if next/prev page exist
+	def next?
+	end
+
+	def prev?
+	end
+
+
+	# Go to the page index specifyed, if the page indicated by the index
+	# does not exist it will throw an exception.  Anyway the index is 
+	# counted from 0 to the last page in the set.
+	def goto (index)
+	end
+
+
+	# Returns the "index" of the current page that this "object/iterator" is
+	# on
+	def index
+	end
+
+
+	# Reading direction of the page itself, IE (MangaUtils::ReadingDirection)
+	# this is for right to left, or left to right reading direction, etc..
+	def reading_direction
+	    return @reading_direction
+	end
+
+
+	# The class constructor
+	def initialize (page_titles, chapter, manga_info, reading_direction)
+	    @page_titles = page_titles
+
+	    @chapter = chapter
+	    @manga_info = manga_info
+
+	    @reading_direction = reading_direction
+	end
+	
+	
+	# to_string for debugging
+	def to_s
+	    # TODO: Complete this
+	    return ret
+	end
     end
 
 
 
 
-    # Manga Pages
-    # TODO: Update this class
-    class MangaPages
+    #######################################################################
+    # Old MangaPages, mainly for refferences now
+    #######################################################################
+    class MangaPages_old
 
 	def initialize (vol_exist, chp_exist)
 	    # Does Volume or Chapters matter
@@ -699,6 +1113,8 @@ module DummyManga
     end
 end
 
+
+
 #
 # This is the General Manga Utils module for taking care of misc items
 # that all Manga Backend/frontend needs
@@ -729,6 +1145,14 @@ module MangaUtils
     class MangaChapterStatus
 	NEW = 1
 	NORMINAL = 2
+    end
+
+    class MangaViews
+	FOREVER = 1
+	YEARLY = 2
+	MONTHLY = 3
+	WEEKLY = 4
+	DAILY = 5
     end
 end
 	    
