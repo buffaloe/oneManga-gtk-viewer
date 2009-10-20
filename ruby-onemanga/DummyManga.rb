@@ -21,8 +21,8 @@ module DummyManga
 
 	    # Site Info
 	    @site_info = MangaSite.new(categories, nil)
-	    
-	    
+
+
 	    ##############################
 	    # Manga (1) Info
 	    ##############################
@@ -44,9 +44,9 @@ module DummyManga
 	    site_ranking = 332
 	    rating = [4.97, 5, 320]
 	    views = [32372, MangaUtils::MangaViews::MONTHLY]
-	    
+
 	    summary = "A girl named Haruka Tōyama happens to be in the care of a certain company because she can see the future, but she wants to get away, so using her abilities she finds a blind though strong man and asks him to help her as a body guard 'till death do them part. The man, named Mamoru Hijikata, quickly dismisses her request as a joke from a small 12 year old kid, only to realize what shady business has beginning to unfold when people willing to do anything are desperately searching for the girl. As she predicted, Mamoru has past experience in shady business himself, and will not be pushed around easily by any criminal.
-	    
+
 	    ... Is 'protection' the only reason that Haruka approached Mamoru? Or could it be something else?"
 
 	    manga_info_one = MangaInfo.new(title, alt_title, categories, authors,
@@ -86,11 +86,16 @@ module DummyManga
 					   nil, last_update, release_year, serialized,
 					   when_added, site_ranking, rating, views, summary,
 					   @site_info, nil, nil, nil, cover_page)
-	    
+
+	    ##############################
+	    # Manga (3) Info
+	    ##############################
+
+
 	    ##############################
 	    # Manga (1) Volume/Chapters/Pages
 	    ##############################
-	    
+
 	    # Volume 0
 	    title = "Killers"
 	    number = 0
@@ -100,29 +105,119 @@ module DummyManga
 					cover_page_path, nil)
 
 	    # Setup Chapter chp_zero
-	    # TODO: Define/set it up
+	    title = "Undying One"
+	    number = 0
+	    status = MangaUtils::MangaChapterStatus::NORMINAL
+	    scanlator = "Manga-Urban"
+	    date = Time.utc(2008, 2, 26)
+	    num_pg = 2
+
+	    chp_zero = MangaChapters.new(title, number, status, scanlator, date,
+					  num_pg, nil, manga_info_one, nil, nil, nil)
+
+	    # Setup Pages for chp_zero
+	    page_titles = ["Page 0", "Page 1"]
+	    reading_dir = MangaUtils::ReadingDirection::LEFT_TO_RIGHT
+
+	    pages_zero = MangaPages.new(page_titles, chp_zero, manga_info_one,
+					reading_dir)
 
 
 	    # Setup Chapter chp_one
-	    # TODO: Define/set it up
+	    title = "Dead One"
+	    number = 1
+	    status = MangaUtils::MangaChapterStatus::NORMINAL
+	    scanlator = "Manga-Urban"
+	    date = Time.utc(2009, 2, 26)
+	    num_pg = 2
+
+	    chp_one = MangaChapters.new(title, number, status, scanlator, date,
+					  num_pg, nil, manga_info_one, nil, nil, nil)
+
+	    # Setup Pages for chp_one
+	    page_titles = ["Page 0", "Page 1"]
+	    reading_dir = MangaUtils::ReadingDirection::LEFT_TO_RIGHT
+
+	    pages_one = MangaPages.new(page_titles, chp_one, manga_info_one,
+					reading_dir)
+
+	    # Setup the prev/next chapters here
+	    chp_one.prev = chp_zero
+	    chp_zero.next = chp_one
+
+	    # Assign pages to chapters
+	    chp_zero.pages = pages_zero
+	    chp_one.pages = pages_one
+
+	    # Assign Chapters to the volume
+	    vol_zero.chapters = [chp_zero, chp_one]
+
 
 
 	    # Volume 1
-	    title = "Nil?"
+	    title = "Undead Ending of Road"
 	    number = 1
 	    cover_page_path = "DummyManga-Data/death/cover.jpg"
 
-	    vol_zero = MangaVolumes.new(title, number, manga_info_one, nil, nil,
+	    vol_one = MangaVolumes.new(title, number, manga_info_one, nil, nil,
 					cover_page_path, nil)
-	    
-	    # Setup Chapter chp_zero
-	    # TODO: Define/set it up
 
+	    # Setup Chapter chp_zero
+	    title = "Undying End"
+	    number = 2
+	    status = MangaUtils::MangaChapterStatus::NORMINAL
+	    scanlator = "Manga-Urban"
+	    date = Time.utc(2008, 2, 26)
+	    num_pg = 2
+
+	    chp_zero = MangaChapters.new(title, number, status, scanlator, date,
+					  num_pg, nil, manga_info_one, nil, nil, nil)
+
+	    # Setup Pages for chp_zero
+	    page_titles = ["Page 0", "Page 1"]
+	    reading_dir = MangaUtils::ReadingDirection::LEFT_TO_RIGHT
+
+	    pages_zero = MangaPages.new(page_titles, chp_zero, manga_info_one,
+					reading_dir)
 
 	    # Setup Chapter chp_one
-	    # TODO: Define/set it up
+	    title = "Dead End"
+	    number = 3
+	    status = MangaUtils::MangaChapterStatus::NORMINAL
+	    scanlator = "Manga-Urban"
+	    date = Time.utc(2009, 2, 26)
+	    num_pg = 2
 
-	    
+	    chp_one = MangaChapters.new(title, number, status, scanlator, date,
+					  num_pg, nil, manga_info_one, nil, nil, nil)
+
+	    # Setup Pages for chp_one
+	    page_titles = ["Page 0", "Page 1"]
+	    reading_dir = MangaUtils::ReadingDirection::LEFT_TO_RIGHT
+
+	    pages_one = MangaPages.new(page_titles, chp_one, manga_info_one,
+					reading_dir)
+
+
+	    # Setup the prev/next chapters here
+	    chp_one.prev = chp_zero
+	    chp_zero.next = chp_one
+
+	    # Assign pages to chapters
+	    chp_zero.pages = pages_zero
+	    chp_one.pages = pages_one
+
+	    # Assign Chapters to the volume
+	    vol_one.chapters = [chp_zero, chp_one]
+
+
+	    # Setup the prev/next volumes here
+	    vol_one.prev = vol_zero
+	    vol_zero.next = vol_one
+
+	    # Set manga_info_one's volumes list
+	    manga_info_one.volumes = [vol_zero, vol_one]
+
 	    ##############################
 	    # Manga (2) Volume/Chapters/Pages
 	    ##############################
@@ -137,11 +232,14 @@ module DummyManga
 
 	    chp_zero = MangaChapters.new(title, number, status, scanlator, date,
 					  num_pg, nil, manga_info_two, nil, nil, nil)
-	   
+
 	    # Setup Pages for chp_zero
-	    # TODO: Define/set it up
-	    pages_zero = 1
-	  
+	    page_titles = ["Page 0", "Page 1", "Page 2", "Page 3"]
+	    reading_dir = MangaUtils::ReadingDirection::RIGHT_TO_LEFT
+
+	    pages_zero = MangaPages.new(page_titles, chp_zero, manga_info_two,
+					reading_dir)
+
 
 	    title = "Diary of the Tree Leaking Day"
 	    number = 1
@@ -152,10 +250,13 @@ module DummyManga
 
 	    chp_one = MangaChapters.new(title, number, status, scanlator, date,
 					  num_pg, nil, manga_info_two, nil, nil, nil)
-	    
+
 	    # Setup Pages for chp_one
-	    # TODO: Define/set it up
-	    pages_one = 1
+	    page_titles = ["Page 0", "Page 1", "Page 2", "Page 3"]
+	    reading_dir = MangaUtils::ReadingDirection::RIGHT_TO_LEFT
+
+	    pages_one = MangaPages.new(page_titles, chp_zero, manga_info_two,
+					reading_dir)
 
 
 	    # Setup the prev/next chapters here
@@ -170,7 +271,12 @@ module DummyManga
 
 	    # Set manga_info_two's chapters list
 	    manga_info_two.chapters = [chp_zero, chp_one]
-	   
+
+
+	    ##############################
+	    # Manga (3) Volume/Chapters/Pages
+	    ##############################
+
 
 	    ##############################
 	    # Manga Setup
@@ -210,16 +316,16 @@ module DummyManga
 	    @mangas = mangas
 	end
 
-	
+
 	# Setter for manga list (Not offical)
 	attr_writer :mangas
-	
-	
+
+
 	# to_string for debugging
 	def to_s
 	    ret = "[MangaSite]\n"
 	    ret += "Categories: #{@categories.join(', ')}\n\n"
-	    
+
 	    if (@mangas.is_a? Array)
 		@mangas.each do |manga|
 		    ret += "[MangaInfo]\n#{manga.to_s}\n\n"
@@ -275,7 +381,7 @@ module DummyManga
 	# words the schedule that the scanlators releases new materials - MangaUtil::ENUM
 	attr_reader :release_schedule
 
-	# The state of the manga, IE is it completed, uncompleted, or 
+	# The state of the manga, IE is it completed, uncompleted, or
 	# suspended? - MangaUtil::ENUM
 	attr_reader :state
 
@@ -364,7 +470,7 @@ module DummyManga
 	    @site_ranking = ranking
 	    @rating = rating
 	    @views = views
-	    
+
 	    @summary = summary
 
 	    @manga_site = manga_site
@@ -375,11 +481,14 @@ module DummyManga
 
 	    @cover_page_paths = cover_pages
 	end
-	
-	# Setter for chapters list (not offical)
+
+	# Setter for volumes list (not offical)
+	attr_writer :volumes
+
+	# Setter for chapters list (Not offical)
 	attr_writer :chapters
-	
-	
+
+
 	# to_string for debugging
 	def to_s
 	    ret  = "Title: #{@title}\n"
@@ -427,43 +536,43 @@ module DummyManga
 		ret += "Views:\n\tNumber: #{@views[0]}\n\tType: #{@views[1]}\n"
 	    end
 
-	    ret += "Summary:\n****\n#{@summary}\n****\n"
+	    ret += "Summary:\n****\n#{@summary}\n****\n\n"
 
 	    if (@volumes.is_a? Array)
 		@volumes.each do |vol|
-		    ret += "[MangaVolumes]\n#{vol.to_s}\n\n"
+		    ret += "[MangaVolumes]\n#{vol.to_s}\n"
 		end
 	    else
 		if (@volumes.nil?)
 		    ret += "[MangaVolumes]\n-Not Used-\n\n"
 		else
-		    ret += "[MangaVolumes]\n#{@volumes.to_s}\n\n"
+		    ret += "[MangaVolumes]\n#{@volumes.to_s}\n"
 		end
 	    end
-	    
-	    
+
+
 	    if (@chapters.is_a? Array)
 		@chapters.each do |chp|
-		    ret += "[MangaChapters]\n#{chp.to_s}\n\n"
+		    ret += "[MangaChapters]\n#{chp.to_s}\n"
 		end
 	    else
 		if (@chapters.nil?)
 		    ret += "[MangaChapters]\n-Not Used-\n\n"
 		else
-		    ret += "[MangaChapters]\n#{@chapters.to_s}\n\n"
+		    ret += "[MangaChapters]\n#{@chapters.to_s}\n"
 		end
 	    end
-	    
-	    
+
+
 	    if (@pages.is_a? Array)
 		@pages.each do |pg|
-		    ret += "[MangaPages]\n#{pg.to_s}\n\n"
+		    ret += "[MangaPages]\n#{pg.to_s}\n"
 		end
 	    else
 		if (@pages.nil?)
 		    ret += "[MangaPages]\n-Not Used-\n\n"
 		else
-		    ret += "[MangaPages]\n#{@pages.to_s}\n\n"
+		    ret += "[MangaPages]\n#{@pages.to_s}\n"
 		end
 	    end
 
@@ -513,14 +622,23 @@ module DummyManga
 
 	    @chapters = chapters
 	end
-	
-	
+
+
+	# Setter for prev/next chapter (Not offical)
+	attr_writer :next
+	attr_writer :prev
+
+	# Setter for chapters (Not offical)
+	attr_writer :chapters
+
+
 	# to_string for debugging
 	def to_s
 	    ret  = "Title: #{@title}\n"
 	    ret += "Number: #{@number}\n"
-	    
-	    #ret += "Next/Prev:\n\tPrev: #{@prev}\n\tNext: #{@next}\n"
+
+	    ret += "Next/Prev:\n\tPrev: #{@prev.title unless @prev.nil?}\n"
+	    ret += "\tNext: #{@next.title unless @next.nil?}\n"
 
 	    if (@chapters.is_a? Array)
 		@chapters.each do |chp|
@@ -534,7 +652,6 @@ module DummyManga
 		end
 	    end
 
-	    # TODO: Complete this
 	    return ret
 	end
     end
@@ -581,7 +698,7 @@ module DummyManga
 
 	# The class constructor
 	def initialize (title, number, status, scanlator, date_added, number_of_pages,
-			volume, manga_info, next_chapter, prev_chapter, 
+			volume, manga_info, next_chapter, prev_chapter,
 			manga_pages)
 	    @title = title
 	    @number = number
@@ -597,23 +714,39 @@ module DummyManga
 
 	    @pages = manga_pages
 	end
-	
+
 	# Setter for prev/next chapter (Not offical)
 	attr_writer :next
 	attr_writer :prev
-	
+
 	# Setter for pages (Not offical)
 	attr_writer :pages
-	
-	
+
+
 	# to_string for debugging
 	def to_s
 	    ret  = "Title: #{@title}\n"
 	    ret += "Number: #{@number}\n"
-	   
-	    #ret += "Next/Prev:\n\tPrev: #{@prev}\n\tNext: #{@next}\n"
+	    ret += "Status: #{@status}\n"
+	    ret += "Scanlator: #{@scanlator}\n"
+	    ret += "Date Added: #{@date_added}\n"
+	    ret += "Number Pages: #{@num_pages}\n"
 
-	    # TODO: Complete this
+	    ret += "Next/Prev:\n\tPrev: #{@prev.title unless @prev.nil?}\n"
+	    ret += "\tNext: #{@next.title unless @next.nil?}\n\n"
+
+	    if (@pages.is_a? Array)
+		@pages.each do |pg|
+		    ret += "[MangaPages]\n#{pg.to_s}"
+		end
+	    else
+		if (@pages.nil?)
+		    ret += "[MangaPages]\n-Not Used-\n"
+		else
+		    ret += "[MangaPages]\n#{@pages.to_s}"
+		end
+	    end
+
 	    return ret
 	end
     end
@@ -652,7 +785,7 @@ module DummyManga
 
 
 	# Go to the page index specifyed, if the page indicated by the index
-	# does not exist it will throw an exception.  Anyway the index is 
+	# does not exist it will throw an exception.  Anyway the index is
 	# counted from 0 to the last page in the set.
 	def goto (index)
 	end
@@ -680,11 +813,24 @@ module DummyManga
 
 	    @reading_direction = reading_direction
 	end
-	
-	
+
+
 	# to_string for debugging
 	def to_s
-	    # TODO: Complete this
+	    ret = "Reading Direction: #{@reading_direction}\n"
+
+	    if (@page_titles.is_a? Array)
+		@page_titles.each do |page|
+		    ret += "Page Title: #{page}\n"
+		end
+	    else
+		if (@pages.nil?)
+		    ret += "Page Title:\n"
+		else
+		    ret += "Page Title: #{@page_titles}\n"
+		end
+	    end
+
 	    return ret
 	end
     end
@@ -759,7 +905,7 @@ module DummyManga
 	end
 
 
-	# Returns an Pixbuf of the page, if its past the last of the pages, it 
+	# Returns an Pixbuf of the page, if its past the last of the pages, it
 	# will return nil to indicate its past the last page
 	#
 	# If there is a failure at fetching the image, it will throw an exception
@@ -859,7 +1005,7 @@ module DummyManga
 	# as a parameter, it will then return an image of that said page and
 	# reset the "internal" iterator to resume from that point in time.
 	# otherwise it functions just like the "next_page" class of function
-	# 
+	#
 	# Also if the page as indicated by the index does not exist, it will
 	# throw an exception
 	def goto_page (index)
@@ -985,7 +1131,7 @@ module DummyManga
 	end
 
 
-	# Most Manga Backend does not really have the concept of 
+	# Most Manga Backend does not really have the concept of
 	# Manga Volume so this class of function is somewhat redudant,
 	# however its still here for those backends that do.
 	#
@@ -1052,7 +1198,7 @@ module DummyManga
 	end
 
 
-	# These family of function returns the current index of the 
+	# These family of function returns the current index of the
 	# MangaPages, in volumes/chapter/page, and if one of these
 	# function/class are not used it will return nil
 	def currentVolumeIndex
@@ -1068,7 +1214,7 @@ module DummyManga
 	end
 
 
-	# These family of function will return a list for use by the 
+	# These family of function will return a list for use by the
 	# GUI (IE chapter names or numbers for example)
 	#
 	# If its not used it will return nil also if there is problems
@@ -1155,7 +1301,7 @@ module MangaUtils
 	DAILY = 5
     end
 end
-	    
+
 
 # State machine states here
 #
