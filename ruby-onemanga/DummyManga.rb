@@ -540,7 +540,7 @@ module DummyManga
 
 	    if (@volumes.is_a? Array)
 		@volumes.each do |vol|
-		    ret += "[MangaVolumes]\n#{vol.to_s}\n"
+		    ret += "[MangaVolumes]\n#{vol.to_s}"
 		end
 	    else
 		if (@volumes.nil?)
@@ -638,11 +638,11 @@ module DummyManga
 	    ret += "Number: #{@number}\n"
 
 	    ret += "Next/Prev:\n\tPrev: #{@prev.title unless @prev.nil?}\n"
-	    ret += "\tNext: #{@next.title unless @next.nil?}\n"
+	    ret += "\tNext: #{@next.title unless @next.nil?}\n\n"
 
 	    if (@chapters.is_a? Array)
 		@chapters.each do |chp|
-		    ret += "[MangaChapters]\n#{chp.to_s}\n\n"
+		    ret += "[MangaChapters]\n#{chp.to_s}\n"
 		end
 	    else
 		if (@chapters.nil?)
