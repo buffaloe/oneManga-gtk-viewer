@@ -90,6 +90,35 @@ module DummyManga
 	    ##############################
 	    # Manga (3) Info
 	    ##############################
+	    cover_page = "DummyManga-Data/undead/cover.jpg"
+
+	    title = "Hajimete no Aku"
+	    alt_title = ["My First Mr.Akuno"]
+	    categories = ["Drama"]
+	    authors = ["Fujiki Shun", "Shun Fujiki"]
+	    artists = ["Double-s", "Dumbar"]
+	    schedule = MangaUtils::MangaReleaseStatus::REGULAR
+	    state = MangaUtils::MangaStatus::UNCOMPLETED
+	    status = MangaUtils::MangaChapterStatus::NEW
+	    total = [nil, nil, 8]
+	    last_update = Time.utc(2008, 10, 3)
+	    release_year = Time.utc(2003)
+	    serialized = nil
+	    when_added = Time.utc(2008, 6, 2)
+	    site_ranking = 22
+	    rating = [4.97, 5, 320]
+	    views = [32372, MangaUtils::MangaViews::MONTHLY]
+
+	    summary = "In the spring of Kyoko's first year in high school, Eiko, a girl like a sister to her, returns with her younger brother, Jiro.
+	    The return isn't that big of a deal, but Jiro (self proclaimed super mad scientist) has it in his head that he wants to operate on Kyoko!
+	    And, what's even more, the two of them are actually high ranking members of an Evil organization at the run for the heroes of justice!
+	    As if high school didn't have enough problems already, now she has to deal with these two living with her."
+
+	    manga_info_three = MangaInfo.new(title, alt_title, categories, authors,
+					   artists, schedule, state, status, total,
+					   nil, last_update, release_year, serialized,
+					   when_added, site_ranking, rating, views, summary,
+					   @site_info, nil, nil, nil, cover_page)
 
 
 	    ##############################
@@ -218,6 +247,7 @@ module DummyManga
 	    # Set manga_info_one's volumes list
 	    manga_info_one.volumes = [vol_zero, vol_one]
 
+
 	    ##############################
 	    # Manga (2) Volume/Chapters/Pages
 	    ##############################
@@ -277,11 +307,22 @@ module DummyManga
 	    # Manga (3) Volume/Chapters/Pages
 	    ##############################
 
+	    # No volumes, no chapter, just pages
+	    page_titles = ["Page 0", "Page 1", "Page 2", "Page 3", "Page 4", "Page 5",
+			    "Page 6", "Page 7"]
+	    reading_dir = MangaUtils::ReadingDirection::RIGHT_TO_LEFT
+
+	    pages = MangaPages.new(page_titles, nil, manga_info_three,
+					reading_dir)
+
+	    # Set manga_info_three's pages list
+	    manga_info_three.pages = pages
+
 
 	    ##############################
 	    # Manga Setup
 	    ##############################
-	    @site_info.mangas = [manga_info_one, manga_info_two]
+	    @site_info.mangas = [manga_info_one, manga_info_two, manga_info_three]
 
 	end
 
@@ -487,6 +528,9 @@ module DummyManga
 
 	# Setter for chapters list (Not offical)
 	attr_writer :chapters
+	
+	# Setter for pages list (Not offical)
+	attr_writer :pages
 
 
 	# to_string for debugging
