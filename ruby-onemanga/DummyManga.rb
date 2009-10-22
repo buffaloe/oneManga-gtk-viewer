@@ -757,6 +757,15 @@ module DummyManga
 	# Next & Previous chapter object, if there is no more, it will be nil
 	attr_reader :next, :prev
 
+	# Check if next/prev chapter exist
+	def next?
+	    return (not @next.nil?)
+	end
+	
+	def prev?
+	    return (not @prev.nil?)
+	end
+
 	# The "MangaPages" Object, which takes care of pages/pagation - one object
 	attr_reader :pages
 
@@ -835,6 +844,8 @@ module DummyManga
 
 	# First/Last Page picture
 	def first
+	    @index = 0
+
 	    str  = @directory
 	    str += ("v#{@vol_idx}") unless @vol_idx.nil?
 	    str += ("c#{@chp_idx}") unless @chp_idx.nil?
@@ -844,6 +855,8 @@ module DummyManga
 	end
 
 	def last
+	    @index = @max
+
 	    str  = @directory
 	    str += ("v#{@vol_idx}") unless @vol_idx.nil?
 	    str += ("c#{@chp_idx}") unless @chp_idx.nil?

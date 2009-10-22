@@ -16,5 +16,5 @@ site = test.getSite()
 
 #puts test.to_s
 
-build_manga_viewer(site.mangas[2])
+build_manga_viewer(site.mangas[1])
 Gtk.main

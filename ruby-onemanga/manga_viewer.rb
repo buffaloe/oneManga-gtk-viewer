@@ -31,6 +31,12 @@ def build_manga_viewer(dummy)
     # Loads first image (assuming manga info w/ pages only)
     dummy_pages = dummy.pages
 
+    # If dummy_pages is nil, check to see if it uses chapters
+    if dummy_pages.nil?
+	dummy_chapters = dummy.chapters[0] #assuming an array
+	dummy_pages = dummy_chapters.pages
+    end
+
     # first page image
     image.pixbuf = dummy_pages.first
 
@@ -40,6 +46,7 @@ def build_manga_viewer(dummy)
     if !dummy_pages.next?
 	forward.sensitive = false
     end
+
 
     # Setup the pages combo_box
     list_store = Gtk::ListStore.new(String)
@@ -54,6 +61,21 @@ def build_manga_viewer(dummy)
     pages.model = list_store
     pages.active = 0
 
+    # Setup the chapters combo_box
+    if not dummy_chapters.nil?
+	list_store = Gtk::ListStore.new(String)
+	dummy.chapters.each do |chp|
+	    (list_store.append())[0] = chp.title
+	end
+
+	render = Gtk::CellRendererText.new
+	chapters.pack_start(render, true)
+	chapters.set_attributes(render, {"text" => 0})
+
+	chapters.model = list_store
+	chapters.active = 0
+    end
+
 
     ##############################
     # Manga forward/back button signal
@@ -65,9 +87,20 @@ def build_manga_viewer(dummy)
 
 	    pages.active = dummy_pages.index
 	    back.sensitive = true
+	elsif (dummy_chapters.next? unless dummy_chapters.nil?)
+	    puts "Next chapter - first page"
+	    dummy_chapters = dummy_chapters.next
+	    dummy_pages = dummy_chapters.pages
+
+	    image.pixbuf = dummy_pages.first
+
+	    pages.active = dummy_pages.index
+	    chapters.active = dummy.chapters.index(dummy_chapters)
+
+	    back.sensitive = true
 	end
 
-	if !dummy_pages.next?
+	if !dummy_pages.next? and !(dummy_chapters.next? unless dummy_chapters.nil?)
 	    forward.sensitive = false
 	end
     end
@@ -79,9 +112,20 @@ def build_manga_viewer(dummy)
 
 	    pages.active = dummy_pages.index
 	    forward.sensitive = true
+	elsif (dummy_chapters.prev? unless dummy_chapters.nil?)
+	    puts "Prev chapter - last page"
+	    dummy_chapters = dummy_chapters.prev
+	    dummy_pages = dummy_chapters.pages
+
+	    image.pixbuf = dummy_pages.last
+
+	    pages.active = dummy_pages.index
+	    chapters.active = dummy.chapters.index(dummy_chapters)
+
+	    forward.sensitive = true
 	end
 
-	if !dummy_pages.prev?
+	if !dummy_pages.prev? and !(dummy_chapters.prev? unless dummy_chapters.nil?)
 	    back.sensitive = false
 	end
     end
@@ -96,6 +140,75 @@ def build_manga_viewer(dummy)
 	if combobox.active != dummy_pages.index
 	    puts "valid"
 	    image.pixbuf = dummy_pages.goto(combobox.active)
+
+	    # TODO: Extract this two if block into a function
+	    if dummy_pages.next?
+		forward.sensitive = true
+	    else
+		if dummy_chapters.nil?
+		    forward.sensitive = false
+		elsif dummy_chapters.next?
+		    forward.sensitive = true
+		else
+		    forward.sensitive = false
+		end
+	    end
+
+	    if dummy_pages.prev?
+		back.sensitive = true
+	    else
+		if dummy_chapters.nil?
+		    back.sensitive = false
+		elsif dummy_chapters.prev?
+		    back.sensitive = true
+		else
+		    back.sensitive = false
+		end
+	    end
+	end
+    end
+
+
+    ##############################
+    # Manga chapters combo box
+    ##############################
+    chapters.signal_connect('changed') do |combobox|
+	# Ignore changes that are from "forward/backward"
+	# setting the combobox active index
+	if combobox.active != dummy.chapters.index(dummy_chapters)
+	    puts "valid"
+
+	    dummy_chapters = dummy.chapters[combobox.active]
+	    dummy_pages = dummy_chapters.pages
+
+	    image.pixbuf = dummy_pages.first
+
+	    pages.active = 0
+
+	    # TODO: Extract this two if block into a function
+	    if dummy_pages.next?
+		forward.sensitive = true
+	    else
+		if dummy_chapters.nil?
+		    forward.sensitive = false
+		elsif dummy_chapters.next?
+		    forward.sensitive = true
+		else
+		    forward.sensitive = false
+		end
+	    end
+
+	    if dummy_pages.prev?
+		back.sensitive = true
+	    else
+		if dummy_chapters.nil?
+		    back.sensitive = false
+		elsif dummy_chapters.prev?
+		    back.sensitive = true
+		else
+		    back.sensitive = false
+		end
+	    end
 	end
     end
 
@@ -103,7 +216,7 @@ def build_manga_viewer(dummy)
     window.show_all
 
     # Show/hide widgets
-    builder.get_object('chapters_hbox').hide_all
+    #builder.get_object('chapters_hbox').hide_all
     builder.get_object('volumes_hbox').hide_all
 end
 
