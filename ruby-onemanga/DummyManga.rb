@@ -280,7 +280,7 @@ module DummyManga
 	    pages_zero = MangaPages.new(page_titles, chp_zero, manga_info_two,
 					reading_dir)
 
-	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
+	    pages_zero.file_init("DummyManga-Data/anima/chp_pg/", nil, 0)
 
 
 	    title = "Diary of the Tree Leaking Day"
@@ -300,7 +300,7 @@ module DummyManga
 	    pages_one = MangaPages.new(page_titles, chp_zero, manga_info_two,
 					reading_dir)
 
-	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
+	    pages_one.file_init("DummyManga-Data/anima/chp_pg/", nil, 1)
 
 
 	    # Setup the prev/next chapters here
@@ -882,7 +882,7 @@ module DummyManga
 	end
 
 	def prev?
-	    return (@index < 0) ? false : true
+	    return (@index < 1) ? false : true
 	end
 
 
