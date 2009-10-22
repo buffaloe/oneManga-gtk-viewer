@@ -11,12 +11,10 @@ require 'gtk2'
 require 'DummyManga'
 require 'manga_viewer'
 
-#dummy = DummyManga::MangaPages.new(true, true)
-
 test = DummyManga::DummyMangaConstructor.new()
+site = test.getSite()
 
-puts test.to_s
+#puts test.to_s
 
-#build_manga_viewer(dummy)
-
-#Gtk.main
+build_manga_viewer(site.mangas[2])
+Gtk.main

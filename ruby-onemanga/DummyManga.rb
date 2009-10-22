@@ -151,6 +151,8 @@ module DummyManga
 	    pages_zero = MangaPages.new(page_titles, chp_zero, manga_info_one,
 					reading_dir)
 
+	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
+
 
 	    # Setup Chapter chp_one
 	    title = "Dead One"
@@ -169,6 +171,9 @@ module DummyManga
 
 	    pages_one = MangaPages.new(page_titles, chp_one, manga_info_one,
 					reading_dir)
+
+	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
+
 
 	    # Setup the prev/next chapters here
 	    chp_one.prev = chp_zero
@@ -209,6 +214,9 @@ module DummyManga
 	    pages_zero = MangaPages.new(page_titles, chp_zero, manga_info_one,
 					reading_dir)
 
+	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
+
+
 	    # Setup Chapter chp_one
 	    title = "Dead End"
 	    number = 3
@@ -226,6 +234,8 @@ module DummyManga
 
 	    pages_one = MangaPages.new(page_titles, chp_one, manga_info_one,
 					reading_dir)
+
+	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
 
 
 	    # Setup the prev/next chapters here
@@ -270,6 +280,8 @@ module DummyManga
 	    pages_zero = MangaPages.new(page_titles, chp_zero, manga_info_two,
 					reading_dir)
 
+	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
+
 
 	    title = "Diary of the Tree Leaking Day"
 	    number = 1
@@ -287,6 +299,8 @@ module DummyManga
 
 	    pages_one = MangaPages.new(page_titles, chp_zero, manga_info_two,
 					reading_dir)
+
+	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
 
 
 	    # Setup the prev/next chapters here
@@ -315,6 +329,9 @@ module DummyManga
 	    pages = MangaPages.new(page_titles, nil, manga_info_three,
 					reading_dir)
 
+	    pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
+
+
 	    # Set manga_info_three's pages list
 	    manga_info_three.pages = pages
 
@@ -326,6 +343,10 @@ module DummyManga
 
 	end
 
+	# Return the manga site
+	def getSite
+	    return @site_info
+	end
 
 	# to_string for debugging
 	def to_s
@@ -528,7 +549,7 @@ module DummyManga
 
 	# Setter for chapters list (Not offical)
 	attr_writer :chapters
-	
+
 	# Setter for pages list (Not offical)
 	attr_writer :pages
 
@@ -812,19 +833,56 @@ module DummyManga
 	# Parent MangaInfo object - one object
 	attr_reader :manga_info
 
+	# First/Last Page picture
+	def first
+	    str  = @directory
+	    str += ("v#{@vol_idx}") unless @vol_idx.nil?
+	    str += ("c#{@chp_idx}") unless @chp_idx.nil?
+	    str += ("p0.jpg")
 
-	# First/Last page picture
-	attr_reader :first, :last
+	    return Gdk::Pixbuf.new(str)
+	end
+
+	def last
+	    str  = @directory
+	    str += ("v#{@vol_idx}") unless @vol_idx.nil?
+	    str += ("c#{@chp_idx}") unless @chp_idx.nil?
+	    str += ("p#{@max}.jpg")
+
+	    return Gdk::Pixbuf.new(str)
+	end
 
 	# Next/Previous page picture
-	attr_reader :next, :prev
+	def next
+	    @index += 1
+
+	    str  = @directory
+	    str += ("v#{@vol_idx}") unless @vol_idx.nil?
+	    str += ("c#{@chp_idx}") unless @chp_idx.nil?
+	    str += ("p#{@index}.jpg")
+
+	    return Gdk::Pixbuf.new(str)
+	end
+
+	def prev
+	    @index -= 1
+
+	    str  = @directory
+	    str += ("v#{@vol_idx}") unless @vol_idx.nil?
+	    str += ("c#{@chp_idx}") unless @chp_idx.nil?
+	    str += ("p#{@index}.jpg")
+
+	    return Gdk::Pixbuf.new(str)
+	end
 
 
 	# Check if next/prev page exist
 	def next?
+	    return (@index >= @max) ? false : true
 	end
 
 	def prev?
+	    return (@index < 0) ? false : true
 	end
 
 
@@ -832,20 +890,25 @@ module DummyManga
 	# does not exist it will throw an exception.  Anyway the index is
 	# counted from 0 to the last page in the set.
 	def goto (index)
+	    @index = index
+
+	    str  = @directory
+	    str += ("v#{@vol_idx}") unless @vol_idx.nil?
+	    str += ("c#{@chp_idx}") unless @chp_idx.nil?
+	    str += ("p#{@index}.jpg")
+
+	    return Gdk::Pixbuf.new(str)
 	end
 
 
 	# Returns the "index" of the current page that this "object/iterator" is
 	# on
-	def index
-	end
+	attr_reader :index
 
 
 	# Reading direction of the page itself, IE (MangaUtils::ReadingDirection)
 	# this is for right to left, or left to right reading direction, etc..
-	def reading_direction
-	    return @reading_direction
-	end
+	attr_reader :reading_direction
 
 
 	# The class constructor
@@ -856,6 +919,17 @@ module DummyManga
 	    @manga_info = manga_info
 
 	    @reading_direction = reading_direction
+	end
+
+
+	# Initalize "file pagation" - (Unoffical)
+	def file_init (directory, vol_idx, chp_idx)
+	    @index = 0
+	    @max = @page_titles.length - 1
+
+	    @directory = directory
+	    @vol_idx = vol_idx
+	    @chp_idx = chp_idx
 	end
 
 
