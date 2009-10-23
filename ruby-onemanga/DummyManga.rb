@@ -151,7 +151,7 @@ module DummyManga
 	    pages_zero = MangaPages.new(page_titles, chp_zero, manga_info_one,
 					reading_dir)
 
-	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
+	    pages_zero.file_init("DummyManga-Data/death/vol_chp_pg/", 0, 0)
 
 
 	    # Setup Chapter chp_one
@@ -172,7 +172,7 @@ module DummyManga
 	    pages_one = MangaPages.new(page_titles, chp_one, manga_info_one,
 					reading_dir)
 
-	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
+	    pages_one.file_init("DummyManga-Data/death/vol_chp_pg/", 0, 1)
 
 
 	    # Setup the prev/next chapters here
@@ -214,7 +214,7 @@ module DummyManga
 	    pages_zero = MangaPages.new(page_titles, chp_zero, manga_info_one,
 					reading_dir)
 
-	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
+	    pages_zero.file_init("DummyManga-Data/death/vol_chp_pg/", 1, 0)
 
 
 	    # Setup Chapter chp_one
@@ -235,7 +235,7 @@ module DummyManga
 	    pages_one = MangaPages.new(page_titles, chp_one, manga_info_one,
 					reading_dir)
 
-	    # TODO: pages.file_init("DummyManga-Data/undead/pg/", nil, nil)
+	    pages_one.file_init("DummyManga-Data/death/vol_chp_pg/", 1, 1)
 
 
 	    # Setup the prev/next chapters here
@@ -664,6 +664,15 @@ module DummyManga
 
 	# Next & Previous volume object, if there is no more, it will be nil
 	attr_reader :next, :prev
+	
+	# Check if next/prev volume exist
+	def next?
+	    return (not @next.nil?)
+	end
+	
+	def prev?
+	    return (not @prev.nil?)
+	end
 
 	# List of MangaChapters object assigned to this volume - Multiple object
 	attr_reader :chapters
@@ -849,7 +858,7 @@ module DummyManga
 	    str  = @directory
 	    str += ("v#{@vol_idx}") unless @vol_idx.nil?
 	    str += ("c#{@chp_idx}") unless @chp_idx.nil?
-	    str += ("p0.jpg")
+	    str += ("p#{@index}.jpg")
 
 	    return Gdk::Pixbuf.new(str)
 	end
@@ -860,7 +869,7 @@ module DummyManga
 	    str  = @directory
 	    str += ("v#{@vol_idx}") unless @vol_idx.nil?
 	    str += ("c#{@chp_idx}") unless @chp_idx.nil?
-	    str += ("p#{@max}.jpg")
+	    str += ("p#{@index}.jpg")
 
 	    return Gdk::Pixbuf.new(str)
 	end
