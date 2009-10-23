@@ -664,12 +664,12 @@ module DummyManga
 
 	# Next & Previous volume object, if there is no more, it will be nil
 	attr_reader :next, :prev
-	
+
 	# Check if next/prev volume exist
 	def next?
 	    return (not @next.nil?)
 	end
-	
+
 	def prev?
 	    return (not @prev.nil?)
 	end
@@ -770,7 +770,7 @@ module DummyManga
 	def next?
 	    return (not @next.nil?)
 	end
-	
+
 	def prev?
 	    return (not @prev.nil?)
 	end

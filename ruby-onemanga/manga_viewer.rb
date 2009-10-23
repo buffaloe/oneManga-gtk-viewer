@@ -319,6 +319,17 @@ def build_manga_viewer(dummy)
 	end
     end
 
+
+    ##############################
+    # Manga volumes combo box
+    ##############################
+    volumes.signal_connect('changed') do |combobox|
+	# Ignore changes that are from "forward/backward"
+	# setting the combobox active index
+	if (true)
+	end
+    end
+
     window = builder.get_object('viewer_window')
     window.show_all
 
