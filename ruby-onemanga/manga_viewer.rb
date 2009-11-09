@@ -55,17 +55,13 @@ def build_manga_viewer(dummy)
 
 
     # Setup the pages combo_box
-    list_store = Gtk::ListStore.new(String)
-    dummy_pages.page_titles.each do |text|
-	(list_store.append())[0] = text
-    end
-
     render = Gtk::CellRendererText.new
     pages.pack_start(render, true)
     pages.set_attributes(render, {"text" => 0})
 
-    pages.model = list_store
+    update_combobox(dummy_pages.page_titles, pages)
     pages.active = 0
+
 
     # Setup the chapters combo_box
     if not dummy_chapters.nil?
@@ -121,11 +117,7 @@ def build_manga_viewer(dummy)
 	    image.pixbuf = dummy_pages.first
 
 	    # Update the pages combobox
-	    list_store = Gtk::ListStore.new(String)
-	    dummy_pages.page_titles.each do |text|
-		(list_store.append())[0] = text
-	    end
-	    pages.model = list_store
+	    update_combobox(dummy_pages.page_titles, pages)
 
 	    pages.active = dummy_pages.index
 	    if dummy_volumes.nil?
@@ -144,19 +136,12 @@ def build_manga_viewer(dummy)
 	    image.pixbuf = dummy_pages.first
 
 	    # Update the pages combobox
-	    list_store = Gtk::ListStore.new(String)
-	    dummy_pages.page_titles.each do |text|
-		(list_store.append())[0] = text
-	    end
-	    pages.model = list_store
-
+	    update_combobox(dummy_pages.page_titles, pages)
 
 	    # Update the chapters combobox
-	    list_store = Gtk::ListStore.new(String)
-	    dummy_volumes.chapters.each do |chp|
-		(list_store.append())[0] = chp.title
-	    end
-	    chapters.model = list_store
+	    update_combobox(dummy_volumes.chapters.map do |chp|
+		chp.title
+	    end, chapters)
 
 
 	    pages.active = dummy_pages.index
@@ -186,11 +171,7 @@ def build_manga_viewer(dummy)
 	    image.pixbuf = dummy_pages.last
 
 	    # Update the pages combobox
-	    list_store = Gtk::ListStore.new(String)
-	    dummy_pages.page_titles.each do |text|
-		(list_store.append())[0] = text
-	    end
-	    pages.model = list_store
+	    update_combobox(dummy_pages.page_titles, pages)
 
 	    pages.active = dummy_pages.index
 	    if dummy_volumes.nil?
@@ -209,19 +190,12 @@ def build_manga_viewer(dummy)
 	    image.pixbuf = dummy_pages.last
 
 	    # Update the pages combobox
-	    list_store = Gtk::ListStore.new(String)
-	    dummy_pages.page_titles.each do |text|
-		(list_store.append())[0] = text
-	    end
-	    pages.model = list_store
-
+	    update_combobox(dummy_pages.page_titles, pages)
 
 	    # Update the chapters combobox
-	    list_store = Gtk::ListStore.new(String)
-	    dummy_volumes.chapters.each do |chp|
-		(list_store.append())[0] = chp.title
-	    end
-	    chapters.model = list_store
+	    update_combobox(dummy_volumes.chapters.map do |chp|
+		chp.title
+	    end, chapters)
 
 
 	    pages.active = dummy_pages.index
@@ -248,54 +222,7 @@ def build_manga_viewer(dummy)
 	    image.pixbuf = dummy_pages.goto(combobox.active)
 
 	    # Setup the forward/backward button status
-	    # TODO: extract to a function
-	    if dummy_pages.next?
-		forward.sensitive = true
-	    else
-		if dummy_chapters.nil? and dummy_volumes.nil?
-		    forward.sensitive = false
-		elsif dummy_volumes.nil?
-		    if dummy_chapters.next?
-			forward.sensitive = true
-		    else
-			forward.sensitive = false
-		    end
-		else
-		    if dummy_chapters.next?
-			forward.sensitive = true
-		    else
-			if dummy_volumes.next?
-			    forward.sensitive = true
-			else
-			    forward.sensitive = false
-			end
-		    end
-		end
-	    end
-
-	    if dummy_pages.prev?
-		back.sensitive = true
-	    else
-		if dummy_chapters.nil? and dummy_volumes.nil?
-		    back.sensitive = false
-		elsif dummy_volumes.nil?
-		    if dummy_chapters.prev?
-			back.sensitive = true
-		    else
-			back.sensitive = false
-		    end
-		else
-		    if dummy_chapters.prev?
-			back.sensitive = true
-		    else
-			if dummy_volumes.prev?
-			    back.sensitive = true
-			else
-			    back.sensitive = false
-			end
-		    end
-		end
-	    end
+	    update_sensitiveness(dummy_pages, dummy_chapters, dummy_volumes, forward, back)
 	end
     end
 
@@ -316,64 +243,13 @@ def build_manga_viewer(dummy)
 
 	    # Update the combo box listing for pages
 	    # Update the pages combobox
-	    list_store = Gtk::ListStore.new(String)
-	    dummy_pages.page_titles.each do |text|
-		(list_store.append())[0] = text
-	    end
-	    pages.model = list_store
+	    update_combobox(dummy_pages.page_titles, pages)
 
 	    # Set the combo box index
 	    pages.active = 0
 
 	    # Setup the forward/backward button status
-	    # TODO: extract to a function
-	    if dummy_pages.next?
-		forward.sensitive = true
-	    else
-		if dummy_chapters.nil? and dummy_volumes.nil?
-		    forward.sensitive = false
-		elsif dummy_volumes.nil?
-		    if dummy_chapters.next?
-			forward.sensitive = true
-		    else
-			forward.sensitive = false
-		    end
-		else
-		    if dummy_chapters.next?
-			forward.sensitive = true
-		    else
-			if dummy_volumes.next?
-			    forward.sensitive = true
-			else
-			    forward.sensitive = false
-			end
-		    end
-		end
-	    end
-
-	    if dummy_pages.prev?
-		back.sensitive = true
-	    else
-		if dummy_chapters.nil? and dummy_volumes.nil?
-		    back.sensitive = false
-		elsif dummy_volumes.nil?
-		    if dummy_chapters.prev?
-			back.sensitive = true
-		    else
-			back.sensitive = false
-		    end
-		else
-		    if dummy_chapters.prev?
-			back.sensitive = true
-		    else
-			if dummy_volumes.prev?
-			    back.sensitive = true
-			else
-			    back.sensitive = false
-			end
-		    end
-		end
-	    end
+	    update_sensitiveness(dummy_pages, dummy_chapters, dummy_volumes, forward, back)
 	end
     end
 
@@ -395,72 +271,19 @@ def build_manga_viewer(dummy)
 
 	    # Update the combo box listing for chapters & pages
 	    # Update the pages combobox
-	    list_store = Gtk::ListStore.new(String)
-	    dummy_pages.page_titles.each do |text|
-		(list_store.append())[0] = text
-	    end
-	    pages.model = list_store
+	    update_combobox(dummy_pages.page_titles, pages)
 
 	    # Update the chapters combobox
-	    list_store = Gtk::ListStore.new(String)
-	    dummy_volumes.chapters.each do |chp|
-		(list_store.append())[0] = chp.title
-	    end
-	    chapters.model = list_store
+	    update_combobox(dummy_volumes.chapters.map do |chp|
+		chp.title
+	    end, chapters)
 
 	    # Set the combo box index
 	    chapters.active = 0
 	    pages.active = 0
 
 	    # Setup the forward/backward button status
-	    # TODO: extract to a function
-	    if dummy_pages.next?
-		forward.sensitive = true
-	    else
-		if dummy_chapters.nil? and dummy_volumes.nil?
-		    forward.sensitive = false
-		elsif dummy_volumes.nil?
-		    if dummy_chapters.next?
-			forward.sensitive = true
-		    else
-			forward.sensitive = false
-		    end
-		else
-		    if dummy_chapters.next?
-			forward.sensitive = true
-		    else
-			if dummy_volumes.next?
-			    forward.sensitive = true
-			else
-			    forward.sensitive = false
-			end
-		    end
-		end
-	    end
-
-	    if dummy_pages.prev?
-		back.sensitive = true
-	    else
-		if dummy_chapters.nil? and dummy_volumes.nil?
-		    back.sensitive = false
-		elsif dummy_volumes.nil?
-		    if dummy_chapters.prev?
-			back.sensitive = true
-		    else
-			back.sensitive = false
-		    end
-		else
-		    if dummy_chapters.prev?
-			back.sensitive = true
-		    else
-			if dummy_volumes.prev?
-			    back.sensitive = true
-			else
-			    back.sensitive = false
-			end
-		    end
-		end
-	    end
+	    update_sensitiveness(dummy_pages, dummy_chapters, dummy_volumes, forward, back)
 	end
     end
 
@@ -470,4 +293,71 @@ def build_manga_viewer(dummy)
     # Show/hide widgets
     #builder.get_object('chapters_hbox').hide_all
     #builder.get_object('volumes_hbox').hide_all
+end
+
+
+##############################
+# Update the combobox
+##############################
+def update_combobox (list, combobox)
+	list_store = Gtk::ListStore.new(String)
+	list.each do |text|
+	    (list_store.append())[0] = text
+	end
+	combobox.model = list_store
+end
+
+
+##############################
+# Update the sensitiveness
+# of back/forward button
+##############################
+def update_sensitiveness(pages, chapters, volumes, forward, back)
+    if pages.next?
+	forward.sensitive = true
+    else
+	if chapters.nil? and volumes.nil?
+	    forward.sensitive = false
+	elsif volumes.nil?
+	    if chapters.next?
+		forward.sensitive = true
+	    else
+		forward.sensitive = false
+	    end
+	else
+	    if chapters.next?
+		forward.sensitive = true
+	    else
+		if volumes.next?
+		    forward.sensitive = true
+		else
+		    forward.sensitive = false
+		end
+	    end
+	end
+    end
+
+    if pages.prev?
+	back.sensitive = true
+    else
+	if chapters.nil? and volumes.nil?
+	    back.sensitive = false
+	elsif volumes.nil?
+	    if chapters.prev?
+		back.sensitive = true
+	    else
+		back.sensitive = false
+	    end
+	else
+	    if chapters.prev?
+		back.sensitive = true
+	    else
+		if volumes.prev?
+		    back.sensitive = true
+		else
+		    back.sensitive = false
+		end
+	    end
+	end
+    end
 end
