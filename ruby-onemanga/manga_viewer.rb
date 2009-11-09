@@ -65,37 +65,34 @@ def build_manga_viewer(dummy)
 
     # Setup the chapters combo_box
     if not dummy_chapters.nil?
-	list_store = Gtk::ListStore.new(String)
-	if dummy_volumes.nil?
-	    dummy.chapters.each do |chp|
-		(list_store.append())[0] = chp.title
-	    end
-	else
-	    dummy_volumes.chapters.each do |chp|
-		(list_store.append())[0] = chp.title
-	    end
-	end
-
 	render = Gtk::CellRendererText.new
 	chapters.pack_start(render, true)
 	chapters.set_attributes(render, {"text" => 0})
 
-	chapters.model = list_store
+	if dummy_volumes.nil?
+	    list = dummy.chapters.map do |chp|
+		chp.title
+	    end
+	else
+	    list = dummy_volumes.chapters.map do |chp|
+		chp.title
+	    end
+	end
+	update_combobox(list, chapters)
+
 	chapters.active = 0
     end
 
     # Setup the volumes combo_box
     if not dummy_volumes.nil?
-	list_store = Gtk::ListStore.new(String)
-	dummy.volumes.each do |vol|
-	    (list_store.append())[0] = vol.title
-	end
-
 	render = Gtk::CellRendererText.new
 	volumes.pack_start(render, true)
 	volumes.set_attributes(render, {"text" => 0})
 
-	volumes.model = list_store
+	update_combobox(dummy.volumes.map do |vol|
+	    vol.title
+	end, volumes)
+
 	volumes.active = 0
     end
 
@@ -233,10 +230,17 @@ def build_manga_viewer(dummy)
     chapters.signal_connect('changed') do |combobox|
 	# Ignore changes that are from "forward/backward"
 	# setting the combobox active index
-	if combobox.active != dummy_volumes.chapters.index(dummy_chapters)
+	if (((combobox.active != dummy_volumes.chapters.index(dummy_chapters)) \
+	    unless (dummy_volumes.nil?)) or ((combobox.active != dummy.chapters.index( \
+	    dummy_chapters)) unless (dummy.chapters.nil?)))
+
 	    puts "valid - chapter"
 
-	    dummy_chapters = dummy_volumes.chapters[combobox.active]
+	    if (dummy.chapters.nil?)
+		dummy_chapters = dummy_volumes.chapters[combobox.active]
+	    else
+		dummy_chapters = dummy.chapters[combobox.active]
+	    end
 	    dummy_pages = dummy_chapters.pages
 
 	    image.pixbuf = dummy_pages.first
