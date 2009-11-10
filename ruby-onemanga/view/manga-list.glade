@@ -5,59 +5,22 @@
   <object class="GtkListStore" id="manga_list"/>
   <object class="GtkWindow" id="list_window">
     <child>
-      <object class="GtkVBox" id="vbox1">
+      <object class="GtkVBox" id="root_vbox">
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkMenuBar" id="menubar1">
+          <object class="GtkMenuBar" id="menubar">
             <property name="visible">True</property>
             <child>
-              <object class="GtkMenuItem" id="menuitem1">
+              <object class="GtkMenuItem" id="file">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_File</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
-                  <object class="GtkMenu" id="menu1">
+                  <object class="GtkMenu" id="file_submenu">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem1">
-                        <property name="label">gtk-new</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem2">
-                        <property name="label">gtk-open</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem3">
-                        <property name="label">gtk-save</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem4">
-                        <property name="label">gtk-save-as</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
-                        <property name="visible">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem5">
+                      <object class="GtkImageMenuItem" id="quit">
                         <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
@@ -69,40 +32,16 @@
               </object>
             </child>
             <child>
-              <object class="GtkMenuItem" id="menuitem2">
+              <object class="GtkMenuItem" id="edit">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Edit</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
-                  <object class="GtkMenu" id="menu2">
+                  <object class="GtkMenu" id="edit_submenu">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem6">
-                        <property name="label">gtk-cut</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem7">
-                        <property name="label">gtk-copy</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem8">
-                        <property name="label">gtk-paste</property>
-                        <property name="visible">True</property>
-                        <property name="use_underline">True</property>
-                        <property name="use_stock">True</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem9">
-                        <property name="label">gtk-delete</property>
+                      <object class="GtkImageMenuItem" id="preferences">
+                        <property name="label">gtk-preferences</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
@@ -113,22 +52,22 @@
               </object>
             </child>
             <child>
-              <object class="GtkMenuItem" id="menuitem3">
+              <object class="GtkMenuItem" id="view">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_View</property>
                 <property name="use_underline">True</property>
               </object>
             </child>
             <child>
-              <object class="GtkMenuItem" id="menuitem4">
+              <object class="GtkMenuItem" id="help">
                 <property name="visible">True</property>
                 <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
-                  <object class="GtkMenu" id="menu3">
+                  <object class="GtkMenu" id="help_submenu">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem10">
+                      <object class="GtkImageMenuItem" id="about">
                         <property name="label">gtk-about</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
@@ -146,7 +85,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkHBox" id="hbox1">
+          <object class="GtkHBox" id="toolbar_hbox">
             <property name="visible">True</property>
             <child>
               <placeholder/>
@@ -165,21 +104,21 @@
           </packing>
         </child>
         <child>
-          <object class="GtkVPaned" id="vpaned1">
+          <object class="GtkVPaned" id="root_vpanned">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkFrame" id="frame1">
+              <object class="GtkFrame" id="manga_list_frame">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
                 <property name="shadow_type">in</property>
                 <child>
-                  <object class="GtkAlignment" id="alignment1">
+                  <object class="GtkAlignment" id="manga_list_alignment">
                     <property name="visible">True</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <object class="GtkTreeView" id="treeview1">
+                      <object class="GtkTreeView" id="manga_list">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="model">manga_list</property>
@@ -197,19 +136,19 @@
               </packing>
             </child>
             <child>
-              <object class="GtkFrame" id="frame2">
+              <object class="GtkFrame" id="manga_info_frame">
                 <property name="visible">True</property>
                 <property name="label_xalign">0</property>
                 <property name="shadow_type">in</property>
                 <child>
-                  <object class="GtkAlignment" id="alignment2">
+                  <object class="GtkAlignment" id="manga_info_alignment">
                     <property name="visible">True</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <object class="GtkHBox" id="hbox2">
+                      <object class="GtkHBox" id="manga_info_hbox">
                         <property name="visible">True</property>
                         <child>
-                          <object class="GtkImage" id="image1">
+                          <object class="GtkImage" id="image">
                             <property name="visible">True</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
@@ -218,18 +157,18 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkTable" id="table1">
+                          <object class="GtkTable" id="manga_info_table">
                             <property name="visible">True</property>
                             <property name="n_rows">10</property>
                             <property name="n_columns">2</property>
                             <child>
-                              <object class="GtkLabel" id="label1">
+                              <object class="GtkLabel" id="title_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Title:</property>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label2">
+                              <object class="GtkLabel" id="ranking_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Ranking:</property>
                               </object>
@@ -239,7 +178,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label3">
+                              <object class="GtkLabel" id="aka_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Aka:</property>
                               </object>
@@ -249,7 +188,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label4">
+                              <object class="GtkLabel" id="status_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Status:</property>
                               </object>
@@ -259,7 +198,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label5">
+                              <object class="GtkLabel" id="max_chp_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Max Chapters:</property>
                               </object>
@@ -269,7 +208,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label6">
+                              <object class="GtkLabel" id="last_uploaded_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Last Updated:</property>
                               </object>
@@ -279,7 +218,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label7">
+                              <object class="GtkLabel" id="categories_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Categories:</property>
                               </object>
@@ -289,7 +228,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label8">
+                              <object class="GtkLabel" id="author_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Author:</property>
                               </object>
@@ -299,7 +238,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label9">
+                              <object class="GtkLabel" id="artist_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Artist:</property>
                               </object>
@@ -309,7 +248,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="label10">
+                              <object class="GtkLabel" id="summary_label">
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Summary:</property>
                               </object>
@@ -319,7 +258,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry1">
+                              <object class="GtkEntry" id="title">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">&#x25CF;</property>
@@ -330,7 +269,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry2">
+                              <object class="GtkEntry" id="ranking">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">&#x25CF;</property>
@@ -343,7 +282,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry3">
+                              <object class="GtkEntry" id="aka">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">&#x25CF;</property>
@@ -356,7 +295,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry4">
+                              <object class="GtkEntry" id="status">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">&#x25CF;</property>
@@ -369,7 +308,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry5">
+                              <object class="GtkEntry" id="max_chp">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">&#x25CF;</property>
@@ -382,7 +321,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry6">
+                              <object class="GtkEntry" id="last_updated">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">&#x25CF;</property>
@@ -395,7 +334,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry7">
+                              <object class="GtkEntry" id="categories">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">&#x25CF;</property>
@@ -408,7 +347,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry8">
+                              <object class="GtkEntry" id="author">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">&#x25CF;</property>
@@ -421,7 +360,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="entry9">
+                              <object class="GtkEntry" id="artist">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="invisible_char">&#x25CF;</property>
