@@ -1,0 +1,7 @@
+1) Get the manga index working
+2) join up the index to the actual manga viewer stuff
+3) begun constructing the plugin system for each "manga site"
+
+4) create an http cache/network stack for dealing with network call to fetch pages and images/etc
+5) create the database API for dealing with the database for storage of the manga data 
+6) create the image api/cache for dealing with storage of the images for each manga

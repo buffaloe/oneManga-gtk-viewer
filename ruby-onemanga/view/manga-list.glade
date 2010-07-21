@@ -2,7 +2,6 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkListStore" id="manga_list"/>
   <object class="GtkWindow" id="list_window">
     <child>
       <object class="GtkVBox" id="root_vbox">
@@ -118,10 +117,9 @@
                     <property name="visible">True</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <object class="GtkTreeView" id="manga_list">
+                      <object class="GtkTreeView" id="manga_list1">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
-                        <property name="model">manga_list</property>
                       </object>
                     </child>
                   </object>
