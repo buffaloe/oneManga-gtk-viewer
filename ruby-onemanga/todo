@@ -2,6 +2,10 @@
 2) join up the index to the actual manga viewer stuff
 3) begun constructing the plugin system for each "manga site"
 
-4) create an http cache/network stack for dealing with network call to fetch pages and images/etc
-5) create the database API for dealing with the database for storage of the manga data 
-6) create the image api/cache for dealing with storage of the images for each manga
+4) cache backend
+    - Its currently pretty stupid, just does a md5 hash of the key and stuff the value in that 
+	file w/ that hash of the key
+
+5) The http fetcher is also a bit dumb, need to look into multi-threading and rate limiters
+6) create the database api for dealing with the db backend for manga data storage
+7) look into an image api/cache for image storage, might just reuse the "cache.rb" for that7) look into an image api/cache for image storage, might just reuse the "cache.rb" for that7) look into an image api/cache for image storage, might just reuse the "cache.rb" for that7) look into an image api/cache for image storage, might just reuse the "cache.rb" for that7) look into an image api/cache for image storage, might just reuse the "cache.rb" for that7) look into an image api/cache for image storage, might just reuse the "cache.rb" for that7) look into an image api/cache for image storage, might just reuse the "cache.rb" for that
