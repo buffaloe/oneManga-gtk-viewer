@@ -13,13 +13,15 @@ require 'SequelManga'
 #require 'manga_viewer'
 #require 'manga_index'
 
-#test = DummyManga::DummyMangaConstructor.new()
-#site = test.getSite()
+#test = DummyManga::DummyMangaConstructor.new
+#site = test.getSite
 
 #puts test.to_s
 
-test2 = SequelManga::SequelMangaConstructor.new()
-site2 = test2.getSite()
+test2 = SequelManga::SequelMangaConstructor.new
+test2.populate
+
+site2 = test2.getSite
 
 puts site2.to_s
 

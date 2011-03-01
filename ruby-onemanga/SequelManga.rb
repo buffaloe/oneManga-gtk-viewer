@@ -15,43 +15,88 @@ module SequelManga
 	DB = Sequel.connect('sqlite://SequelManga.db')
 
 	def initialize
+	    # Create the Manga Site table
+	    DB.create_table! :sites do
+		primary_key :id
+		String :site_name, :unique => true
+	    end
 
 	    # Create the categories/genre table
 	    DB.create_table! :category do
 		primary_key :id
-		column :category, :text, :unique => true
+		String :category, :unique => true
+
+		# Foreign Key
+		Integer :site_id
+		Integer :info_id
 	    end
 
-	    # Populate the categories table
-	    c1 = Category.create(:category => "Action")
-	    c2 = Category.create(:category => "Adventure")
-	    c3 = Category.create(:category => "Drama")
-	    c1.save
-	    c2.save
-	    c3.save
-	    
-	    
-	    # Create the Manga Site table
-	    DB.create_table! :sites do
+	    # Create the Manga Info table
+	    DB.create_table! :infos do
 		primary_key :id
-		column :site_name, :text, :unique => true
-	    end
+		String :title
+		# Alt titles [blah, foo]
+		# Artist [blah, blz]
+		Integer :schedule_id
+		Integer :state_id
+		Integer :status_id
+		# Total [x, y, z]
+		Date :last_update
+		Date :release_year
+		# Serialized ?
+		Date :when_added
+		Integer :site_ranking
+		# Rating [rate, out_of, total]
+		# Views [Number, Type Of]
+		Text :summary
 
-	    # Modify the categories table
-	    DB.alter_table(:category) do
-		add_foreign_key :site_id, :sites
+		# Foreign Key
+		Integer :site_id
 	    end
+	end
+
+	def populate
+	    # Populate the categories table
+	    c1 = DB[:category].insert(:category => "Action")
+	    c2 = DB[:category].insert(:category => "Adventure")
+	    c3 = DB[:category].insert(:category => "Drama")
+
+	    # Populate the Manga Info table
+	    i1 = DB[:infos].insert(
+		:title		=> "UNTIL DEATH DO US PART",
+		:schedule_id	=> MangaUtils::MangaReleaseStatus::REGULAR,
+		:state_id	=> MangaUtils::MangaStatus::UNCOMPLETED,
+		:status_id	=> MangaUtils::MangaChapterStatus::NEW,
+		:last_update	=> Time.utc(2009, 10, 3),
+		:release_year	=> Time.utc(2005),
+		:when_added	=> Time.utc(2008, 6, 2),
+		:site_ranking	=> 332,
+		:summary	=> "A girl named Haruka Tōyama happens to be in the care of a certain company because she can see the future, but she wants to get away, so using her abilities she finds a blind though strong man and asks him to help her as a body guard 'till death do them part. The man, named Mamoru Hijikata, quickly dismisses her request as a joke from a small 12 year old kid, only to realize what shady business has beginning to unfold when people willing to do anything are desperately searching for the girl. As she predicted, Mamoru has past experience in shady business himself, and will not be pushed around easily by any criminal.
+
+		... Is 'protection' the only reason that Haruka approached Mamoru? Or could it be something else?"
+	    )
+
+	    # Populate Manga Info Category
+	    manga = Info[i1]
+	    manga.add_category(Category[c1])
+	    manga.add_category(Category[c3])
+	    manga.save
+
 
 	    # Populate the site table
-	    s1 = Site.create(:site_name => "One Manga")
-	    s1.save
+	    s1 = DB[:sites].insert(:site_name => "One Manga")
 
-	    s1.add_category(c1)
-	    s1.add_category(c2)
-	    s1.add_category(c3)
-	    s1.save
+	    # Populate site Category
+	    site = Site[s1]
+	    site.add_category(Category[c1])
+	    site.add_category(Category[c2])
+	    site.add_category(Category[c3])
 
-	    @site = s1.pk
+	    # Populate Site Manga Info
+	    site.add_info(Info[i1])
+	    site.save
+
+	    @site = s1
 	end
 
 	# Return the manga site
@@ -66,6 +111,7 @@ module SequelManga
     #######################################################################
     class Category < Sequel::Model(:category)
 	many_to_one :sites
+	many_to_one :infos
 
 	# to_string for debugging
 	def to_s
@@ -84,7 +130,7 @@ module SequelManga
 	one_to_many :category
 
 	# List of all of the MangaInfo - multiple objects, on this site
-#	one_to_many :mangas
+	one_to_many :info
 
 
 	# to_string for debugging
@@ -92,16 +138,8 @@ module SequelManga
 	    ret = "[Manga Site]\n"
 	    ret += "\tName: #{site_name}\n"
 	    ret += "\tCategories: #{category.join(', ')}\n"
+	    ret += "#{info.join('\n')}\n"
 	    return ret
-#	    if (@mangas.is_a? Array)
-#		@mangas.each do |manga|
-#		    ret += "[MangaInfo]\n#{manga.to_s}\n\n"
-#		end
-#	    else
-#		ret += "[MangaInfo]\n#{manga.to_s}\n\n"
-#	    end
-#
-#	    return ret
 	end
     end
 
@@ -109,8 +147,29 @@ module SequelManga
     #######################################################################
     # Per manga Information - Each object holds information on one manga
     #######################################################################
-    class MangaInfo
+    class Info < Sequel::Model
+	# List of categories/genre of manga that are available on the site
+	one_to_many :category
 
+	# to_string for debugging
+	def to_s
+	    ret = "[Manga Info]\n"
+	    ret += "\tTitle: #{title}\n"
+	    ret += "\tCategories: #{category.join(', ')}\n"
+	    ret += "\tSchedule id: #{schedule_id}\n"
+	    ret += "\tState id: #{state_id}\n"
+	    ret += "\tStatus id: #{status_id}\n"
+	    ret += "\tLast Update: #{last_update}\n"
+	    ret += "\tRelease Year: #{release_year}\n"
+	    ret += "\tWhen Added: #{when_added}\n"
+	    ret += "\tSite Ranking: #{site_ranking}\n"
+#	    ret += "\tSummary: #{summary}\n"
+
+	    return ret
+	end
+    end
+    
+    class MangaInfo
 	# Front page picture, it will return a single image if there is only one
 	# cover image.  However if there is more than one cover page image such
 	# as one cover page image per volume, it will return an array with the
@@ -213,41 +272,41 @@ module SequelManga
 
 
 	# The class constructor
-	def initialize (title, alt_titles, categories, authors, artists,
-			releases, state, status, total, latest_chapter, last_update,
-			release_year, serialized, add_date, ranking, rating, views,
-			summary, manga_site, volumes, chapters, pages, cover_pages)
-	    @title = title
-	    @alt_titles = alt_titles
-	    @categories = categories
-	    @authors = authors
-	    @artists = artists
-
-	    @release_schedule = releases
-	    @state = state
-	    @status = status
-	    @total = total
-
-	    @latest_chapter = latest_chapter
-	    @last_update = last_update
-	    @release_year = release_year
-	    @serialized_in = serialized
-	    @when_added = add_date
-
-	    @site_ranking = ranking
-	    @rating = rating
-	    @views = views
-
-	    @summary = summary
-
-	    @manga_site = manga_site
-
-	    @volumes = volumes
-	    @chapters = chapters
-	    @pages = pages
-
-	    @cover_page_paths = cover_pages
-	end
+#	def initialize (title, alt_titles, categories, authors, artists,
+#			releases, state, status, total, latest_chapter, last_update,
+#			release_year, serialized, add_date, ranking, rating, views,
+#			summary, manga_site, volumes, chapters, pages, cover_pages)
+#	    @title = title
+#	    @alt_titles = alt_titles
+#	    @categories = categories
+#	    @authors = authors
+#	    @artists = artists
+#
+#	    @release_schedule = releases
+#	    @state = state
+#	    @status = status
+#	    @total = total
+#
+#	    @latest_chapter = latest_chapter
+#	    @last_update = last_update
+#	    @release_year = release_year
+#	    @serialized_in = serialized
+#	    @when_added = add_date
+#
+#	    @site_ranking = ranking
+#	    @rating = rating
+#	    @views = views
+#
+#	    @summary = summary
+#
+#	    @manga_site = manga_site
+#
+#	    @volumes = volumes
+#	    @chapters = chapters
+#	    @pages = pages
+#
+#	    @cover_page_paths = cover_pages
+#	end
 
 	# Setter for volumes list (not offical)
 	attr_writer :volumes
@@ -260,95 +319,95 @@ module SequelManga
 
 
 	# to_string for debugging
-	def to_s
-	    ret  = "Title: #{@title}\n"
-
-	    if (@alt_titles.is_a? Array)
-		ret += "Alt Titles: #{@alt_titles.join(', ')}\n"
-	    else
-		ret += "Alt Titles: #{@alt_titles}\n"
-	    end
-
-	    if (@authors.is_a? Array)
-		ret += "Authors: #{@authors.join(', ')}\n"
-	    else
-		ret += "Authors: #{@authors}\n"
-	    end
-
-	    if (@artists.is_a? Array)
-		ret += "Artists: #{@artists.join(', ')}\n"
-	    else
-		ret += "Artists: #{@artists}\n"
-	    end
-
-	    ret += "Release Schedule: #{@release_schedule}\n"
-	    ret += "State: #{@state}\n"
-	    ret += "Status: #{@status}\n"
-
-	    ret += "Total:\n\tVol: #{@total[0]}\n\tChp: #{@total[1]}\n\tPage: #{@total[2]}\n"
-
-	    ret += "Latest Chapter: #{@latest_chapter}\n"
-	    ret += "Last Update: #{@last_update}\n"
-	    ret += "Release Year: #{@release_year}\n"
-	    ret += "Serialized in: #{@serialized_in}\n"
-	    ret += "When Added: #{@when_added}\n"
-	    ret += "Site Ranking: #{@site_ranking}\n"
-
-	    if (@rating.nil?)
-		ret += "Rating:\n\tRating:\n\tVotes:\n"
-	    else
-		ret += "Rating:\n\tRating: (#{@rating[0]}/#{@rating[1]})\n\tVotes: #{@rating[2]}\n"
-	    end
-
-	    if (@views.nil?)
-		ret += "Views:\n\tNumber:\n\tType:\n"
-	    else
-		ret += "Views:\n\tNumber: #{@views[0]}\n\tType: #{@views[1]}\n"
-	    end
-
-	    ret += "Summary:\n****\n#{@summary}\n****\n\n"
-
-	    if (@volumes.is_a? Array)
-		@volumes.each do |vol|
-		    ret += "[MangaVolumes]\n#{vol.to_s}"
-		end
-	    else
-		if (@volumes.nil?)
-		    ret += "[MangaVolumes]\n-Not Used-\n\n"
-		else
-		    ret += "[MangaVolumes]\n#{@volumes.to_s}\n"
-		end
-	    end
-
-
-	    if (@chapters.is_a? Array)
-		@chapters.each do |chp|
-		    ret += "[MangaChapters]\n#{chp.to_s}\n"
-		end
-	    else
-		if (@chapters.nil?)
-		    ret += "[MangaChapters]\n-Not Used-\n\n"
-		else
-		    ret += "[MangaChapters]\n#{@chapters.to_s}\n"
-		end
-	    end
-
-
-	    if (@pages.is_a? Array)
-		@pages.each do |pg|
-		    ret += "[MangaPages]\n#{pg.to_s}\n"
-		end
-	    else
-		if (@pages.nil?)
-		    ret += "[MangaPages]\n-Not Used-\n\n"
-		else
-		    ret += "[MangaPages]\n#{@pages.to_s}\n"
-		end
-	    end
-
-
-	    return ret
-	end
+#	def to_s
+#	    ret  = "Title: #{@title}\n"
+#
+#	    if (@alt_titles.is_a? Array)
+#		ret += "Alt Titles: #{@alt_titles.join(', ')}\n"
+#	    else
+#		ret += "Alt Titles: #{@alt_titles}\n"
+#	    end
+#
+#	    if (@authors.is_a? Array)
+#		ret += "Authors: #{@authors.join(', ')}\n"
+#	    else
+#		ret += "Authors: #{@authors}\n"
+#	    end
+#
+#	    if (@artists.is_a? Array)
+#		ret += "Artists: #{@artists.join(', ')}\n"
+#	    else
+#		ret += "Artists: #{@artists}\n"
+#	    end
+#
+#	    ret += "Release Schedule: #{@release_schedule}\n"
+#	    ret += "State: #{@state}\n"
+#	    ret += "Status: #{@status}\n"
+#
+#	    ret += "Total:\n\tVol: #{@total[0]}\n\tChp: #{@total[1]}\n\tPage: #{@total[2]}\n"
+#
+#	    ret += "Latest Chapter: #{@latest_chapter}\n"
+#	    ret += "Last Update: #{@last_update}\n"
+#	    ret += "Release Year: #{@release_year}\n"
+#	    ret += "Serialized in: #{@serialized_in}\n"
+#	    ret += "When Added: #{@when_added}\n"
+#	    ret += "Site Ranking: #{@site_ranking}\n"
+#
+#	    if (@rating.nil?)
+#		ret += "Rating:\n\tRating:\n\tVotes:\n"
+#	    else
+#		ret += "Rating:\n\tRating: (#{@rating[0]}/#{@rating[1]})\n\tVotes: #{@rating[2]}\n"
+#	    end
+#
+#	    if (@views.nil?)
+#		ret += "Views:\n\tNumber:\n\tType:\n"
+#	    else
+#		ret += "Views:\n\tNumber: #{@views[0]}\n\tType: #{@views[1]}\n"
+#	    end
+#
+#	    ret += "Summary:\n****\n#{@summary}\n****\n\n"
+#
+#	    if (@volumes.is_a? Array)
+#		@volumes.each do |vol|
+#		    ret += "[MangaVolumes]\n#{vol.to_s}"
+#		end
+#	    else
+#		if (@volumes.nil?)
+#		    ret += "[MangaVolumes]\n-Not Used-\n\n"
+#		else
+#		    ret += "[MangaVolumes]\n#{@volumes.to_s}\n"
+#		end
+#	    end
+#
+#
+#	    if (@chapters.is_a? Array)
+#		@chapters.each do |chp|
+#		    ret += "[MangaChapters]\n#{chp.to_s}\n"
+#		end
+#	    else
+#		if (@chapters.nil?)
+#		    ret += "[MangaChapters]\n-Not Used-\n\n"
+#		else
+#		    ret += "[MangaChapters]\n#{@chapters.to_s}\n"
+#		end
+#	    end
+#
+#
+#	    if (@pages.is_a? Array)
+#		@pages.each do |pg|
+#		    ret += "[MangaPages]\n#{pg.to_s}\n"
+#		end
+#	    else
+#		if (@pages.nil?)
+#		    ret += "[MangaPages]\n-Not Used-\n\n"
+#		else
+#		    ret += "[MangaPages]\n#{@pages.to_s}\n"
+#		end
+#	    end
+#
+#
+#	    return ret
+#	end
     end
 
 
@@ -677,429 +736,6 @@ module SequelManga
 	    end
 
 	    return ret
-	end
-    end
-
-
-
-
-    #######################################################################
-    # Old MangaPages, mainly for refferences now
-    #######################################################################
-    class MangaPages_old
-
-	def initialize (vol_exist, chp_exist)
-	    # Does Volume or Chapters matter
-	    @vol_exist = vol_exist
-	    @chp_exist = chp_exist
-
-	    # Volume/chapter/page index
-	    @vol = 0
-	    @chp = 0
-	    @pg  = 0
-	end
-
-
-	# These two function returns the Manga, and the Site
-	# that this "Manga Page" is from
-	def get_manga
-	    return MangaInfo.new
-	end
-
-	def get_manga_site
-	    return MangaSite.new
-	end
-
-
-	# Returns an Pixbuf of the first page, this is to make the next/prev_page
-	# code to be simpler, plus when the manga viewer loads up it will want a
-	# pixbuf of the first page of the manga anyway (for now)
-	def first_page
-	    if !@vol_exist & !@chp_exist
-		str = "DummyManga-Data/pg/p#{@pg}.jpg"
-		return Gdk::Pixbuf.new(str)
-
-	    elsif !@vol_exist & @chp_exist
-		str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
-		return Gdk::Pixbuf.new(str)
-	    elsif @vol_exist & @chp_exist
-		str = "DummyManga-Data/vol_chp_pg/v#{@vol}c#{@chp}p#{@pg}.jpg"
-		return Gdk::Pixbuf.new(str)
-	    else
-		puts "not implemented"
-	    end
-	end
-
-	# Returns an Pixbuf of the last page, this is to make the next/prev_page
-	# code to be simpler, plus when the manga viewer loads up it will want a
-	# pixbuf of the last page of the manga anyway (for now)
-	def last_page
-	    if !@vol_exist & !@chp_exist
-		str = "DummyManga-Data/pg/p#{@pg}.jpg"
-		return Gdk::Pixbuf.new(str)
-
-	    elsif !@vol_exist & @chp_exist
-		str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
-		return Gdk::Pixbuf.new(str)
-	    elsif @vol_exist & @chp_exist
-		str = "DummyManga-Data/vol_chp_pg/v#{@vol}c#{@chp}p#{@pg}.jpg"
-		return Gdk::Pixbuf.new(str)
-	    else
-		puts "not implemented"
-	    end
-	end
-
-
-	# Returns an Pixbuf of the page, if its past the last of the pages, it
-	# will return nil to indicate its past the last page
-	#
-	# If there is a failure at fetching the image, it will throw an exception
-	def next_page
-	    if !@vol_exist & !@chp_exist
-		if @pg >= 7
-		    return nil
-		else
-		    @pg += 1
-		    str = "DummyManga-Data/pg/p#{@pg}.jpg"
-
-		    return Gdk::Pixbuf.new(str)
-		end
-	    elsif !@vol_exist & @chp_exist
-		if @pg >= 3
-		    return nil
-		else
-		    @pg += 1
-		    str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
-
-		    return Gdk::Pixbuf.new(str)
-		end
-	    elsif @vol_exist & @chp_exist
-		if @pg >= 1
-		    return nil
-		else
-		    @pg += 1
-		    str = "DummyManga-Data/vol_chp_pg/v#{@vol}c#{@chp}p#{@pg}.jpg"
-
-		    return Gdk::Pixbuf.new(str)
-		end
-	    else
-		puts "not implemented"
-	    end
-	end
-
-	def next_page?
-	    if !@vol_exist & !@chp_exist
-		return (@pg >= 7) ? false : true
-	    elsif !@vol_exist & @chp_exist
-		return (@pg >= 3) ? false : true
-	    elsif @vol_exist & @chp_exist
-		return (@pg >= 1) ? false : true
-	    else
-		puts "not implemented"
-	    end
-	end
-
-
-	# Same thing as the "next_page" class of function
-	def prev_page
-	    if !@vol_exist & !@chp_exist
-		if @pg < 1
-		    return nil
-		else
-		    @pg -= 1
-		    str = "DummyManga-Data/pg/p#{@pg}.jpg"
-
-		    return Gdk::Pixbuf.new(str)
-		end
-	    elsif !@vol_exist & @chp_exist
-		if @pg < 1
-		    return nil
-		else
-		    @pg -= 1
-		    str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
-
-		    return Gdk::Pixbuf.new(str)
-		end
-	    elsif @vol_exist & @chp_exist
-		if @pg < 1
-		    return nil
-		else
-		    @pg -= 1
-		    str = "DummyManga-Data/vol_chp_pg/v#{@vol}c#{@chp}p#{@pg}.jpg"
-
-		    return Gdk::Pixbuf.new(str)
-		end
-	    else
-		puts "not implemented"
-	    end
-	end
-
-	def prev_page?
-	    if !@vol_exist & !@chp_exist
-		return (@pg < 1) ? false : true
-	    elsif !@vol_exist & @chp_exist
-		return (@pg < 1) ? false : true
-	    elsif @vol_exist & @chp_exist
-		return (@pg < 1) ? false : true
-	    else
-		puts "not implemented"
-	    end
-	end
-
-	# This function will go to the page as specifyed in the index passed
-	# as a parameter, it will then return an image of that said page and
-	# reset the "internal" iterator to resume from that point in time.
-	# otherwise it functions just like the "next_page" class of function
-	#
-	# Also if the page as indicated by the index does not exist, it will
-	# throw an exception
-	def goto_page (index)
-	    if !@vol_exist & !@chp_exist
-		@pg = index
-		str = "DummyManga-Data/pg/p#{@pg}.jpg"
-
-		return Gdk::Pixbuf.new(str)
-	    elsif !@vol_exist & @chp_exist
-		@pg = index
-		str = "DummyManga-Data/chp_pg/c#{@chp}p#{@pg}.jpg"
-
-		return Gdk::Pixbuf.new(str)
-	    elsif @vol_exist & @chp_exist
-		@pg = index
-		str = "DummyManga-Data/vol_chp_pg/v#{@vol}c#{@chp}p#{@pg}.jpg"
-
-		return Gdk::Pixbuf.new(str)
-	    else
-		puts "not implemented"
-	    end
-	end
-
-
-	# This function will return the next "MangaPages" object, which can
-	# be this current object if the Manga Site/Backend does not have the
-	# concept of "Chapters".  This function will return nil if there is
-	# no more chapters to fetch, the "pages count is undefined at the moment"
-	def next_chapter
-	    if !@vol_exist & @chp_exist
-		if @chp >= 1
-		    return nil
-		else
-		    @chp += 1
-		    @pg = 0
-
-		    return self
-		end
-	    elsif @vol_exist & @chp_exist
-		if @chp >= 1
-		    return nil
-		else
-		    @chp += 1
-		    @pg = 0
-
-		    return self
-		end
-	    else
-		puts "not implemented"
-		return nil
-	    end
-	end
-
-	def next_chapter?
-	    if !@vol_exist & @chp_exist
-		return (@chp >= 1) ? false : true
-	    elsif @vol_exist & @chp_exist
-		return (@chp >= 1) ? false : true
-	    else
-		puts "not implemented"
-		return nil
-	    end
-	end
-
-
-	# Same thing as the "next_chapter" class of function
-	def prev_chapter
-	    if !@vol_exist & @chp_exist
-		if @chp < 1
-		    return nil
-		else
-		    @chp -= 1
-		    @pg = 3
-
-		    return self
-		end
-	    elsif @vol_exist & @chp_exist
-		if @chp < 1
-		    return nil
-		else
-		    @chp -= 1
-		    @pg = 1
-
-		    return self
-		end
-	    else
-		puts "not implemented"
-		return nil
-	    end
-	end
-
-	def prev_chapter?
-	    if !@vol_exist & @chp_exist
-		return (@chp < 1) ? false : true
-	    elsif @vol_exist & @chp_exist
-		return (@chp < 1) ? false : true
-	    else
-		puts "not implemented"
-		return nil
-	    end
-	end
-
-
-	# Same thing as the "goto_page" function, however with respect
-	# to chapters, the results is the same, but applied to chapters
-	#
-	# It defaults to the first page of each chapter
-	def goto_chapter (index)
-	    if !@vol_exist & @chp_exist
-		@pg = 0
-		@chp = index
-
-		return first_page
-	    elsif @vol_exist & @chp_exist
-		@pg = 0
-		@chp = index
-
-		return first_page
-	    else
-		puts "not implemented"
-		return nil
-	    end
-	end
-
-
-	# Most Manga Backend does not really have the concept of
-	# Manga Volume so this class of function is somewhat redudant,
-	# however its still here for those backends that do.
-	#
-	# Regardless, the functionality here is the same as the
-	# "*_chapter" classes of function, just applied to volumes
-	def next_volume
-	    if @vol_exist & @chp_exist
-		if @vol >= 1
-		    return nil
-		else
-		    @vol += 1
-		    @chp = 0
-		    @pg = 0
-
-		    return self
-		end
-	    end
-	end
-
-	def next_volume?
-	    if @vol_exist & @chp_exist
-		return (@vol >= 1) ? false : true
-	    end
-	end
-
-
-	def prev_volume
-	    if @vol_exist & @chp_exist
-		if @vol < 1
-		    return nil
-		else
-		    @vol -= 1
-		    @chp = 1
-		    @pg = 1
-
-		    return self
-		end
-	    end
-	end
-
-	def prev_volume?
-	    if @vol_exist & @chp_exist
-		return (@vol < 1) ? false : true
-	    end
-	end
-
-
-	def goto_volume (index)
-	    if @vol_exist & @chp_exist
-		@pg = 0
-		@chp = 0
-		@vol = index
-
-		return first_page
-	    end
-	end
-
-
-	# This function returns an enum (MangaUtils::ReadingDirection::)
-	# for which direction that the manga is read, IE right to left
-	# or left to right
-	def reading_direction
-	    return MangaUtils::ReadingDirection::RIGHT_TO_LEFT
-	end
-
-
-	# These family of function returns the current index of the
-	# MangaPages, in volumes/chapter/page, and if one of these
-	# function/class are not used it will return nil
-	def currentVolumeIndex
-	    return @vol
-	end
-
-	def currentChapterIndex
-	    return @chp
-	end
-
-	def currentPageIndex
-	    return @pg
-	end
-
-
-	# These family of function will return a list for use by the
-	# GUI (IE chapter names or numbers for example)
-	#
-	# If its not used it will return nil also if there is problems
-	# fetching that information, it will also toss out an exception
-	def list_volumes
-	    if @vol_exist & @chp_exist
-		return ["Vol 0", "Vol 1"]
-	    end
-	end
-
-	def list_chapters
-	    if !@vol_exist & !@chp_exist
-		return nil
-	    elsif !@vol_exist & @chp_exist
-		return ["Chp 0", "Chp 1"]
-	    elsif @vol_exist & @chp_exist
-		return ["Chp 0", "Chp 1"]
-	    else
-		puts "not implemented"
-		return nil
-	    end
-	end
-
-	def list_pages
-	    if !@vol_exist & !@chp_exist
-		return ["Pg 0", "Pg 1", "Pg 2", "Pg 3", "Pg 4", "Pg 5", "Pg 6", "Pg 7"]
-	    elsif !@vol_exist & @chp_exist
-		return ["Pg 0", "Pg 1", "Pg 2", "Pg 3"]
-	    elsif @vol_exist & @chp_exist
-		return ["Pg 0", "Pg 1"]
-	    else
-		puts "not implemented"
-		return nil
-	    end
-	end
-
-
-	# The to_s function
-	def to_s
-	    return "v:#{@vol} c:#{@chp} p:#{@pg} - v:#{@exist_more_vol} c:#{@exist_more_chp} p:#{@exist_more_pg}"
 	end
     end
 end
