@@ -1,3 +1,7 @@
+a) Convert over to a sequel based database with sqlite as the backend
+b) get the structure/cache/etc for this to work
+c) proceed to finish up some of these following issues:
+
 1) Get the manga index working
 2) join up the index to the actual manga viewer stuff
 3) begun constructing the plugin system for each "manga site"
