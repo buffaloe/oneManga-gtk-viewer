@@ -1,3 +1,22 @@
+Setup a rough design of the database:
+
+1) Site information
+
+2) Manga specific information
+
+3) categories/other grouping information like author, artist, etc...
+
+4) "page/chapter/volume" index for unusual URL, names/title of each
+volume/page/etc that kind of stuff
+
+Thus in the end will be able to query based on site, query based on category,
+     author, artist.... 
+
+     or query on I like XYZ manga, find me the site with the most up to date,
+     etc..
+
+
+
 a) Convert over to a sequel based database with sqlite as the backend
 b) get the structure/cache/etc for this to work
 c) proceed to finish up some of these following issues:

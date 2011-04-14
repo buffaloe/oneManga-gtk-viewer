@@ -25,22 +25,70 @@ module SequelManga
 	    DB.create_table! :category do
 		primary_key :id
 		String :category, :unique => true
-
+	    end
+	    DB.create_table! :categories_infos do
 		# Foreign Key
-		Integer :site_id
+		Integer :category_id
 		Integer :info_id
 	    end
+	    DB.create_table! :categories_sites do
+		# Foreign Key
+		Integer :category_id
+		Integer :site_id
+	    end
+
+
+	    # Create the Title
+	    DB.create_table! :titles do
+		primary_key :id
+		String :title, :unique => true
+		
+		# Foreign Key
+		Integer :info_id
+	    end
+
+	    # Create the alt titles
+	    DB.create_table! :alttitles do
+		primary_key :id
+		String :title, :unique => true
+
+		# Foreign Key
+		Integer :info_id
+	    end
+	   
+
+	    # Create the author tables
+	    DB.create_table! :authors do
+		primary_key :id
+		String :name, :unique => true
+	    end
+	    DB.create_table! :authors_infos do
+		# Foreign Key
+		Integer :author_id
+		Integer :info_id
+	    end
+	   
+
+	    # Create the artist table
+	    DB.create_table! :artists do
+		primary_key :id
+		String :name, :unique => true
+	    end
+	    DB.create_table! :artists_infos do
+		# Foreign Key
+		Integer :artist_id
+		Integer :info_id
+	    end
+
 
 	    # Create the Manga Info table
 	    DB.create_table! :infos do
 		primary_key :id
-		String :title
-		# Alt titles [blah, foo]
 		# Artist [blah, blz]
-		Integer :schedule_id
-		Integer :state_id
-		Integer :status_id
-		# Total [x, y, z]
+		String :schedule
+		String :state
+		String :status
+		# Total [x, y, z] - chapter/vol/page/etc
 		Date :last_update
 		Date :release_year
 		# Serialized ?
@@ -61,12 +109,22 @@ module SequelManga
 	    c2 = DB[:category].insert(:category => "Adventure")
 	    c3 = DB[:category].insert(:category => "Drama")
 
+	    # Populate the title table
+	    t1 = DB[:titles].insert(:title => "UNTIL DEATH DO US PART")
+
+	    # Populate it with alternate titles
+	    at1 = DB[:alttitles].insert(:title => "SHI GA FUTARI WO WAKATSU MADE")
+	    at2 = DB[:alttitles].insert(:title => "POKIAľ NáS SMRť NEROZDELí")
+
+	    # Populate it with author/artist
+	    aa1 = DB[:authors].insert(:name => "Takashige Hiroshi")
+	    ar1 = DB[:artists].insert(:name => "Double-S")
+
 	    # Populate the Manga Info table
 	    i1 = DB[:infos].insert(
-		:title		=> "UNTIL DEATH DO US PART",
-		:schedule_id	=> MangaUtils::MangaReleaseStatus::REGULAR,
-		:state_id	=> MangaUtils::MangaStatus::UNCOMPLETED,
-		:status_id	=> MangaUtils::MangaChapterStatus::NEW,
+		:schedule	=> :release_status_regular.to_s,
+		:state		=> :manga_status_uncompleted.to_s,
+		:status		=> :chapter_status_new.to_s,
 		:last_update	=> Time.utc(2009, 10, 3),
 		:release_year	=> Time.utc(2005),
 		:when_added	=> Time.utc(2008, 6, 2),
@@ -78,6 +136,14 @@ module SequelManga
 
 	    # Populate Manga Info Category
 	    manga = Info[i1]
+	    manga.title = Title[t1]
+
+	    manga.add_alttitle(Alttitle[at1])
+	    manga.add_alttitle(Alttitle[at2])
+
+	    manga.add_author(Author[aa1])
+	    manga.add_artist(Artist[ar1])
+
 	    manga.add_category(Category[c1])
 	    manga.add_category(Category[c3])
 	    manga.save
@@ -110,12 +176,64 @@ module SequelManga
     # Category/Genre information
     #######################################################################
     class Category < Sequel::Model(:category)
-	many_to_one :sites
-	many_to_one :infos
+	many_to_many :site
+	many_to_many :info
 
 	# to_string for debugging
 	def to_s
 	    return "#{category}"
+	end
+    end
+   
+
+    #######################################################################
+    # Title information
+    #######################################################################
+    class Title < Sequel::Model
+	one_to_one :info
+
+	# to_string for debugging
+	def to_s
+	    return "#{title}"
+	end
+    end
+    
+    
+    #######################################################################
+    # alttitle information
+    #######################################################################
+    class Alttitle < Sequel::Model
+	many_to_one :info
+
+	# to_string for debugging
+	def to_s
+	    return "#{title}"
+	end
+    end
+   
+
+    #######################################################################
+    # Author information
+    #######################################################################
+    class Author < Sequel::Model
+	many_to_many :info
+
+	# to_string for debugging
+	def to_s
+	    return "#{name}"
+	end
+    end
+    
+    
+    #######################################################################
+    # Artist information
+    #######################################################################
+    class Artist < Sequel::Model
+	many_to_many :info
+
+	# to_string for debugging
+	def to_s
+	    return "#{name}"
 	end
     end
 
@@ -127,11 +245,10 @@ module SequelManga
     #######################################################################
     class Site < Sequel::Model
 	# List of categories/genre of manga that are available on the site
-	one_to_many :category
+	many_to_many :category
 
 	# List of all of the MangaInfo - multiple objects, on this site
 	one_to_many :info
-
 
 	# to_string for debugging
 	def to_s
@@ -149,16 +266,29 @@ module SequelManga
     #######################################################################
     class Info < Sequel::Model
 	# List of categories/genre of manga that are available on the site
-	one_to_many :category
+	many_to_many :category
+	
+	# Titles
+	one_to_one :title
+
+	# List of Alternative titles
+	one_to_many :alttitle
+
+	# List of author/artist
+	many_to_many :author
+	many_to_many :artist
 
 	# to_string for debugging
 	def to_s
 	    ret = "[Manga Info]\n"
 	    ret += "\tTitle: #{title}\n"
+	    ret += "\tAlt Titles: #{alttitle.join(', ')}\n"
+	    ret += "\tAuthors: #{author.join(', ')}\n"
+	    ret += "\tArtists: #{artist.join(', ')}\n"
 	    ret += "\tCategories: #{category.join(', ')}\n"
-	    ret += "\tSchedule id: #{schedule_id}\n"
-	    ret += "\tState id: #{state_id}\n"
-	    ret += "\tStatus id: #{status_id}\n"
+	    ret += "\tSchedule: #{schedule}\n"
+	    ret += "\tState: #{state}\n"
+	    ret += "\tStatus: #{status}\n"
 	    ret += "\tLast Update: #{last_update}\n"
 	    ret += "\tRelease Year: #{release_year}\n"
 	    ret += "\tWhen Added: #{when_added}\n"
@@ -186,34 +316,12 @@ module SequelManga
 	    return ret
 	end
 
-	# Manga's Title
-	attr_reader :title
-
-	# Alternative Titles, there may be more than one.  If there is more than
-	# one an array will be returned, otherwise it'll return a nil
-	attr_reader :alt_titles
-
-	# The manga's Categories/Genres, if there is more than one, it will be
-	# returned as an array
-	attr_reader :categories
 
 	# Authors, if there is more than one its returned as an array
 	attr_reader :authors
 
 	# Artists, if there is more than one, its then returned as an array
 	attr_reader :artists
-
-	# Manga release schedule, such as irregular, regular, unknown, in other
-	# words the schedule that the scanlators releases new materials - MangaUtil::ENUM
-	attr_reader :release_schedule
-
-	# The state of the manga, IE is it completed, uncompleted, or
-	# suspended? - MangaUtil::ENUM
-	attr_reader :state
-
-	# The status of the manga, is it newly updated, new addition, or "hot"
-	# meaning popular - MangaUtil::ENUM
-	attr_reader :status
 
 	# Manga size/total - number of pages, number of chapters, and number of
 	# volumes, anyway it will return nil for unknown values, this function
@@ -225,33 +333,14 @@ module SequelManga
 	# Latest chapter - A direct link to the latest chapter
 	attr_reader :latest_chapter
 
-	# Last update - The last time it was updated
-	attr_reader :last_update
-
-	# Year of release - Date/time object perhaps?
-	attr_reader :release_year
-
 	# Which magzine it was serialized in
 	attr_reader :serialized_in
-
-	# date/time it was added to the site - Date/time object
-	attr_reader :when_added
-
-	# Ranking on the site
-	attr_reader :site_ranking
 
 	# Rating on the site for this manga (rating, out-of, votes)
 	attr_reader :rating
 
 	# Views (number, type(monthly, weekly, etc)) - MangaUtil::ENUM
 	attr_reader :views
-
-	# Summary - Summary of the manga itself
-	attr_reader :summary
-
-
-	# Parent MangaSite
-	attr_reader :manga_site
 
 
 	# List of MangaVolumes, assigned to this manga - multiple objects
@@ -269,54 +358,6 @@ module SequelManga
 	# it will return a single object that deals with pagation, this part is not
 	# still certain yet...
 	attr_reader :pages
-
-
-	# The class constructor
-#	def initialize (title, alt_titles, categories, authors, artists,
-#			releases, state, status, total, latest_chapter, last_update,
-#			release_year, serialized, add_date, ranking, rating, views,
-#			summary, manga_site, volumes, chapters, pages, cover_pages)
-#	    @title = title
-#	    @alt_titles = alt_titles
-#	    @categories = categories
-#	    @authors = authors
-#	    @artists = artists
-#
-#	    @release_schedule = releases
-#	    @state = state
-#	    @status = status
-#	    @total = total
-#
-#	    @latest_chapter = latest_chapter
-#	    @last_update = last_update
-#	    @release_year = release_year
-#	    @serialized_in = serialized
-#	    @when_added = add_date
-#
-#	    @site_ranking = ranking
-#	    @rating = rating
-#	    @views = views
-#
-#	    @summary = summary
-#
-#	    @manga_site = manga_site
-#
-#	    @volumes = volumes
-#	    @chapters = chapters
-#	    @pages = pages
-#
-#	    @cover_page_paths = cover_pages
-#	end
-
-	# Setter for volumes list (not offical)
-	attr_writer :volumes
-
-	# Setter for chapters list (Not offical)
-	attr_writer :chapters
-
-	# Setter for pages list (Not offical)
-	attr_writer :pages
-
 
 	# to_string for debugging
 #	def to_s
@@ -742,47 +783,6 @@ end
 
 
 
-#
-# This is the General Manga Utils module for taking care of misc items
-# that all Manga Backend/frontend needs
-#
-module MangaUtils
-    class ReadingDirection
-	RIGHT_TO_LEFT = 1
-	LEFT_TO_RIGHT = 2
-    end
-
-    class MangaReleaseStatus
-	REGULAR = 1
-	IRREGULAR = 2 # Ongoing
-    end
-
-    class MangaStatus
-	COMPLETED = 1
-	UNCOMPLETED = 2
-	SUSPENDED = 3
-    end
-
-    class MangaViewType
-	EVER = 1
-	MONTHLY = 2
-	WEEKLY = 3
-    end
-
-    class MangaChapterStatus
-	NEW = 1
-	NORMINAL = 2
-    end
-
-    class MangaViews
-	FOREVER = 1
-	YEARLY = 2
-	MONTHLY = 3
-	WEEKLY = 4
-	DAILY = 5
-    end
-end
-
 
 # State machine states here
 #
@@ -805,3 +805,36 @@ end
 # no vol,   more chp, no pg	    - +1 chp, pg = 0
 # no vol,   no chp,   more pg   - +1 pg
 # no vol,   no chp,   no pg	    - +1 vol & exit
+
+
+
+
+# Random settings/utils
+# ReadingDirection
+#	RIGHT_TO_LEFT
+#	LEFT_TO_RIGHT
+#
+# MangaReleaseStatus
+#	REGULAR
+#	IRREGULAR
+#
+# MangaStatus
+#	COMPLETED
+#	UNCOMPLETED
+#	SUSPENDED
+#
+# MangaViewType
+#	EVER
+#	MONTHLY
+#	WEEKLY
+#
+# MangaChapterStatus
+#	NEW
+#	NORMINAL
+#
+# MangaViews
+#	FOREVER
+#	YEARLY
+#	MONTHLY
+#	WEEKLY
+#	DAILY

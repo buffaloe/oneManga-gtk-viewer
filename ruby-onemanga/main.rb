@@ -12,18 +12,30 @@ require 'gtk2'
 require 'SequelManga'
 #require 'manga_viewer'
 #require 'manga_index'
+require 'fetcher/OneManga'
+
+
+#test2 = SequelManga::SequelMangaConstructor.new
+#test2.populate
+
+#site2 = test2.getSite
+
+#puts site2.to_s
+
+
+SequelManga::SequelMangaConstructor.new
+test3 = Fetcher::OneManga.new
+test3.populate
+
+site3 = test3.getSite
+
+puts site3.to_s
+
+
 
 #test = DummyManga::DummyMangaConstructor.new
 #site = test.getSite
-
 #puts test.to_s
-
-test2 = SequelManga::SequelMangaConstructor.new
-test2.populate
-
-site2 = test2.getSite
-
-puts site2.to_s
 
 #build_manga_viewer(site.mangas[0])
 

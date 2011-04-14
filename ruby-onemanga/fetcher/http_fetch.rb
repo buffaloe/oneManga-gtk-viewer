@@ -1,6 +1,6 @@
 # Fetches a http page and deals with caching it
 #
-require 'cache.rb'
+require 'fetcher/cache'
 require 'net/http'
 require 'uri'
 
@@ -21,15 +21,16 @@ class HTTP_fetch
 	    return @cache[n_url]
 	end
 
-	response = Net::HTTP.get_response(url)
-	case response
-	when Net::HTTPSuccess
-	    @cache[n_url] = response.body
-	    return response.body
-	when Net::HTTPRedirection
-	    fetch(response['location'], limit - 1)
-	else
-	    response.error!
-	end
+	# Commenting out to avoid this
+#	response = Net::HTTP.get_response(url)
+#	case response
+#	when Net::HTTPSuccess
+#	    @cache[n_url] = response.body
+#	    return response.body
+#	when Net::HTTPRedirection
+#	    fetch(response['location'], limit - 1)
+#	else
+#	    response.error!
+#	end
     end
 end
