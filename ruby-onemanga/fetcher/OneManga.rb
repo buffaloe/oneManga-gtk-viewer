@@ -36,20 +36,16 @@ module Fetcher
 		end
 	    end
 
-	    exclude2 = ['/directory/', '/directory/pop/']
 	    # Manga Info
 	    manga_url = []
-	    dir.xpath('/html/body/div[2]/div[3]/div/table/tr/td/a').each do |manga|
+	    dir.css('td.ch-subject a').each do |manga|
 		url = manga.values
 		next if (url.length > 1)
 		
 		url = url.to_s
-		if (exclude2.index(url)).nil?
-		    manga_url << url
-		end
+		manga_url << url
 	    end
 	    manga_url.uniq!
-	    #puts manga_url.length
 	   
 	    # Process each site
 	    manga_url.each do |url|
@@ -59,11 +55,21 @@ module Fetcher
 		manga_info = SequelManga::Info.new
 		manga_info.save
 
-		# This part needs work for the alt titles
-		titledata = data.xpath('/html/body/div[2]/div[3]/div/h1').first.content.strip
+		# Manga Titles
+		titledata = data.xpath('/html/body/div[2]/div[3]/div/h1[1]/child::text()')
 		title = SequelManga::Title.new
-		title.title = titledata
+		title.title = titledata.to_s.squeeze(' ').strip.gsub(/ Manga$/, '')
 		manga_info.title = title
+
+		# Alt Titles
+		alttitledata = data.xpath('/html/body/div[2]/div[3]/div/h1[1]/span').first
+		if (not alttitledata.nil?)
+		    alttitledata.content.split(',').each do |atitle|
+			alttitle = SequelManga::Alttitle.new
+			alttitle.title = atitle.strip
+			manga_info.add_alttitle(alttitle)
+		    end
+		end
 
 		data.xpath('/html/body/div[2]/div[3]/div/div/div/table/tr').each do |chunk|
 		    type = chunk.xpath('th').first.content.strip
@@ -102,10 +108,10 @@ module Fetcher
 		    when 'Start Date:'
 			manga_info.release_year = Time.utc(value.strip.to_i)
 		    when 'Chapters:'
-			if (value.strip) =~ /\d* - (\w*) - (\w*)/
+			if (value.strip) =~ /\d* - (.*) - (.*)/
 			    manga_info.state = $1.to_sym
 			    manga_info.schedule = $2.to_sym
-			elsif (value.strip) =~ /\d* - (\w*)/
+			elsif (value.strip) =~ /\d* - (.*)/
 			    manga_info.state = $1.to_sym
 			end
 		    end

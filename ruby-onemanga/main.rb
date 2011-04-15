@@ -15,7 +15,8 @@ require 'SequelManga'
 require 'fetcher/OneManga'
 
 
-#test2 = SequelManga::SequelMangaConstructor.new
+test2 = SequelManga::SequelMangaConstructor.new false
+#test2 = SequelManga::SequelMangaConstructor.new true
 #test2.populate
 
 #site2 = test2.getSite
@@ -23,15 +24,25 @@ require 'fetcher/OneManga'
 #puts site2.to_s
 
 
-SequelManga::SequelMangaConstructor.new
-test3 = Fetcher::OneManga.new
-test3.populate
+#test3 = Fetcher::OneManga.new
+#test3.populate
+#site3 = test3.getSite
+#puts site3.to_s
 
-site3 = test3.getSite
+DB = test2.getDb
 
-puts site3.to_s
+ds = DB[:alttitles]
+ds.group(:info_id).having('COUNT(info_id) > 1').each do |r|
+    info = SequelManga::Info[r[:info_id]]
+    puts info.title
+    puts "\t#{info.alttitle.join(', ')}"
+end
 
 
+#ds.select(:id).filter.each do |r|
+#    puts SequelManga::Info[r[:id]].title
+#    puts "\t#{SequelManga::Info[r[:id]].alttitle.join(', ')}"
+#end
 
 #test = DummyManga::DummyMangaConstructor.new
 #site = test.getSite

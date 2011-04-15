@@ -14,92 +14,94 @@ module SequelManga
 	# Setup the sequel db connection
 	DB = Sequel.connect('sqlite://SequelManga.db')
 
-	def initialize
-	    # Create the Manga Site table
-	    DB.create_table! :sites do
-		primary_key :id
-		String :site_name, :unique => true
-	    end
+	def initialize (init_tables)
+	    if init_tables
+		# Create the Manga Site table
+		DB.create_table! :sites do
+		    primary_key :id
+		    String :site_name, :unique => true
+		end
 
-	    # Create the categories/genre table
-	    DB.create_table! :category do
-		primary_key :id
-		String :category, :unique => true
-	    end
-	    DB.create_table! :categories_infos do
-		# Foreign Key
-		Integer :category_id
-		Integer :info_id
-	    end
-	    DB.create_table! :categories_sites do
-		# Foreign Key
-		Integer :category_id
-		Integer :site_id
-	    end
-
-
-	    # Create the Title
-	    DB.create_table! :titles do
-		primary_key :id
-		String :title, :unique => true
-		
-		# Foreign Key
-		Integer :info_id
-	    end
-
-	    # Create the alt titles
-	    DB.create_table! :alttitles do
-		primary_key :id
-		String :title, :unique => true
-
-		# Foreign Key
-		Integer :info_id
-	    end
-	   
-
-	    # Create the author tables
-	    DB.create_table! :authors do
-		primary_key :id
-		String :name, :unique => true
-	    end
-	    DB.create_table! :authors_infos do
-		# Foreign Key
-		Integer :author_id
-		Integer :info_id
-	    end
-	   
-
-	    # Create the artist table
-	    DB.create_table! :artists do
-		primary_key :id
-		String :name, :unique => true
-	    end
-	    DB.create_table! :artists_infos do
-		# Foreign Key
-		Integer :artist_id
-		Integer :info_id
-	    end
+		# Create the categories/genre table
+		DB.create_table! :category do
+		    primary_key :id
+		    String :category, :unique => true
+		end
+		DB.create_table! :categories_infos do
+		    # Foreign Key
+		    Integer :category_id
+		    Integer :info_id
+		end
+		DB.create_table! :categories_sites do
+		    # Foreign Key
+		    Integer :category_id
+		    Integer :site_id
+		end
 
 
-	    # Create the Manga Info table
-	    DB.create_table! :infos do
-		primary_key :id
-		# Artist [blah, blz]
-		String :schedule
-		String :state
-		String :status
-		# Total [x, y, z] - chapter/vol/page/etc
-		Date :last_update
-		Date :release_year
-		# Serialized ?
-		Date :when_added
-		Integer :site_ranking
-		# Rating [rate, out_of, total]
-		# Views [Number, Type Of]
-		Text :summary
+		# Create the Title
+		DB.create_table! :titles do
+		    primary_key :id
+		    String :title, :unique => true
+		    
+		    # Foreign Key
+		    Integer :info_id
+		end
 
-		# Foreign Key
-		Integer :site_id
+		# Create the alt titles
+		DB.create_table! :alttitles do
+		    primary_key :id
+		    String :title, :unique => true
+
+		    # Foreign Key
+		    Integer :info_id
+		end
+	       
+
+		# Create the author tables
+		DB.create_table! :authors do
+		    primary_key :id
+		    String :name, :unique => true
+		end
+		DB.create_table! :authors_infos do
+		    # Foreign Key
+		    Integer :author_id
+		    Integer :info_id
+		end
+	       
+
+		# Create the artist table
+		DB.create_table! :artists do
+		    primary_key :id
+		    String :name, :unique => true
+		end
+		DB.create_table! :artists_infos do
+		    # Foreign Key
+		    Integer :artist_id
+		    Integer :info_id
+		end
+
+
+		# Create the Manga Info table
+		DB.create_table! :infos do
+		    primary_key :id
+		    # Artist [blah, blz]
+		    String :schedule
+		    String :state
+		    String :status
+		    # Total [x, y, z] - chapter/vol/page/etc
+		    Date :last_update
+		    Date :release_year
+		    # Serialized ?
+		    Date :when_added
+		    Integer :site_ranking
+		    # Rating [rate, out_of, total]
+		    # Views [Number, Type Of]
+		    Text :summary
+
+		    # Foreign Key
+		    Integer :site_id
+		end
 	    end
 	end
 
@@ -168,6 +170,11 @@ module SequelManga
 	# Return the manga site
 	def getSite
 	    return Site[@site]
+	end
+
+	# DB for debugging and running random queries on the db to verify
+	def getDb
+	    return DB
 	end
     end
     
