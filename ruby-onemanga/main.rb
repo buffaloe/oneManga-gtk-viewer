@@ -31,13 +31,18 @@ test2 = SequelManga::SequelMangaConstructor.new false
 
 DB = test2.getDb
 
-ds = DB[:alttitles]
-ds.group(:info_id).having('COUNT(info_id) > 1').each do |r|
+ds = DB[:titles]
+ds.filter(:alternate => true).group(:info_id).having('COUNT(info_id) > 1').each do |r|
     info = SequelManga::Info[r[:info_id]]
     puts info.title
-    puts "\t#{info.alttitle.join(', ')}"
+    puts "\t#{info.alt_titles.join(', ')}"
 end
 
+ds = DB[:sites]
+ds.select(:id).each do |r|
+    site = SequelManga::Site[r[:id]]
+    puts site.to_s
+end
 
 #ds.select(:id).filter.each do |r|
 #    puts SequelManga::Info[r[:id]].title

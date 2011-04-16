@@ -59,15 +59,17 @@ module Fetcher
 		titledata = data.xpath('/html/body/div[2]/div[3]/div/h1[1]/child::text()')
 		title = SequelManga::Title.new
 		title.title = titledata.to_s.squeeze(' ').strip.gsub(/ Manga$/, '')
-		manga_info.title = title
+		title.alternate = false
+		manga_info.add_title(title)
 
 		# Alt Titles
 		alttitledata = data.xpath('/html/body/div[2]/div[3]/div/h1[1]/span').first
 		if (not alttitledata.nil?)
 		    alttitledata.content.split(',').each do |atitle|
-			alttitle = SequelManga::Alttitle.new
+			alttitle = SequelManga::Title.new
 			alttitle.title = atitle.strip
-			manga_info.add_alttitle(alttitle)
+			alttitle.alternate = true
+			manga_info.add_title(alttitle)
 		    end
 		end
 

@@ -22,6 +22,7 @@ module SequelManga
 		    String :site_name, :unique => true
 		end
 
+
 		# Create the categories/genre table
 		DB.create_table! :category do
 		    primary_key :id
@@ -43,16 +44,8 @@ module SequelManga
 		DB.create_table! :titles do
 		    primary_key :id
 		    String :title, :unique => true
+		    Boolean :alternate
 		    
-		    # Foreign Key
-		    Integer :info_id
-		end
-
-		# Create the alt titles
-		DB.create_table! :alttitles do
-		    primary_key :id
-		    String :title, :unique => true
-
 		    # Foreign Key
 		    Integer :info_id
 		end
@@ -85,7 +78,6 @@ module SequelManga
 		# Create the Manga Info table
 		DB.create_table! :infos do
 		    primary_key :id
-		    # Artist [blah, blz]
 		    String :schedule
 		    String :state
 		    String :status
@@ -112,11 +104,14 @@ module SequelManga
 	    c3 = DB[:category].insert(:category => "Drama")
 
 	    # Populate the title table
-	    t1 = DB[:titles].insert(:title => "UNTIL DEATH DO US PART")
+	    t1 = DB[:titles].insert(:title => "UNTIL DEATH DO US PART",
+				   :alternate => false)
 
 	    # Populate it with alternate titles
-	    at1 = DB[:alttitles].insert(:title => "SHI GA FUTARI WO WAKATSU MADE")
-	    at2 = DB[:alttitles].insert(:title => "POKIAľ NáS SMRť NEROZDELí")
+	    at1 = DB[:titles].insert(:title => "SHI GA FUTARI WO WAKATSU MADE",
+				    :alternate => true)
+	    at2 = DB[:titles].insert(:title => "POKIAľ NáS SMRť NEROZDELí",
+				    :alternate => true)
 
 	    # Populate it with author/artist
 	    aa1 = DB[:authors].insert(:name => "Takashige Hiroshi")
@@ -138,10 +133,9 @@ module SequelManga
 
 	    # Populate Manga Info Category
 	    manga = Info[i1]
-	    manga.title = Title[t1]
-
-	    manga.add_alttitle(Alttitle[at1])
-	    manga.add_alttitle(Alttitle[at2])
+	    manga.add_title(Title[t1])
+	    manga.add_title(Title[at1])
+	    manga.add_title(Title[at2])
 
 	    manga.add_author(Author[aa1])
 	    manga.add_artist(Artist[ar1])
@@ -197,19 +191,6 @@ module SequelManga
     # Title information
     #######################################################################
     class Title < Sequel::Model
-	one_to_one :info
-
-	# to_string for debugging
-	def to_s
-	    return "#{title}"
-	end
-    end
-    
-    
-    #######################################################################
-    # alttitle information
-    #######################################################################
-    class Alttitle < Sequel::Model
 	many_to_one :info
 
 	# to_string for debugging
@@ -262,7 +243,9 @@ module SequelManga
 	    ret = "[Manga Site]\n"
 	    ret += "\tName: #{site_name}\n"
 	    ret += "\tCategories: #{category.join(', ')}\n"
-	    ret += "#{info.join('\n')}\n"
+	    info.each do |i|
+		ret += "#{i}\n"
+	    end
 	    return ret
 	end
     end
@@ -276,20 +259,31 @@ module SequelManga
 	many_to_many :category
 	
 	# Titles
-	one_to_one :title
-
-	# List of Alternative titles
-	one_to_many :alttitle
+	one_to_many :title
 
 	# List of author/artist
 	many_to_many :author
 	many_to_many :artist
 
+	# Return the primary title
+	def title
+	    return Title[:info_id => id, :alternate => false].title
+	end
+
+	# Return the alternate title
+	def alt_titles
+	    ret = []
+	    Title.filter(:info_id => id, :alternate => true).all.each do |title|
+		ret << title.title
+	    end
+	    return ret
+	end
+
 	# to_string for debugging
 	def to_s
 	    ret = "[Manga Info]\n"
 	    ret += "\tTitle: #{title}\n"
-	    ret += "\tAlt Titles: #{alttitle.join(', ')}\n"
+	    ret += "\tAlt Titles: #{alt_titles.join(', ')}\n"
 	    ret += "\tAuthors: #{author.join(', ')}\n"
 	    ret += "\tArtists: #{artist.join(', ')}\n"
 	    ret += "\tCategories: #{category.join(', ')}\n"
