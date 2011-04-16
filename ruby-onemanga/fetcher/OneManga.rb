@@ -119,6 +119,21 @@ module Fetcher
 		    end
 		end
 
+		# Deal with the Summary
+		summary = []
+		sum = data.xpath('/html/body/div[2]/div[3]/div/div/div[2]/p/child::text()').each do |p|
+		    summary << p.to_s.squeeze(' ').strip
+		end
+		if (summary.length > 0)
+		    manga_info.summary = summary.join("\n")
+		else
+		    manga_info.summary = nil
+		end
+
+		# Deal with the Cover page url for fetching the image latter
+		img = data.xpath('/html/body/div[2]/div[3]/div/div/div/img').first['src']
+		manga_info.cover_page_url = img
+
 		manga_info.save
 		@site.add_info(manga_info)
 

@@ -78,6 +78,7 @@ module SequelManga
 		# Create the Manga Info table
 		DB.create_table! :infos do
 		    primary_key :id
+		    String :cover_page_url
 		    String :schedule
 		    String :state
 		    String :status
@@ -119,6 +120,7 @@ module SequelManga
 
 	    # Populate the Manga Info table
 	    i1 = DB[:infos].insert(
+		:cover_page_url => "http://img-a.onemanga.com/mangas/00001141/Until_Death_Do_Us_Part.jpg",
 		:schedule	=> :release_status_regular.to_s,
 		:state		=> :manga_status_uncompleted.to_s,
 		:status		=> :chapter_status_new.to_s,
@@ -294,12 +296,22 @@ module SequelManga
 	    ret += "\tRelease Year: #{release_year}\n"
 	    ret += "\tWhen Added: #{when_added}\n"
 	    ret += "\tSite Ranking: #{site_ranking}\n"
-#	    ret += "\tSummary: #{summary}\n"
+	    ret += "\tCover Page Url: #{cover_page_url}\n"
+	    ret += "\tSummary: #{summary}\n"
 
 	    return ret
 	end
     end
-    
+   
+
+    #######################################################################
+    # Per chapter information
+    #######################################################################
+#    class Chapter < Sequel::Model
+#    end
+
+
+
     class MangaInfo
 	# Front page picture, it will return a single image if there is only one
 	# cover image.  However if there is more than one cover page image such
@@ -316,13 +328,6 @@ module SequelManga
 	    end
 	    return ret
 	end
-
-
-	# Authors, if there is more than one its returned as an array
-	attr_reader :authors
-
-	# Artists, if there is more than one, its then returned as an array
-	attr_reader :artists
 
 	# Manga size/total - number of pages, number of chapters, and number of
 	# volumes, anyway it will return nil for unknown values, this function
