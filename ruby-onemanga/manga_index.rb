@@ -8,7 +8,8 @@
 #
 
 require 'gtk2'
-require 'DummyManga'
+#require 'DummyManga'
+require 'SequelManga'
 
 def build_manga_index(dummy)
     builder = Gtk::Builder.new
@@ -16,4 +17,10 @@ def build_manga_index(dummy)
 
     window = builder.get_object('list_window')
     window.show_all
+
+    # Get site name/categories/etc and populate the combobox
+    #
+    # populate the list storing
+    #
+    # setup all of the listeners/actions/events
 end

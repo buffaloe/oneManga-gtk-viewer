@@ -87,13 +87,92 @@
           <object class="GtkHBox" id="toolbar_hbox">
             <property name="visible">True</property>
             <child>
-              <placeholder/>
+              <object class="GtkHBox" id="site_hbox">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkAlignment" id="site_label_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xscale">0</property>
+                    <property name="yscale">0</property>
+                    <property name="left_padding">12</property>
+                    <property name="right_padding">6</property>
+                    <child>
+                      <object class="GtkLabel" id="site_label">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Site:</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="site_combobox_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yscale">0</property>
+                    <child>
+                      <object class="GtkComboBox" id="site_combobox">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
+              <object class="GtkHBox" id="category_hbox">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkAlignment" id="category_label_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="xscale">0</property>
+                    <property name="yscale">0</property>
+                    <property name="left_padding">12</property>
+                    <property name="right_padding">6</property>
+                    <child>
+                      <object class="GtkLabel" id="category_label">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Category:</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="category_combobox_alignment">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="yscale">0</property>
+                    <child>
+                      <object class="GtkComboBox" id="category_combobox">
+                        <property name="visible">True</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
           <packing>
@@ -117,7 +196,9 @@
                     <property name="visible">True</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <object class="GtkTreeView" id="manga_list1">
+                      <object class="GtkTreeView" id="manga_list">
+                        <property name="width_request">400</property>
+                        <property name="height_request">200</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                       </object>
@@ -129,7 +210,7 @@
                 </child>
               </object>
               <packing>
-                <property name="resize">False</property>
+                <property name="resize">True</property>
                 <property name="shrink">True</property>
               </packing>
             </child>
@@ -147,6 +228,8 @@
                         <property name="visible">True</property>
                         <child>
                           <object class="GtkImage" id="image">
+                            <property name="width_request">200</property>
+                            <property name="height_request">300</property>
                             <property name="visible">True</property>
                             <property name="stock">gtk-missing-image</property>
                           </object>
@@ -155,223 +238,523 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkTable" id="manga_info_table">
+                          <object class="GtkTable" id="manga_info">
                             <property name="visible">True</property>
-                            <property name="n_rows">10</property>
+                            <property name="n_rows">13</property>
                             <property name="n_columns">2</property>
                             <child>
-                              <object class="GtkLabel" id="title_label">
+                              <object class="GtkAlignment" id="title_label_alignment">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Title:</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="title_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">Title:</property>
+                                  </object>
+                                </child>
                               </object>
+                              <packing>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="ranking_label">
+                              <object class="GtkAlignment" id="alt_title_label_alignment">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Ranking:</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="alt_title_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">Alt Titles:</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="aka_label">
+                              <object class="GtkAlignment" id="author_label_alignment">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Aka:</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="author_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">Authors:</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="status_label">
+                              <object class="GtkAlignment" id="artist_label_alignment">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Status:</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="artist_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">Artists:</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="max_chp_label">
+                              <object class="GtkAlignment" id="categories_label_alignment">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Max Chapters:</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="categories_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">Categories:</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="top_attach">4</property>
                                 <property name="bottom_attach">5</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="last_uploaded_label">
+                              <object class="GtkAlignment" id="schedule_label_alignment">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Last Updated:</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="schedule_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">Schedule:</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="top_attach">5</property>
                                 <property name="bottom_attach">6</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="categories_label">
+                              <object class="GtkAlignment" id="state_label_alignment">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Categories:</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="state_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">State:</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="top_attach">6</property>
                                 <property name="bottom_attach">7</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="author_label">
+                              <object class="GtkAlignment" id="status_label_alignment">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Author:</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="status_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">Status:</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="top_attach">7</property>
                                 <property name="bottom_attach">8</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="artist_label">
+                              <object class="GtkAlignment" id="last_update_label_alignment">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Artist:</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="last_update_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">Last Update:</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="top_attach">8</property>
                                 <property name="bottom_attach">9</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="summary_label">
+                              <object class="GtkAlignment" id="release_year_label_alignment">
                                 <property name="visible">True</property>
-                                <property name="label" translatable="yes">Summary:</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="release_year_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">Release Year:</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="top_attach">9</property>
                                 <property name="bottom_attach">10</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="title">
+                              <object class="GtkAlignment" id="title_entry_alignment">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">&#x25CF;</property>
+                                <child>
+                                  <object class="GtkEntry" id="title_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="ranking">
+                              <object class="GtkAlignment" id="alt_title_entry_alignment">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">&#x25CF;</property>
+                                <child>
+                                  <object class="GtkEntry" id="alt_title_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">1</property>
                                 <property name="bottom_attach">2</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="aka">
+                              <object class="GtkAlignment" id="authors_entry_alignment">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">&#x25CF;</property>
+                                <child>
+                                  <object class="GtkEntry" id="authors_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">2</property>
                                 <property name="bottom_attach">3</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="status">
+                              <object class="GtkAlignment" id="artist_entry_alignment">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">&#x25CF;</property>
+                                <child>
+                                  <object class="GtkEntry" id="artist_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="max_chp">
+                              <object class="GtkAlignment" id="categories_entry_alignment">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">&#x25CF;</property>
+                                <child>
+                                  <object class="GtkEntry" id="categories_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">4</property>
                                 <property name="bottom_attach">5</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="last_updated">
+                              <object class="GtkAlignment" id="schedule_entry_alignment">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">&#x25CF;</property>
+                                <child>
+                                  <object class="GtkEntry" id="schedule_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">5</property>
                                 <property name="bottom_attach">6</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="categories">
+                              <object class="GtkAlignment" id="state_entry_alignment">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">&#x25CF;</property>
+                                <child>
+                                  <object class="GtkEntry" id="state_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">6</property>
                                 <property name="bottom_attach">7</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="author">
+                              <object class="GtkAlignment" id="status_entry_alignment">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">&#x25CF;</property>
+                                <child>
+                                  <object class="GtkEntry" id="status_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">7</property>
                                 <property name="bottom_attach">8</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkEntry" id="artist">
+                              <object class="GtkAlignment" id="last_update_entry_alignment">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="invisible_char">&#x25CF;</property>
+                                <child>
+                                  <object class="GtkEntry" id="last_update_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">8</property>
                                 <property name="bottom_attach">9</property>
+                                <property name="y_options"></property>
                               </packing>
                             </child>
                             <child>
-                              <placeholder/>
+                              <object class="GtkAlignment" id="release_year_entry_alignment">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkEntry" id="release_year_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">9</property>
+                                <property name="bottom_attach">10</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkAlignment" id="when_added_label_alignment">
+                                <property name="visible">True</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="when_added_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">When Added:</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="top_attach">10</property>
+                                <property name="bottom_attach">11</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkAlignment" id="site_ranking_label_alignment">
+                                <property name="visible">True</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="site_ranking_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="label" translatable="yes">Site Ranking:</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="top_attach">11</property>
+                                <property name="bottom_attach">12</property>
+                                <property name="x_options">GTK_FILL</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkAlignment" id="summary_label_alignment">
+                                <property name="visible">True</property>
+                                <property name="left_padding">12</property>
+                                <property name="right_padding">6</property>
+                                <child>
+                                  <object class="GtkLabel" id="summary_label">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">1</property>
+                                    <property name="yalign">0</property>
+                                    <property name="label" translatable="yes">Summary:</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="top_attach">12</property>
+                                <property name="bottom_attach">13</property>
+                                <property name="x_options">GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkAlignment" id="when_added_entry_alignment">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkEntry" id="when_added_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">10</property>
+                                <property name="bottom_attach">11</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkAlignment" id="site_ranking_entry_alignment">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkEntry" id="site_ranking_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="invisible_char">&#x25CF;</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">11</property>
+                                <property name="bottom_attach">12</property>
+                                <property name="y_options"></property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkAlignment" id="summary_textview_alignment">
+                                <property name="visible">True</property>
+                                <property name="top_padding">1</property>
+                                <property name="bottom_padding">1</property>
+                                <property name="left_padding">1</property>
+                                <property name="right_padding">1</property>
+                                <child>
+                                  <object class="GtkScrolledWindow" id="summary_textview_scrolledwindow">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="hscrollbar_policy">automatic</property>
+                                    <property name="vscrollbar_policy">automatic</property>
+                                    <property name="shadow_type">in</property>
+                                    <child>
+                                      <object class="GtkTextView" id="summary_textview">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">True</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">12</property>
+                                <property name="bottom_attach">13</property>
+                              </packing>
                             </child>
                           </object>
                           <packing>
