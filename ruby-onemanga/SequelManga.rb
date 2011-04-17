@@ -274,11 +274,9 @@ module SequelManga
 
 	# Return the alternate title
 	def alt_titles
-	    ret = []
-	    Title.filter(:info_id => id, :alternate => true).all.each do |title|
-		ret << title.title
+	    return Title.filter(:info_id => id, :alternate => true).all.map do |title|
+		title.title
 	    end
-	    return ret
 	end
 
 	# to_string for debugging

@@ -49,5 +49,7 @@ test2 = SequelManga::SequelMangaConstructor.new false
 
 #build_manga_viewer(site.mangas[0])
 
-build_manga_index(test2.getSite)
+DB = test2.getDb
+site = SequelManga::Site[1]
+build_manga_index(site)
 Gtk.main

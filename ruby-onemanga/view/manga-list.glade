@@ -159,6 +159,7 @@
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="yscale">0</property>
+                    <property name="right_padding">12</property>
                     <child>
                       <object class="GtkComboBox" id="category_combobox">
                         <property name="visible">True</property>
@@ -196,11 +197,19 @@
                     <property name="visible">True</property>
                     <property name="left_padding">12</property>
                     <child>
-                      <object class="GtkTreeView" id="manga_list">
-                        <property name="width_request">400</property>
-                        <property name="height_request">200</property>
+                      <object class="GtkScrolledWindow" id="manga_list_scrollwindow">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">automatic</property>
+                        <property name="vscrollbar_policy">automatic</property>
+                        <child>
+                          <object class="GtkTreeView" id="manga_list">
+                            <property name="width_request">400</property>
+                            <property name="height_request">200</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -261,12 +270,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkAlignment" id="alt_title_label_alignment">
+                              <object class="GtkAlignment" id="alt_titles_label_alignment">
                                 <property name="visible">True</property>
                                 <property name="left_padding">12</property>
                                 <property name="right_padding">6</property>
                                 <child>
-                                  <object class="GtkLabel" id="alt_title_label">
+                                  <object class="GtkLabel" id="alt_titles_label">
                                     <property name="visible">True</property>
                                     <property name="xalign">1</property>
                                     <property name="label" translatable="yes">Alt Titles:</property>
@@ -281,12 +290,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkAlignment" id="author_label_alignment">
+                              <object class="GtkAlignment" id="authors_label_alignment">
                                 <property name="visible">True</property>
                                 <property name="left_padding">12</property>
                                 <property name="right_padding">6</property>
                                 <child>
-                                  <object class="GtkLabel" id="author_label">
+                                  <object class="GtkLabel" id="authors_label">
                                     <property name="visible">True</property>
                                     <property name="xalign">1</property>
                                     <property name="label" translatable="yes">Authors:</property>
@@ -301,12 +310,12 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkAlignment" id="artist_label_alignment">
+                              <object class="GtkAlignment" id="artists_label_alignment">
                                 <property name="visible">True</property>
                                 <property name="left_padding">12</property>
                                 <property name="right_padding">6</property>
                                 <child>
-                                  <object class="GtkLabel" id="artist_label">
+                                  <object class="GtkLabel" id="artists_label">
                                     <property name="visible">True</property>
                                     <property name="xalign">1</property>
                                     <property name="label" translatable="yes">Artists:</property>
@@ -458,10 +467,10 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkAlignment" id="alt_title_entry_alignment">
+                              <object class="GtkAlignment" id="alt_titles_entry_alignment">
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkEntry" id="alt_title_entry">
+                                  <object class="GtkEntry" id="alt_titles_entry">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="invisible_char">&#x25CF;</property>
@@ -496,10 +505,10 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkAlignment" id="artist_entry_alignment">
+                              <object class="GtkAlignment" id="artists_entry_alignment">
                                 <property name="visible">True</property>
                                 <child>
-                                  <object class="GtkEntry" id="artist_entry">
+                                  <object class="GtkEntry" id="artists_entry">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
                                     <property name="invisible_char">&#x25CF;</property>
@@ -737,13 +746,14 @@
                                   <object class="GtkScrolledWindow" id="summary_textview_scrolledwindow">
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
-                                    <property name="hscrollbar_policy">automatic</property>
+                                    <property name="hscrollbar_policy">never</property>
                                     <property name="vscrollbar_policy">automatic</property>
                                     <property name="shadow_type">in</property>
                                     <child>
                                       <object class="GtkTextView" id="summary_textview">
                                         <property name="visible">True</property>
                                         <property name="can_focus">True</property>
+                                        <property name="wrap_mode">word-char</property>
                                       </object>
                                     </child>
                                   </object>
