@@ -9,15 +9,21 @@ module Fetcher
     require 'nokogiri'
 
     class OneManga
-	def initialize
-	    @site = SequelManga::Site.new
-	    @site.site_name = "One Manga"
-	    @site.save
+	def initialize(cache_only)
+	    @cache_only = cache_only
+	    @site = SequelManga::Site[:site_name => "One Manga"]
+	    if @site.nil?
+		@site = SequelManga::Site.new
+		@site.site_name = "One Manga"
+		@site.fetcher = "OneManga.rb"
+		@site.site_url = "http://www.onemanga.com"
+		@site.save
+	    end
 
-	    @url = "http://www.onemanga.com"
+	    @url = @site.site_url.to_s
 	    @directory_url = "#{@url}/directory/"
 
-	    @fetch = HTTP_fetch.new
+	    @fetch = HTTP_fetch.new @cache_only
 	end
 
 	# Hash operation for storing a string into a "key"
@@ -46,7 +52,7 @@ module Fetcher
 		manga_url << url
 	    end
 	    manga_url.uniq!
-	   
+
 	    # Process each site
 	    manga_url.each do |url|
 		puts url
@@ -137,14 +143,11 @@ module Fetcher
 		manga_info.save
 		@site.add_info(manga_info)
 
-# Uncomment this if using network transfers
-#		sleep 1
+		if (not @cache_only)
+		    sleep 1
+		end
 	    end
 	    @site.save
-	end
-
-	def getSite
-	    return @site
 	end
     end
 end

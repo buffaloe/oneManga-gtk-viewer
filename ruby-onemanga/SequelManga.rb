@@ -20,6 +20,8 @@ module SequelManga
 		DB.create_table! :sites do
 		    primary_key :id
 		    String :site_name, :unique => true
+		    String :fetcher
+		    String :site_url
 		end
 
 

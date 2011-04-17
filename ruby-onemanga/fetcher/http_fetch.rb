@@ -5,7 +5,8 @@ require 'net/http'
 require 'uri'
 
 class HTTP_fetch
-    def initialize
+    def initialize(cache_only)
+	@cache_only = cache_only
 	@cache = Cache.new
     end
 
@@ -19,18 +20,21 @@ class HTTP_fetch
 	# Deal with cache
 	if @cache.has_key?(n_url)
 	    return @cache[n_url]
+	elsif (not @cache_only)
+	    raise 'Not in cache and net access is not enabled'
 	end
 
-	# Commenting out to avoid this
-#	response = Net::HTTP.get_response(url)
-#	case response
-#	when Net::HTTPSuccess
-#	    @cache[n_url] = response.body
-#	    return response.body
-#	when Net::HTTPRedirection
-#	    fetch(response['location'], limit - 1)
-#	else
-#	    response.error!
-#	end
+	if (not @cache_only)
+	    response = Net::HTTP.get_response(url)
+	    case response
+	    when Net::HTTPSuccess
+		@cache[n_url] = response.body
+		return response.body
+	    when Net::HTTPRedirection
+		fetch(response['location'], limit - 1)
+	    else
+		response.error!
+	    end
+	end
     end
 end
