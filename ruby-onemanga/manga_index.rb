@@ -28,7 +28,7 @@ def build_manga_index(dummy)
 
     update_combobox([dummy.site_name], site)
     site.active = 0
-    
+
     # Setup the site category combo_box
     render = Gtk::CellRendererText.new
     category.pack_start(render, true)

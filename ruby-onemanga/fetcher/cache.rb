@@ -8,7 +8,7 @@ class Cache
 	@cache_dir = './cache'
 
 	# Make sure the cache directory exists
-	if File.exist?(@cache_dir) 
+	if File.exist?(@cache_dir)
 	    if File.directory?(@cache_dir)
 		puts "We are good to go"
 	    else
@@ -31,7 +31,7 @@ class Cache
 		value += f.read
 	    }
 	end
-	
+
 	return value
     end
 

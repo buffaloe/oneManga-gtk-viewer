@@ -47,7 +47,7 @@ module Fetcher
 	    dir.css('td.ch-subject a').each do |manga|
 		url = manga.values
 		next if (url.length > 1)
-		
+
 		url = url.to_s
 		manga_url << url
 	    end

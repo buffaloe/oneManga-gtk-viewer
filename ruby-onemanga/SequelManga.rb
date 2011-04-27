@@ -47,11 +47,11 @@ module SequelManga
 		    primary_key :id
 		    String :title, :unique => true
 		    Boolean :alternate
-		    
+
 		    # Foreign Key
 		    Integer :info_id
 		end
-	       
+
 
 		# Create the author tables
 		DB.create_table! :authors do
@@ -63,7 +63,7 @@ module SequelManga
 		    Integer :author_id
 		    Integer :info_id
 		end
-	       
+
 
 		# Create the artist table
 		DB.create_table! :artists do
@@ -175,8 +175,8 @@ module SequelManga
 	    return DB
 	end
     end
-    
-    
+
+
     #######################################################################
     # Category/Genre information
     #######################################################################
@@ -189,7 +189,7 @@ module SequelManga
 	    return "#{category}"
 	end
     end
-   
+
 
     #######################################################################
     # Title information
@@ -202,7 +202,7 @@ module SequelManga
 	    return "#{title}"
 	end
     end
-   
+
 
     #######################################################################
     # Author information
@@ -215,8 +215,8 @@ module SequelManga
 	    return "#{name}"
 	end
     end
-    
-    
+
+
     #######################################################################
     # Artist information
     #######################################################################
@@ -261,7 +261,7 @@ module SequelManga
     class Info < Sequel::Model
 	# List of categories/genre of manga that are available on the site
 	many_to_many :category
-	
+
 	# Titles
 	one_to_many :title
 
@@ -302,7 +302,7 @@ module SequelManga
 	    return ret
 	end
     end
-   
+
 
     #######################################################################
     # Per chapter information
