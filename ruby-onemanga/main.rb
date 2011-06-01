@@ -49,6 +49,6 @@ else
 
     DB = test2.getDb
     site = SequelManga::Site[1]
-    build_manga_index(site)
+    build_manga_index(site, test3)
     Gtk.main
 end

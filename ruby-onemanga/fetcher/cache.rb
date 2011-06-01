@@ -35,6 +35,17 @@ class Cache
 	return value
     end
 
+    # Hash operation for returning the file of the cached copy
+    def get_filename(key)
+	hash = hash(key)
+
+	if File.exist?(File.join(@cache_dir, hash))
+	    return File.join(@cache_dir, hash)
+	else
+	    return nil
+	end
+    end
+
     def []=(key, value)
 	hash = hash(key)
 

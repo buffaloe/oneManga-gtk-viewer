@@ -149,5 +149,10 @@ module Fetcher
 	    end
 	    @site.save
 	end
+
+	def get_image(url)
+	    # Return the image filename
+	    @fetch.fetch_image(url)
+	end
     end
 end

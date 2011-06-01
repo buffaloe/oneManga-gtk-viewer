@@ -8,10 +8,9 @@
 #
 
 require 'gtk2'
-#require 'DummyManga'
 require 'SequelManga'
 
-def build_manga_index(dummy)
+def build_manga_index(dummy, fetcher)
     builder = Gtk::Builder.new
     builder.add_from_file('view/manga-list.glade')
 
@@ -74,7 +73,7 @@ def build_manga_index(dummy)
 	iter = model.get_iter(path)
 	id = model.get_value(iter, 0)
 	info = SequelManga::Info[id]
-	update_manga_info(info, builder)
+	update_manga_info(info, fetcher, builder)
     }
 
     window = builder.get_object('list_window')
@@ -95,7 +94,7 @@ end
 ##############################
 # Update manga info panel
 ##############################
-def update_manga_info (manga, builder)
+def update_manga_info (manga, fetcher, builder)
     # Deal with image latter
     cover = builder.get_object('image')
 
@@ -129,6 +128,14 @@ def update_manga_info (manga, builder)
     site_ranking.text = manga.site_ranking.to_s
 
     summary.set_buffer((Gtk::TextBuffer.new).set_text(manga.summary))
+
+    # Deal with the image
+    url = manga.cover_page_url
+    image_file = fetcher.get_image(url)
+
+    if !image_file.nil?
+	cover.pixbuf = Gdk::Pixbuf.new(image_file)
+    end
 end
 
 
