@@ -242,6 +242,17 @@ module SequelManga
 	# List of all of the MangaInfo - multiple objects, on this site
 	one_to_many :info
 
+	# Return a list of infos that sates the specific category
+	def info_category (category)
+	    # Not ideal, but it gets a category, then it gets a list of
+	    # all info that is associated with the category, then it goes through
+	    # and reject any infos that are not associated with this site (manually)
+	    #
+	    # I want to find a sequel valid way of doing this
+	    category_id = Category[:category => category]
+	    return (category_id.info).reject { |info| info.site_id != id }
+	end
+
 	# to_string for debugging
 	def to_s
 	    ret = "[Manga Site]\n"

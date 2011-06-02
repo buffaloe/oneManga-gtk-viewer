@@ -61,11 +61,7 @@ def build_manga_index(dummy, fetcher)
 #    manga_list.append_column(site_ranking_col)
 
     # Populate the list
-    list = Gtk::ListStore.new(Integer)
-    dummy.info.each do |info|
-	list.append.set_value(0, info.id)
-    end
-    manga_list.model = list
+    update_manga_list(dummy.info, manga_list)
 
     # setup all of the listeners/actions/events
     manga_list.selection.mode = Gtk::SELECTION_SINGLE
@@ -76,8 +72,35 @@ def build_manga_index(dummy, fetcher)
 	update_manga_info(info, fetcher, builder)
     }
 
+    # Combobox listener
+    category.signal_connect('changed') do |combobox|
+	# See if its "all" if so get "all category mangas"
+	model = combobox.model
+	iter = model.get_iter(Gtk::TreePath.new(combobox.active))
+	value = iter.get_value(0)
+
+	if value == "all"
+	    update_manga_list(dummy.info, manga_list)
+	else
+	    # list of "all" manga -> dummy.info
+	    update_manga_list(dummy.info_category(value), manga_list)
+	end
+    end
+
+
     window = builder.get_object('list_window')
     window.show_all
+end
+
+##############################
+# Update/populate the manga_list
+##############################
+def update_manga_list (list, manga_list)
+    list_store = Gtk::ListStore.new(Integer)
+    list.each do |info|
+	list_store.append.set_value(0, info.id)
+    end
+    manga_list.model = list_store
 end
 
 ##############################
@@ -85,6 +108,8 @@ end
 ##############################
 def update_combobox (list, combobox)
         list_store = Gtk::ListStore.new(String)
+        (list_store.append())[0] = "all"
+
         list.each do |text|
             (list_store.append())[0] = text
         end
