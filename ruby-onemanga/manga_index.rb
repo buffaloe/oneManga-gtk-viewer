@@ -36,6 +36,9 @@ def build_manga_index(dummy, fetcher)
     update_combobox(dummy.category.map {|cat| cat.category}, category)
     category.active = 0
 
+    # Fix up the TextView with its own TextBuffer
+    summary = builder.get_object('summary_textview')
+    summary.set_buffer(Gtk::TextBuffer.new)
 
     # Treeview stuff
     manga_list = builder.get_object('manga_list')
@@ -206,9 +209,9 @@ def update_manga_info (manga, fetcher, builder)
 
     summary = builder.get_object('summary_textview')
     if manga.summary.nil?
-	summary.set_buffer(Gtk::TextBuffer.new)
+	summary.buffer.text = ""
     else
-	summary.set_buffer((Gtk::TextBuffer.new).set_text(manga.summary))
+	summary.buffer.text = manga.summary
     end
 
     # Deal with the image
