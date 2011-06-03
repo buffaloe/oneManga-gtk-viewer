@@ -25,7 +25,7 @@ def build_manga_index(dummy, fetcher)
     site.pack_start(render, true)
     site.set_attributes(render, {"text" => 0})
 
-    update_combobox([dummy.site_name], site)
+    update_site_combobox([dummy.site_name], site)
     site.active = 0
 
     # Setup the site category combo_box
@@ -33,7 +33,7 @@ def build_manga_index(dummy, fetcher)
     category.pack_start(render, true)
     category.set_attributes(render, {"text" => 0})
 
-    update_combobox(dummy.category.map {|cat| cat.category}, category)
+    update_category_combobox(dummy.category, dummy.info.length, dummy.id, category)
     category.active = 0
 
     # Fix up the TextView with its own TextBuffer
@@ -82,6 +82,10 @@ def build_manga_index(dummy, fetcher)
 	iter = model.get_iter(Gtk::TreePath.new(combobox.active))
 	value = iter.get_value(0)
 
+	# TODO: Find a better way of dealing with this
+	# Strip the (/d) off
+	value = value.slice(0, value.index(' ('))
+
 	if value == "all"
 	    update_manga_list(dummy.info, manga_list)
 	else
@@ -109,14 +113,25 @@ end
 ##############################
 # Update the combobox
 ##############################
-def update_combobox (list, combobox)
-        list_store = Gtk::ListStore.new(String)
-        (list_store.append())[0] = "all"
+def update_site_combobox (list, combobox)
+    list_store = Gtk::ListStore.new(String)
+    list.each do |text|
+	(list_store.append())[0] = text
+    end
+    combobox.model = list_store
+end
 
-        list.each do |text|
-            (list_store.append())[0] = text
-        end
-        combobox.model = list_store
+##############################
+# Update the combobox
+##############################
+def update_category_combobox (list, total_info, site_id, combobox)
+    list_store = Gtk::ListStore.new(String, Integer)
+    (list_store.append())[0] = "all" + " (" + total_info.to_s + ")"
+
+    list.each do |text|
+	(list_store.append())[0] = text.category + " (" + text.count_site_specific_info(site_id).to_s + ")"
+    end
+    combobox.model = list_store
 end
 
 ##############################

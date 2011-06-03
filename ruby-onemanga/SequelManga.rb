@@ -184,6 +184,10 @@ module SequelManga
 	many_to_many :site
 	many_to_many :info
 
+	def count_site_specific_info(site_id)
+	    info_dataset.filter(:site_id => site_id).count
+	end
+
 	# to_string for debugging
 	def to_s
 	    return "#{category}"
