@@ -244,13 +244,12 @@ module SequelManga
 
 	# Return a list of infos that sates the specific category
 	def info_category (category)
-	    # Not ideal, but it gets a category, then it gets a list of
-	    # all info that is associated with the category, then it goes through
-	    # and reject any infos that are not associated with this site (manually)
-	    #
-	    # I want to find a sequel valid way of doing this
 	    category_id = Category[:category => category]
-	    return (category_id.info).reject { |info| info.site_id != id }
+	    return category_id.info_dataset.filter(:site_id => id)
+
+	    # Old way of getting an array of infos then rejecting one that did not
+	    # belong to this site
+	    # return (category_id.info).reject { |info| info.site_id != id }
 	end
 
 	# to_string for debugging
