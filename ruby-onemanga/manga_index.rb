@@ -120,46 +120,106 @@ end
 # Update manga info panel
 ##############################
 def update_manga_info (manga, fetcher, builder)
-    # Deal with image latter
-    cover = builder.get_object('image')
-
-    # Infobox/etc
     title = builder.get_object('title_entry')
+    if manga.title.nil?
+	title.text = ""
+    else
+	title.text = manga.title
+    end
+
     alt_titles = builder.get_object('alt_titles_entry')
+    if manga.alt_titles.nil? or manga.alt_titles.empty?
+	alt_titles.text = ""
+    else
+	alt_titles.text = manga.alt_titles.join(', ')
+    end
+
     authors = builder.get_object('authors_entry')
+    if manga.author.nil? or manga.author.empty?
+	authors.text = ""
+    else
+	authors.text = manga.author.join(', ')
+    end
+
     artists = builder.get_object('artists_entry')
+    if manga.artist.nil? or manga.artist.empty?
+	artist.text = ""
+    else
+	artists.text = manga.artist.join(', ')
+    end
+
     categories = builder.get_object('categories_entry')
+    if manga.category.nil? or manga.category.empty?
+	categories.text = ""
+    else
+	categories.text = manga.category.join(', ')
+    end
+
     schedule = builder.get_object('schedule_entry')
+    if manga.schedule.nil?
+	schedule.text = ""
+    else
+	schedule.text = manga.schedule
+    end
+
     state = builder.get_object('state_entry')
+    if manga.state.nil?
+	state.text = ""
+    else
+	state.text = manga.state
+    end
+
     status = builder.get_object('status_entry')
+    if manga.status.nil?
+	status.text = ""
+    else
+	status.text = manga.status
+    end
+
     last_update = builder.get_object('last_update_entry')
+    if manga.last_update.nil?
+	last_update.text = ""
+    else
+	last_update.text = manga.last_update
+    end
+
     release_year = builder.get_object('release_year_entry')
+    if manga.release_year.nil?
+	release_year.text = ""
+    else
+	release_year.text = manga.release_year.year.to_s
+    end
+
     when_added = builder.get_object('when_added_entry')
+    if manga.when_added.nil?
+	when_added.text = ""
+    else
+	when_added.text = manga.when_added
+    end
+
     site_ranking = builder.get_object('site_ranking_entry')
+    if manga.site_ranking.nil?
+	site_ranking.text = ""
+    else
+	site_ranking.text = manga.site_ranking.to_s
+    end
+
     summary = builder.get_object('summary_textview')
-
-    # Set them
-    title.text = manga.title
-    alt_titles.text = manga.alt_titles.join(', ')
-    authors.text = manga.author.join(', ')
-    artists.text = manga.artist.join(', ')
-    categories.text = manga.category.join(', ')
-    schedule.text = manga.schedule
-    state.text = manga.state
-    status.text = manga.status
-    last_update.text = manga.last_update
-    release_year.text = manga.release_year.year.to_s
-    when_added.text = manga.when_added
-    site_ranking.text = manga.site_ranking.to_s
-
-    summary.set_buffer((Gtk::TextBuffer.new).set_text(manga.summary))
+    if manga.summary.nil?
+	summary.set_buffer(Gtk::TextBuffer.new)
+    else
+	summary.set_buffer((Gtk::TextBuffer.new).set_text(manga.summary))
+    end
 
     # Deal with the image
+    cover = builder.get_object('image')
     url = manga.cover_page_url
     image_file = fetcher.get_image(url)
 
     if !image_file.nil?
 	cover.pixbuf = Gdk::Pixbuf.new(image_file)
+    else
+	cover.stock = Gtk::Stock.MISSING_IMAGE
     end
 end
 
